@@ -1,0 +1,173 @@
+<!-- build time:Sat Jan 18 2020 19:58:48 GMT+0800 (China Standard Time) --><!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2"><meta name="theme-color" content="#222"><meta name="generator" content="Hexo 4.2.0"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png"><link rel="mask-icon" href="/images/logo.svg" color="#222"><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="//fonts.googleapis.com/css?family=PingFang SC:300,300italic,400,400italic,700,700italic|Menlo:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext"><link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css"><script id="hexo-configurations">var NexT=window.NexT||{},CONFIG={hostname:new URL("http://zhoutao822.coding.me").hostname,root:"/",scheme:"Pisces",version:"7.7.0",exturl:!1,sidebar:{position:"left",display:"post",padding:18,offset:12,onmobile:!1},copycode:{enable:!0,show_result:!0,style:"mac"},back2top:{enable:!0,sidebar:!1,scrollpercent:!0},bookmark:{enable:!0,color:"#222",save:"auto"},fancybox:!1,mediumzoom:!1,lazyload:!1,pangu:!1,comments:{style:"tabs",active:"valine",storage:!0,lazyload:!1,nav:null,activeClass:"valine"},algolia:{appID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"Search for Posts",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}},localsearch:{enable:!0,trigger:"auto",top_n_per_article:1,unescape:!0,preload:!0},path:"search.xml",motion:{enable:!0,async:!1,transition:{post_block:"fadeIn",post_header:"slideDownIn",post_body:"slideDownIn",coll_header:"slideLeftIn",sidebar:"slideUpIn"}}}</script><meta name="description" content="论如何成为一个优秀的瓜农参考：西瓜书第2章 模型评估与选择1. 经验误差与过拟合错误率（error rate）：在m个样本中有a个样本分类错误，即错误率E &#x3D; a&#x2F;m；精度（accuracy）：1 - a&#x2F;m；误差（error）：模型的预测输出与样本的真实输出之间的差异；训练误差（training error）：训练集上的误差；泛化误差（generalization error）：新样本上的误差，"><meta property="og:type" content="article"><meta property="og:title" content="模型评估与选择"><meta property="og:url" content="http://zhoutao822.coding.me/archives/7d1dcda7.html"><meta property="og:site_name" content="Tao"><meta property="og:description" content="论如何成为一个优秀的瓜农参考：西瓜书第2章 模型评估与选择1. 经验误差与过拟合错误率（error rate）：在m个样本中有a个样本分类错误，即错误率E &#x3D; a&#x2F;m；精度（accuracy）：1 - a&#x2F;m；误差（error）：模型的预测输出与样本的真实输出之间的差异；训练误差（training error）：训练集上的误差；泛化误差（generalization error）：新样本上的误差，"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://zhoutao822.coding.me/archives/7d1dcda7/pr.png"><meta property="og:image" content="http://zhoutao822.coding.me/archives/7d1dcda7/roc.jpg"><meta property="og:image" content="http://zhoutao822.coding.me/archives/7d1dcda7/cost.jpg"><meta property="og:image" content="http://zhoutao822.coding.me/archives/7d1dcda7/error.jpg"><meta property="article:published_time" content="2018-10-31T13:44:17.000Z"><meta property="article:modified_time" content="2020-01-17T15:07:46.270Z"><meta property="article:author" content="Tao Zhou"><meta property="article:tag" content="Theory"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="http://zhoutao822.coding.me/archives/7d1dcda7/pr.png"><link rel="canonical" href="http://zhoutao822.coding.me/archives/7d1dcda7.html"><script id="page-configurations">CONFIG.page={sidebar:"",isHome:!1,isPost:!0}</script><title>模型评估与选择 | Tao</title><noscript><style>.sidebar-inner,.use-motion .brand,.use-motion .collection-header,.use-motion .comments,.use-motion .menu-item,.use-motion .pagination,.use-motion .post-block,.use-motion .post-body,.use-motion .post-header{opacity:initial}.use-motion .site-subtitle,.use-motion .site-title{opacity:initial;top:initial}.use-motion .logo-line-before i{left:initial}.use-motion .logo-line-after i{right:initial}</style></noscript><link rel="alternate" href="/atom.xml" title="Tao" type="application/atom+xml"></head><body itemscope itemtype="http://schema.org/WebPage"><div class="container use-motion"><div class="headband"></div><header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-brand-container"><div class="site-meta"><div><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">Tao</span> <span class="logo-line-after"><i></i></span></a></div></div><div class="site-nav-toggle"><div class="toggle" aria-label="切换导航栏"><span class="toggle-line toggle-line-first"></span> <span class="toggle-line toggle-line-middle"></span> <span class="toggle-line toggle-line-last"></span></div></div></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a></li><li class="menu-item menu-item-search"><a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索</a></li></ul></nav><div class="site-search"><div class="popup search-popup"><div class="search-header"><span class="search-icon"><i class="fa fa-search"></i></span><div class="search-input-container"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="搜索..." spellcheck="false" type="text" id="search-input"></div><span class="popup-btn-close"><i class="fa fa-times-circle"></i></span></div><div id="search-result"></div></div><div class="search-pop-overlay"></div></div></div></header><div class="back-to-top"><i class="fa fa-arrow-up"></i> <span>0%</span></div><div class="reading-progress-bar"></div><a role="button" class="book-mark-link book-mark-link-fixed"></a><main class="main"><div class="main-inner"><div class="content-wrap"><div class="content"><div class="posts-expand"><article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN"><link itemprop="mainEntityOfPage" href="http://zhoutao822.coding.me/archives/7d1dcda7.html"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="image" content="/images/avatar.jpg"><meta itemprop="name" content="Tao Zhou"><meta itemprop="description" content="学习笔记"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Tao"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">模型评估与选择</h1><div class="post-meta"><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i> </span><span class="post-meta-item-text">发表于</span> <time title="创建时间：2018-10-31 21:44:17" itemprop="dateCreated datePublished" datetime="2018-10-31T21:44:17+08:00">2018-10-31</time> </span><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-calendar-check-o"></i> </span><span class="post-meta-item-text">更新于</span> <time title="修改时间：2020-01-17 23:07:46" itemprop="dateModified" datetime="2020-01-17T23:07:46+08:00">2020-01-17</time> </span><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i> </span><span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Machine-Learning/" itemprop="url" rel="index"><span itemprop="name">Machine Learning</span> </a></span></span><span id="/archives/7d1dcda7.html" class="post-meta-item leancloud_visitors" data-flag-title="模型评估与选择" title="阅读次数"><span class="post-meta-item-icon"><i class="fa fa-eye"></i> </span><span class="post-meta-item-text">阅读次数：</span> <span class="leancloud-visitors-count"></span> </span><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-comment-o"></i> </span><span class="post-meta-item-text">Valine：</span> <a title="valine" href="/archives/7d1dcda7.html#comments" itemprop="discussionUrl"><span class="post-comments-count valine-comment-count" data-xid="/archives/7d1dcda7.html" itemprop="commentCount"></span></a></span><br><span class="post-meta-item" title="本文字数"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i> </span><span class="post-meta-item-text">本文字数：</span> <span>4.9k</span> </span><span class="post-meta-item" title="阅读时长"><span class="post-meta-item-icon"><i class="fa fa-clock-o"></i> </span><span class="post-meta-item-text">阅读时长 &asymp;</span> <span>4 分钟</span></span></div></header><div class="post-body" itemprop="articleBody"><p><strong>论如何成为一个优秀的瓜农</strong></p><p>参考：</p><blockquote><p>西瓜书第2章 模型评估与选择</p></blockquote><h2 id="1-经验误差与过拟合"><a href="#1-经验误差与过拟合" class="headerlink" title="1. 经验误差与过拟合"></a>1. 经验误差与过拟合</h2><ul><li><p>错误率（error rate）：在m个样本中有a个样本分类错误，即错误率<code>E = a/m</code>；</p></li><li><p>精度（accuracy）：<code>1 - a/m</code>；</p></li><li><p>误差（error）：模型的预测输出与样本的真实输出之间的差异；</p></li><li><p>训练误差（training error）：训练集上的误差；</p></li><li><p>泛化误差（generalization error）：新样本上的误差，或者说测试集上的误差；</p></li><li><p>过拟合（overfitting）：学习器把训练集中的某些特征当作一般特征，导致泛化性能下降，表现为模型在训练集上表现非常好，在测试集上表现不好；</p></li><li><p>欠拟合（underfitting）：学习器尚未习得样本数据集的特性，导致无法正确的预测，表现为模型在训练集和测试集上表现都不好；</p></li></ul><p><strong>解决方法：</strong></p><ul><li>过拟合：减少训练轮数或剪枝处理，选择泛化性能更强的学习器，很难处理；</li><li>欠拟合：增加训练轮数或增加分支，容易解决；</li></ul><a id="more"></a><h2 id="2-评估方法"><a href="#2-评估方法" class="headerlink" title="2. 评估方法"></a>2. 评估方法</h2><h3 id="2-1-目标"><a href="#2-1-目标" class="headerlink" title="2.1 目标"></a>2.1 目标</h3><blockquote><p>训练集用于训练学习器，测试集用于测试学习器泛化性能，训练集与测试集不相交，且样本分布应大致相同。</p></blockquote><h3 id="2-2-原理"><a href="#2-2-原理" class="headerlink" title="2.2 原理"></a>2.2 原理</h3><blockquote><p>如果测试集与训练集相同或者是训练集的子集，那么学习器只需要朝着过拟合的方向发展就可以实现在测试集上很好的效果，但是面对新的样本，那么过拟合就成为了必然的缺陷，所以划分测试集是为了模拟面对新样本的状况，能够更好的体现学习器的泛化性能。</p></blockquote><h3 id="2-3-划分技巧"><a href="#2-3-划分技巧" class="headerlink" title="2.3 划分技巧"></a>2.3 划分技巧</h3><p>我们有一个包含了m个样例的数据集$D = {(x_1, y_1), (x_2, y_2),…,(x_m, y_m)}$，通过对D进行适当的处理，从中产生训练集S和测试集T。</p><p><strong>1. 留出法</strong></p><p>直接将数据集D划分为两个互斥的集合T/S，T，S互斥。一般<code>T : S = 5 : 1 ~ 3 : 1</code>。</p><p>为了尽可能的保持数据分布的一致性，我们还需要进行采样：<br>采样方式为“分层采样”，即在正反样本中采样比例相同，或者是多分类问题中各个种类采样比例相同。</p><p>在上面的采样中，仍然会出现问题，比如选取的样本是前XX个还是后XX个，解决方法是重复进行若干次划分，例如进行100次划分，每次都产生一个训练/测试集用于实验评估，得到的100个结果取平均。</p><p><strong>2. 交叉验证法</strong></p><p>将数据集$D$划分为k个大小相似的互斥子集$D_1,…,D_k$，每个子集$D_i$都尽可能的保持数据分布一致性，即从D中通过分层采样得到。每次用k - 1个子集的并集训练，剩下的那一个子集用于测试；这样就可以进行k次训练和测试，最后取均值。k常取10，也叫“k折交叉验证”</p><p>同样在分层采样的过程中也常常需要重复若干次划分，同上，因此常见的有“10次10折交叉验证”。</p><p>交叉验证的特例：留一法</p><ul><li><p>优点：评估结果最准确；</p></li><li><p>缺点：训练的模型数等于数据集样本数，如果数据集包括百万数据，那么需要训练百万个模型，训练成本难以忍受。</p></li></ul><p><strong>3. 自助法</strong></p><p>给定包含m个样本的数据集D，每次从D中随机挑选一个样本放入$D’$（复制不是剪切），重复执行m次，得到一个包含m个样本的数据集$D’$，我们可以将$D’$作为训练集，D$D’$作为测试集。</p><ul><li>$D’$中的样本有重复</li><li>D中大约有36.8%的样本未出现在数据集$D’$中</li><li>自助法在数据集较小/难以有效划分训练/测试集时很有用，但是自助法产生的数据集改变了初始数据集的分布，会引入估计偏差，因此，在数据量足够时，留出法和交叉验证法更常用</li></ul><p><strong>4. 调参</strong></p><ul><li>对每一个参数选定一个范围和变化步长</li><li>模型评估阶段需要划分测试集，最终提交给用户的模型在训练过程中不需要划分测试集，直接使用全部数据</li><li>在研究阶段，将数据集划分为训练集、验证集和测试集，测试集用于评估模型在实际使用时的泛化能力，验证集用于模型选择和调参</li></ul><h2 id="3-性能度量"><a href="#3-性能度量" class="headerlink" title="3. 性能度量"></a>3. 性能度量</h2><h3 id="3-1-常见性能度量函数"><a href="#3-1-常见性能度量函数" class="headerlink" title="3.1 常见性能度量函数"></a>3.1 常见性能度量函数</h3><p><strong>1. 均方误差MSE（Mean Squard Error）</strong></p><p>$$<br>E(f; D)) = \frac{1}{m} \sum_{i=1}^{m} (f(\boldsymbol{x}_i) - y_i) ^ 2<br>$$</p><p>对于数据分布$D$和概率密度函数$p(·)$，均方误差为<br>$$<br>E(f; D) = \int_{\boldsymbol{x} \sim D}^{ } (f(\boldsymbol{x}) - y)^2p(\boldsymbol{x})d\boldsymbol{x}<br>$$</p><p><strong>2. 均方根误差RMSE（Root Mean Squard Error）</strong></p><p>$$<br>E(f; D)) = \sqrt{\frac{1}{m} \sum_{i=1}^{m} (f(\boldsymbol{x}_i) - y_i) ^ 2}<br>$$</p><p><strong>3. 平均绝对误差MAE（Mean Absolute Error）</strong></p><p>$$<br>E(f; D)) = \frac{1}{m} \sum_{i=1}^{m} \left | f(\boldsymbol{x}_i) - y_i \right |<br>$$</p><p>区别：</p><ul><li>MSE和RMSE放大数据波动，预测效果不好的值产生的残差会被放大；</li><li>RMSE和MAE的数量级和单位与数据相同，因此可以直观的显示模型性能，但是RMSE更关注错误情况。</li></ul><h3 id="3-2-查准率、查全率与F1"><a href="#3-2-查准率、查全率与F1" class="headerlink" title="3.2 查准率、查全率与F1"></a>3.2 查准率、查全率与F1</h3><p>分类结果混淆矩阵</p><table><thead><tr><th>真实情况/预测结果</th><th>正例</th><th>反例</th></tr></thead><tbody><tr><td>正例</td><td>TP（真正例）</td><td>FN（假反例）</td></tr><tr><td>反例</td><td>FP（假正例）</td><td>TN（真反例）</td></tr></tbody></table><ul><li>查准率P（precision）</li></ul><p>$$<br>P = \frac{TP}{ TP + FP}<br>$$</p><ul><li>查全率R（recall）</li></ul><p>$$<br>R = \frac{TP}{TP + FN}<br>$$</p><img src="/archives/7d1dcda7/pr.png" title="model"><p>查准率与查全率是一对矛盾的度量，如果一条曲线可以将另一条曲线完全“包裹”，则可以判断后者的模型性能比前者弱；如果两条曲线相交，那么可以使用“平衡点”（BEP），即当$P = R$时的值，谁大谁更优，但是BEP还是过于简单，更常用的时F1度量：</p><p>$$<br>F1 = \frac{2 \times P \times R}{P + R} = \frac{2 \times TP}{样例总数 + TP - TN}<br>$$</p><p>上式中我们对查准率和查全率没有偏向，但是在实际使用中，我们可能会更关注两者之一，那么就需要对其进行加权， $\beta &gt; 1$时查全率有更大影响；$\beta &lt; 1$时查准率有更大影响：</p><p>$$<br>F_{\beta} = \frac{(1 + \beta ^2) \times P \times R}{(\beta ^2 \times P) + R}<br>$$</p><h3 id="3-3-ROC与AUC"><a href="#3-3-ROC与AUC" class="headerlink" title="3.3 ROC与AUC"></a>3.3 ROC与AUC</h3><p>很多学习器为测试样本产生一个实值或概率预测，然后将这个预测值与一个分类阈值进行比较，若大于阈值则分为正类，否则反类；根据阈值设定的大小，我们决定更加偏向于查准率还是查全率，比如，如果更重视查准率，则提高分类阈值。ROC曲线则是从这个角度出发来研究学习器泛化性能的有力工具。</p><p>ROC纵轴“真正例率”（TPR）</p><p>$$<br>TPR = \frac{TP}{TP + FN}<br>$$</p><p>ROC横轴“假正例率”（FPR）</p><p>$$<br>FPR = \frac{FP}{TN + FP}<br>$$</p><p>当ROC曲线越接近左边和上边时，模型性能越好。</p><img src="/archives/7d1dcda7/roc.jpg" title="model"><p>实际过程中的ROC曲线不是平滑的，绘制过程：给定$m^+$个正例和$m^-$个反例，根据学习器预测结果排序，然后将分类阈值设置为最大，然后分类阈值依次设为每个样例的预测值，设前一个标记点的坐标为$(x, y)$，若当前为真正例，则对应的标记点坐标为$(x, y + \frac{1}{m^+})$，若当前为假正例，则标记点为$(x + \frac{1}{m^-}, y)$；分类阈值最大时对应所有样例均预测为反例，TPR和FPR均为0</p><p>AUC为ROC曲线下的面积</p><p>$$<br>AUC = \frac{1}{2} \sum_{i=1}^{m-1}(x_{i+1} - x_i) \cdot (y_i + y_{i+1})<br>$$</p><p>形式化的看，AUC考虑的是样本预测的排序质量，因此它与排序误差有紧密联系。给定$m^+$个正例和$m^-$个反例，令$D^+$和$D^-$分别表示正、反例集合，则排序损失定义为：</p><p>$$<br>l_{rank} = \frac{1}{m^+m^-} \sum_{\boldsymbol{x}^+ \in D^+}\sum_{\boldsymbol{x}^- \in D^-}(\mathbb{I}(f(\boldsymbol{x}^+) &lt; f(\boldsymbol{x}^-)) + \frac{1}{2}\mathbb{I}(f(\boldsymbol{x}^+) = f(\boldsymbol{x}^-)))<br>$$</p><p>即考虑每一对正、反例，若正例的预测值小于反例，则记一个罚分，若相等，记0.5个罚分。因此$l_{rank}$对应ROC曲线之上的面积</p><p>$$<br>AUC = 1 - l_{rank}<br>$$</p><h3 id="3-4-代价敏感错误率与代价曲线"><a href="#3-4-代价敏感错误率与代价曲线" class="headerlink" title="3.4 代价敏感错误率与代价曲线"></a>3.4 代价敏感错误率与代价曲线</h3><p>在实际分类问题中，把健康人诊断为患者和把患者诊断为健康人的代价是完全不同的，因此需要一个代价矩阵对分类错误加权。</p><p>二分类代价矩阵</p><table><thead><tr><th>真实类别/预测类别</th><th>第0类</th><th>第1类</th></tr></thead><tbody><tr><td>第0类</td><td>0</td><td>cost01</td></tr><tr><td>第1类</td><td>cost10</td><td>0</td></tr></tbody></table><p>代价敏感错误率为</p><p>$$<br>E(f;D;cost) = \frac{1}{m}(\sum_{\boldsymbol{x}<em>i \in D^+}\mathbb{I}(f(\boldsymbol{x}_i) \neq y_i) \times cost</em>{01} + \sum_{\boldsymbol{x}<em>i \in D^-}\mathbb{I}(f(\boldsymbol{x}_i) \neq y_i) \times cost</em>{10})<br>$$</p><p>在非均等代价下，ROC曲线不能直接反映出学习器的期望总体代价，而“代价曲线”则可达到该目的，代价曲线图的横轴是取值为$[0, 1]$的正例率代价</p><p>$$<br>P(+)cost = \frac{p \times cost_{01}}{p \times cost_{01} + (1 - p) \times cost_{10}}<br>$$</p><p>其中p是样例为正例的概率；纵轴是取值为$[0, 1]$的归一化代价</p><p>$$<br>cost_{norm} = \frac{FNR \times p \times cost_{01} + FPR \times (1 - p) \times cost_{10}}{p \times cost_{01} + (1-p) \times cost_{10}}<br>$$</p><p>FPR是假正例率，$FNR = 1 - TPR$是假反例率</p><img src="/archives/7d1dcda7/cost.jpg" title="model"><h2 id="4-偏差与方差"><a href="#4-偏差与方差" class="headerlink" title="4. 偏差与方差"></a>4. 偏差与方差</h2><p>学习算法的期望预测为</p><p>$$<br>\overline{f}(\boldsymbol{x}) = \mathbb{E}_D[f(\boldsymbol{x};D)]<br>$$</p><p>使用样本数相同的不同训练集产生的方差为</p><p>$$<br>var(\boldsymbol{x}) = \mathbb{E}_D[(f(\boldsymbol{x};D) - \overline{f}(\boldsymbol{x}))^2]<br>$$</p><p>噪声为</p><p>$$<br>\varepsilon ^2 = \mathbb{E}_D[(y_D - y)^2]<br>$$</p><p>期望输出与真实标记的差别为偏差（bias）</p><p>$$<br>bias^2(\boldsymbol{x}) = (\overline{f}(\boldsymbol{x}) - y)^2<br>$$</p><p>假定噪声期望为0，即$\mathbb{E}[y_D - y] = 0$，通过简单的计算可对算法的期望泛化误差进行分解：</p><p>$$<br>E(f;D) = \mathbb{E}_D[(f(\boldsymbol{x};D) - y_D)^2]<br>$$<br>$$<br>= \mathbb{E}_D[(f(\boldsymbol{x};D) - \overline{f}(\boldsymbol{x}) + \overline{f}(\boldsymbol{x}) - y_D)^2]<br>$$<br>$$<br>…<br>$$<br>$$<br>= \mathbb{E}_D[(f(\boldsymbol{x};D) - \overline{f}(\boldsymbol{x}))^2] + (\overline{f}(\boldsymbol{x}) - y)^2 + \mathbb{E}[(y_D - y)^2]<br>$$</p><p>于是，<br>$$<br>E(f;D) = bias^2(\boldsymbol{x}) + var(\boldsymbol{x}) + \varepsilon^2<br>$$</p><p>也就是说，泛化误差可分解为偏差、方差和噪声之和。</p><ul><li>偏差度量了学习算法的期望预测与真实结果的偏离程度，即刻画了学习算法本身的拟合能力；</li><li>方差度量了同样大小的训练集的变动所导致的学习性能的变化，即刻画了数据扰动所造成的影响；</li><li>噪声则表达了学习问题本身的难度</li></ul><img src="/archives/7d1dcda7/error.jpg" title="model"></div><div class="popular-posts-header">推荐文章</div><ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><a href="/archives/280b588e.html" rel="bookmark">支持向量机</a></div></li><li class="popular-posts-item"><div class="popular-posts-title"><a href="/archives/8ddc7426.html" rel="bookmark">决策树</a></div></li><li class="popular-posts-item"><div class="popular-posts-title"><a href="/archives/7ca31f7.html" rel="bookmark">神经网络</a></div></li><li class="popular-posts-item"><div class="popular-posts-title"><a href="/archives/fcb2659b.html" rel="bookmark">数据集</a></div></li><li class="popular-posts-item"><div class="popular-posts-title"><a href="/archives/5206f73f.html" rel="bookmark">线性模型</a></div></li></ul><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者： </strong>Tao Zhou</li><li class="post-copyright-link"><strong>本文链接：</strong> <a href="http://zhoutao822.coding.me/archives/7d1dcda7.html" title="模型评估与选择">http://zhoutao822.coding.me/archives/7d1dcda7.html</a></li><li class="post-copyright-license"><strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li></ul></div><footer class="post-footer"><div class="post-tags"><a href="/tags/Theory/" rel="tag"># Theory</a></div><div class="post-nav"><div class="post-nav-item"><a href="/archives/eb46b14b.html" rel="prev" title="Mac+Anaconda+PyCharm/VSCode环境搭建"><i class="fa fa-chevron-left"></i> Mac+Anaconda+PyCharm/VSCode环境搭建</a></div><div class="post-nav-item"><a href="/archives/fcb2659b.html" rel="next" title="数据集">数据集 <i class="fa fa-chevron-right"></i></a></div></div></footer></article></div></div><div class="comments" id="valine-comments"></div><script>window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }</script></div><div class="toggle sidebar-toggle"><span class="toggle-line toggle-line-first"></span> <span class="toggle-line toggle-line-middle"></span> <span class="toggle-line toggle-line-last"></span></div><aside class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc">文章目录</li><li class="sidebar-nav-overview">站点概览</li></ul><div class="post-toc-wrap sidebar-panel"><div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-经验误差与过拟合"><span class="nav-text">1. 经验误差与过拟合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-评估方法"><span class="nav-text">2. 评估方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-目标"><span class="nav-text">2.1 目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-原理"><span class="nav-text">2.2 原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-划分技巧"><span class="nav-text">2.3 划分技巧</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-性能度量"><span class="nav-text">3. 性能度量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-常见性能度量函数"><span class="nav-text">3.1 常见性能度量函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-查准率、查全率与F1"><span class="nav-text">3.2 查准率、查全率与F1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-ROC与AUC"><span class="nav-text">3.3 ROC与AUC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-代价敏感错误率与代价曲线"><span class="nav-text">3.4 代价敏感错误率与代价曲线</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-偏差与方差"><span class="nav-text">4. 偏差与方差</span></a></li></ol></div></div><div class="site-overview-wrap sidebar-panel"><div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"><img class="site-author-image" itemprop="image" alt="Tao Zhou" src="/images/avatar.jpg"><p class="site-author-name" itemprop="name">Tao Zhou</p><div class="site-description" itemprop="description">学习笔记</div></div><div class="site-state-wrap motion-element"><nav class="site-state"><div class="site-state-item site-state-posts"><a href="/archives/"><span class="site-state-item-count">61</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"><a href="/categories/"><span class="site-state-item-count">6</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"><a href="/tags/"><span class="site-state-item-count">126</span> <span class="site-state-item-name">标签</span></a></div></nav></div><div class="cc-license motion-element" itemprop="license"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a></div></div></div></aside><div id="sidebar-dimmer"></div></div></main><footer class="footer"><div class="footer-inner"><div class="copyright">&copy; <span itemprop="copyrightYear">2020</span> <span class="with-love"><i class="fa fa-user"></i> </span><span class="author" itemprop="copyrightHolder">Tao Zhou</span> <span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-area-chart"></i> </span><span title="站点总字数">897k</span> <span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-coffee"></i> </span><span title="站点阅读时长">13:36</span></div><div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0</div><span class="post-meta-divider">|</span><div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.0</div><script>function leancloudSelector(url) {
+    url = encodeURI(url);
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.getAttribute('id'));
+      var title = visitors.getAttribute('data-flag-title');
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+              leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.getAttribute('id'));
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (let item of results) {
+            let { url, time } = item;
+            leancloudSelector(url).innerText = time;
+          }
+          for (let url of entries) {
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=iyNzyQRx6yCU5YQVEXPl0hSe-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'iyNzyQRx6yCU5YQVEXPl0hSe-gzGzoHsz',
+            'X-LC-Key': 'xoukWFyqvFIXJ6DfxLLYtsTP',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });</script></div></footer></div><script src="/lib/anime.min.js"></script><script src="/lib/velocity/velocity.min.js"></script><script src="/lib/velocity/velocity.ui.min.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/pisces.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script><script src="/js/local-search.js"></script><script type="text/x-mathjax-config">MathJax.Ajax.config.path['mhchem'] = '//cdn.jsdelivr.net/npm/mathjax-mhchem@3';
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        extensions: ['[mhchem]/mhchem.js'],
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });</script><script>NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);</script><script>NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el: '#valine-comments',
+      verify: false,
+      notify: false,
+      appId: 'iyNzyQRx6yCU5YQVEXPl0hSe-gzGzoHsz',
+      appKey: 'xoukWFyqvFIXJ6DfxLLYtsTP',
+      placeholder: "Just go go",
+      avatar: 'mm',
+      meta: guest,
+      pageSize: '10' || 10,
+      visitor: false,
+      lang: 'zh-cn' || 'zh-cn',
+      path: location.pathname,
+      recordIP: true,
+      serverURLs: ''
+    });
+  }, window.Valine);
+});</script></body></html><!-- rebuild by neat -->
