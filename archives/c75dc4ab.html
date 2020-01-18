@@ -1,4 +1,442 @@
-<!-- build time:Sat Jan 18 2020 21:25:26 GMT+0800 (China Standard Time) --><!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2"><meta name="theme-color" content="#222"><meta name="generator" content="Hexo 4.2.0"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png"><link rel="mask-icon" href="/images/logo.svg" color="#222"><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css"><script id="hexo-configurations">var NexT=window.NexT||{},CONFIG={hostname:new URL("http://zhoutao822.coding.me").hostname,root:"/",scheme:"Pisces",version:"7.7.0",exturl:!1,sidebar:{position:"left",display:"post",padding:18,offset:12,onmobile:!1},copycode:{enable:!0,show_result:!0,style:"mac"},back2top:{enable:!0,sidebar:!1,scrollpercent:!0},bookmark:{enable:!1,color:"#222",save:"auto"},fancybox:!1,mediumzoom:!1,lazyload:!1,pangu:!1,comments:{style:"tabs",active:"valine",storage:!0,lazyload:!1,nav:null,activeClass:"valine"},algolia:{appID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"Search for Posts",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}},localsearch:{enable:!0,trigger:"auto",top_n_per_article:1,unescape:!0,preload:!0},path:"search.xml",motion:{enable:!0,async:!1,transition:{post_block:"fadeIn",post_header:"slideDownIn",post_body:"slideDownIn",coll_header:"slideLeftIn",sidebar:"slideUpIn"}}}</script><meta name="description" content="参考：Android开发艺术探索Android系统中的每一个应用都运行在一个各自的进程中，那么不同的应用是如何进行数据交互的呢，大致分为两类，第一类我称之为伪进程间通信，其特征是不同进程都对同一个文件进行操作，数据交互通过此文件，比如两个进程共同读写同一个数据库；第二类我称之为真进程间通信，特征是基于系统级别的Binder进行服务调用从而实现的进程间通信或者Socket，具体细节后面再说。"><meta property="og:type" content="article"><meta property="og:title" content="Android IPC-AIDL、Messenger和Socket"><meta property="og:url" content="http://zhoutao822.coding.me/archives/c75dc4ab.html"><meta property="og:site_name" content="Tao"><meta property="og:description" content="参考：Android开发艺术探索Android系统中的每一个应用都运行在一个各自的进程中，那么不同的应用是如何进行数据交互的呢，大致分为两类，第一类我称之为伪进程间通信，其特征是不同进程都对同一个文件进行操作，数据交互通过此文件，比如两个进程共同读写同一个数据库；第二类我称之为真进程间通信，特征是基于系统级别的Binder进行服务调用从而实现的进程间通信或者Socket，具体细节后面再说。"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://zhoutao822.coding.me/archives/c75dc4ab/socket.gif"><meta property="article:published_time" content="2019-07-25T13:41:57.000Z"><meta property="article:modified_time" content="2020-01-17T15:07:46.303Z"><meta property="article:author" content="Tao Zhou"><meta property="article:tag" content="Android"><meta property="article:tag" content="IPC"><meta property="article:tag" content="AIDL"><meta property="article:tag" content="Binder"><meta property="article:tag" content="Messenger"><meta property="article:tag" content="Socket"><meta property="article:tag" content="进程间通信"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="http://zhoutao822.coding.me/archives/c75dc4ab/socket.gif"><link rel="canonical" href="http://zhoutao822.coding.me/archives/c75dc4ab.html"><script id="page-configurations">CONFIG.page={sidebar:"",isHome:!1,isPost:!0}</script><title>Android IPC-AIDL、Messenger和Socket | Tao</title><noscript><style>.sidebar-inner,.use-motion .brand,.use-motion .collection-header,.use-motion .comments,.use-motion .menu-item,.use-motion .pagination,.use-motion .post-block,.use-motion .post-body,.use-motion .post-header{opacity:initial}.use-motion .site-subtitle,.use-motion .site-title{opacity:initial;top:initial}.use-motion .logo-line-before i{left:initial}.use-motion .logo-line-after i{right:initial}</style></noscript><link rel="alternate" href="/atom.xml" title="Tao" type="application/atom+xml"></head><body itemscope itemtype="http://schema.org/WebPage"><div class="container use-motion"><div class="headband"></div><header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-brand-container"><div class="site-meta"><div><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">Tao</span> <span class="logo-line-after"><i></i></span></a></div></div><div class="site-nav-toggle"><div class="toggle" aria-label="切换导航栏"><span class="toggle-line toggle-line-first"></span> <span class="toggle-line toggle-line-middle"></span> <span class="toggle-line toggle-line-last"></span></div></div></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a></li><li class="menu-item menu-item-search"><a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索</a></li></ul></nav><div class="site-search"><div class="popup search-popup"><div class="search-header"><span class="search-icon"><i class="fa fa-search"></i></span><div class="search-input-container"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="搜索..." spellcheck="false" type="text" id="search-input"></div><span class="popup-btn-close"><i class="fa fa-times-circle"></i></span></div><div id="search-result"></div></div><div class="search-pop-overlay"></div></div></div></header><div class="back-to-top"><i class="fa fa-arrow-up"></i> <span>0%</span></div><div class="reading-progress-bar"></div><main class="main"><div class="main-inner"><div class="content-wrap"><div class="content"><div class="posts-expand"><article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN"><link itemprop="mainEntityOfPage" href="http://zhoutao822.coding.me/archives/c75dc4ab.html"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="image" content="/images/avatar.jpg"><meta itemprop="name" content="Tao Zhou"><meta itemprop="description" content="学习笔记"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Tao"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Android IPC-AIDL、Messenger和Socket</h1><div class="post-meta"><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i> </span><span class="post-meta-item-text">发表于</span> <time title="创建时间：2019-07-25 21:41:57" itemprop="dateCreated datePublished" datetime="2019-07-25T21:41:57+08:00">2019-07-25</time> </span><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-calendar-check-o"></i> </span><span class="post-meta-item-text">更新于</span> <time title="修改时间：2020-01-17 23:07:46" itemprop="dateModified" datetime="2020-01-17T23:07:46+08:00">2020-01-17</time> </span><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i> </span><span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span> </a></span></span><span id="/archives/c75dc4ab.html" class="post-meta-item leancloud_visitors" data-flag-title="Android IPC-AIDL、Messenger和Socket" title="阅读次数"><span class="post-meta-item-icon"><i class="fa fa-eye"></i> </span><span class="post-meta-item-text">阅读次数：</span> <span class="leancloud-visitors-count"></span> </span><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-comment-o"></i> </span><span class="post-meta-item-text">Valine：</span> <a title="valine" href="/archives/c75dc4ab.html#comments" itemprop="discussionUrl"><span class="post-comments-count valine-comment-count" data-xid="/archives/c75dc4ab.html" itemprop="commentCount"></span></a></span><br><span class="post-meta-item" title="本文字数"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i> </span><span class="post-meta-item-text">本文字数：</span> <span>4.5k</span> </span><span class="post-meta-item" title="阅读时长"><span class="post-meta-item-icon"><i class="fa fa-clock-o"></i> </span><span class="post-meta-item-text">阅读时长 &asymp;</span> <span>4 分钟</span></span></div></header><div class="post-body" itemprop="articleBody"><p>参考：</p><blockquote><p><a href="https://item.m.jd.com/product/11760209.html" target="_blank" rel="noopener">Android开发艺术探索</a></p></blockquote><p>Android系统中的每一个应用都运行在一个各自的进程中，那么不同的应用是如何进行数据交互的呢，大致分为两类，第一类我称之为伪进程间通信，其特征是不同进程都对同一个文件进行操作，数据交互通过此文件，比如两个进程共同读写同一个数据库；第二类我称之为真进程间通信，特征是基于系统级别的Binder进行服务调用从而实现的进程间通信或者Socket，具体细节后面再说。</p><a id="more"></a><h2 id="1-Socket"><a href="#1-Socket" class="headerlink" title="1. Socket"></a>1. Socket</h2><p>首先了解一下Socket，Socket是对TCP和UDP协议的封装，通过Socket建立的连接可以实现互联网中任意两个进程间的通信，不仅限于局域网或者单机多进程，而我们仅需要确定的是设备的IP和监听的端口号，下面看看Socket是如何实现局域网内从手机传数据到笔记本上。</p><p>Socket的使用分为服务端和客户端，服务端需要监听自己设定的端口，客户端需要知道服务端的IP和服务端监听的端口，两者通过Socket建立连接，然后以数据流的形式通过Socket传输数据。</p><p>首先是服务端，在笔记本上运行的代码，同时需要知道笔记本的IP地址（笔记本和手机在同一局域网中）</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 自定义线程Server</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Server</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">    ServerSocket server = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Server</span><span class="params">(<span class="keyword">int</span> port)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Server线程初始化需要指定端口号，且服务端使用ServerSocket建立连接</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            server = <span class="keyword">new</span> ServerSocket(port);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.run();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">"服务器在启动中...等待用户的连接"</span>);</span><br><span class="line">            <span class="comment">// 一直接收用户的连接，连接之后发送一条短信给用户</span></span><br><span class="line">            <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">                <span class="comment">// 建立socket接口，accept方法是一个阻塞进程,等到有用户连接才往下走</span></span><br><span class="line">                <span class="comment">// 定义Socket类</span></span><br><span class="line">                Socket socket = server.accept();</span><br><span class="line">                <span class="comment">// 通过socket对象可以获得输出流，用来写数据</span></span><br><span class="line">                OutputStream os = socket.getOutputStream();</span><br><span class="line">                <span class="comment">// 向客户端发送消息</span></span><br><span class="line">                os.write(<span class="string">"服务器正在向你发送消息！"</span>.getBytes());</span><br><span class="line">                <span class="comment">// 在服务器上显示连接的上的电脑、</span></span><br><span class="line">                System.out.println(socket.getInetAddress().getHostAddress() + <span class="string">"连接上了！"</span>);</span><br><span class="line">                <span class="comment">// 通过socket对象可以获得输入流，用来读取用户数据</span></span><br><span class="line">                InputStream is = socket.getInputStream();</span><br><span class="line">                <span class="comment">// 读取数据</span></span><br><span class="line">                <span class="keyword">int</span> len = <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">byte</span>[] buf = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">                <span class="keyword">while</span> ((len = is.read(buf)) != -<span class="number">1</span>) &#123;</span><br><span class="line">                    <span class="comment">// 直接把获得的数据打印出来</span></span><br><span class="line">                    String msgFromClient = <span class="keyword">new</span> String(buf, <span class="number">0</span>, len);</span><br><span class="line">                    System.out.println(<span class="string">"服务器接收到客户端的数据："</span> + msgFromClient);</span><br><span class="line">                    <span class="comment">// 根据客户端传来的数据，我们再返回数据给客户端</span></span><br><span class="line">                    <span class="keyword">if</span> (msgFromClient.contains(<span class="string">"hello"</span>)) &#123;</span><br><span class="line">                        os.write(<span class="string">"hello too!!"</span>.getBytes());</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (msgFromClient.contains(<span class="string">"are"</span>)) &#123;</span><br><span class="line">                        os.write(<span class="string">"I'm fine."</span>.getBytes());</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (msgFromClient.contains(<span class="string">"bye"</span>)) &#123;</span><br><span class="line">                        os.write(<span class="string">"Bye!"</span>.getBytes());</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                os.flush();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在main函数中启用即可，这里选择监听的端口为6768</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServerTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 这里服务器只需要定义一个端口号就可以了，程序会自动获取IP地址</span></span><br><span class="line">        <span class="comment">// 但是客户端需要连接这个服务器时，需要知道它的IP地址还有端口号</span></span><br><span class="line">        <span class="comment">// ip地址的查看方法：进入cmd窗口，输入ipconfig/all可以看到</span></span><br><span class="line">        Server server = <span class="keyword">new</span> Server(<span class="number">6768</span>);</span><br><span class="line">        server.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>然后是客户端的设计，需要权限<code>&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;</code></p><blockquote><p>1.简单布局</p></blockquote><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> <span class="keyword">implements</span> <span class="title">View</span>.<span class="title">OnClickListener</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Socket socket = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> TextView textView;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        Button button = findViewById(R.id.button);</span><br><span class="line">        button.setOnClickListener(<span class="keyword">this</span>);</span><br><span class="line">        Button button1 = findViewById(R.id.hello);</span><br><span class="line">        button1.setOnClickListener(<span class="keyword">this</span>);</span><br><span class="line">        Button button2 = findViewById(R.id.how);</span><br><span class="line">        button2.setOnClickListener(<span class="keyword">this</span>);</span><br><span class="line">        Button button3 = findViewById(R.id.bye);</span><br><span class="line">        button3.setOnClickListener(<span class="keyword">this</span>);</span><br><span class="line">        textView = findViewById(R.id.textView);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><blockquote><p>2.定义连接Socket的方法</p></blockquote><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">connectToServer</span><span class="params">(String host, <span class="keyword">int</span> port)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 需要的参数是IP和端口号，就是局域网中你的笔记本的IP和监听的端口号，对应上文的6768</span></span><br><span class="line">    <span class="keyword">while</span> (socket == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 建立连接</span></span><br><span class="line">            socket = <span class="keyword">new</span> Socket(host, port);</span><br><span class="line">            <span class="comment">// 读socket里面的数据</span></span><br><span class="line">            InputStream s = socket.getInputStream();</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">byte</span>[] buf = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">            <span class="keyword">int</span> len = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span> ((len = s.read(buf)) != -<span class="number">1</span>) &#123;</span><br><span class="line">                <span class="keyword">final</span> <span class="keyword">int</span> finalLen = len;</span><br><span class="line">                <span class="comment">// 在主线程中更新读取的数据</span></span><br><span class="line">                runOnUiThread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                        textView.setText(<span class="keyword">new</span> String(buf, <span class="number">0</span>, finalLen));</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><blockquote><p>3.创建发送数据到服务器的线程</p></blockquote><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SendMessThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String message;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SendMessThread</span><span class="params">(String message)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.message = message;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.run();</span><br><span class="line">        <span class="comment">//写操作</span></span><br><span class="line">        <span class="keyword">if</span> (socket != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// 向Socket中的OutputStream写数据即可</span></span><br><span class="line">                OutputStream os = socket.getOutputStream();</span><br><span class="line">                os.write((<span class="string">"客户端:"</span> + message).getBytes());</span><br><span class="line">                os.flush();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><blockquote><p>4.最后是点击事件的处理</p></blockquote><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">switch</span> (v.getId()) &#123;</span><br><span class="line">        <span class="keyword">case</span> R.id.button:</span><br><span class="line">            <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    <span class="comment">// 我笔记本的IP为192.168.31.43</span></span><br><span class="line">                    connectToServer(<span class="string">"192.168.31.43"</span>, <span class="number">6768</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;).start();</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> R.id.hello:</span><br><span class="line">            <span class="keyword">new</span> SendMessThread(<span class="string">"hello"</span>).start();</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> R.id.how:</span><br><span class="line">            <span class="keyword">new</span> SendMessThread(<span class="string">"how are you?"</span>).start();</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> R.id.bye:</span><br><span class="line">            <span class="keyword">new</span> SendMessThread(<span class="string">"bye"</span>).start();</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>运行结果如下：</p><blockquote><p>服务器（笔记本）</p></blockquote><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">服务器在启动中...等待用户的连接</span><br><span class="line">192.168.31.100连接上了！</span><br><span class="line">服务器接收到客户端的数据：客户端:hello</span><br><span class="line">服务器接收到客户端的数据：客户端:how are you?</span><br><span class="line">服务器接收到客户端的数据：客户端:bye</span><br></pre></td></tr></table></figure><blockquote><p>客户端（手机）</p></blockquote><img src="/archives/c75dc4ab/socket.gif"><p>这样就完成了服务器与客户端的对话。</p><h2 id="2-AIDL"><a href="#2-AIDL" class="headerlink" title="2. AIDL"></a>2. AIDL</h2><h2 id="3"><a href="#3" class="headerlink" title="3."></a>3.</h2><h2 id="4"><a href="#4" class="headerlink" title="4."></a>4.</h2></div><div class="popular-posts-header">推荐文章</div><ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><a href="/archives/b0107659.html" rel="bookmark">Android框架-Gson</a></div></li><li class="popular-posts-item"><div class="popular-posts-title"><a href="/archives/d1370632.html" rel="bookmark">Material组件-Snackbar</a></div></li><li class="popular-posts-item"><div class="popular-posts-title"><a href="/archives/2943f9f3.html" rel="bookmark">Android-共享元素动画效果</a></div></li><li class="popular-posts-item"><div class="popular-posts-title"><a href="/archives/bb3604db.html" rel="bookmark">Android-Q适配-存储方式</a></div></li><li class="popular-posts-item"><div class="popular-posts-title"><a href="/archives/4972210c.html" rel="bookmark">Material组件-BottomSheetDialog</a></div></li></ul><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者： </strong>Tao Zhou</li><li class="post-copyright-link"><strong>本文链接：</strong> <a href="http://zhoutao822.coding.me/archives/c75dc4ab.html" title="Android IPC-AIDL、Messenger和Socket">http://zhoutao822.coding.me/archives/c75dc4ab.html</a></li><li class="post-copyright-license"><strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li></ul></div><footer class="post-footer"><div class="post-tags"><a href="/tags/Android/" rel="tag"># Android</a> <a href="/tags/IPC/" rel="tag"># IPC</a> <a href="/tags/AIDL/" rel="tag"># AIDL</a> <a href="/tags/Binder/" rel="tag"># Binder</a> <a href="/tags/Messenger/" rel="tag"># Messenger</a> <a href="/tags/Socket/" rel="tag"># Socket</a> <a href="/tags/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/" rel="tag"># 进程间通信</a></div><div class="post-nav"><div class="post-nav-item"><a href="/archives/686da54d.html" rel="prev" title="Android框架-RxJava"><i class="fa fa-chevron-left"></i> Android框架-RxJava</a></div><div class="post-nav-item"><a href="/archives/8f4a6b8f.html" rel="next" title="LSGAN">LSGAN <i class="fa fa-chevron-right"></i></a></div></div></footer></article></div></div><div class="comments" id="valine-comments"></div><script>window.addEventListener('tabs:register', () => {
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://zhoutao822.coding.me').hostname,
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"mac"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="参考：  Android开发艺术探索  Android系统中的每一个应用都运行在一个各自的进程中，那么不同的应用是如何进行数据交互的呢，大致分为两类，第一类我称之为伪进程间通信，其特征是不同进程都对同一个文件进行操作，数据交互通过此文件，比如两个进程共同读写同一个数据库；第二类我称之为真进程间通信，特征是基于系统级别的Binder进行服务调用从而实现的进程间通信或者Socket，具体细节后面再说。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android IPC-AIDL、Messenger和Socket">
+<meta property="og:url" content="http://zhoutao822.coding.me/archives/c75dc4ab.html">
+<meta property="og:site_name" content="Tao">
+<meta property="og:description" content="参考：  Android开发艺术探索  Android系统中的每一个应用都运行在一个各自的进程中，那么不同的应用是如何进行数据交互的呢，大致分为两类，第一类我称之为伪进程间通信，其特征是不同进程都对同一个文件进行操作，数据交互通过此文件，比如两个进程共同读写同一个数据库；第二类我称之为真进程间通信，特征是基于系统级别的Binder进行服务调用从而实现的进程间通信或者Socket，具体细节后面再说。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://zhoutao822.coding.me/archives/c75dc4ab/socket.gif">
+<meta property="article:published_time" content="2019-07-25T13:41:57.000Z">
+<meta property="article:modified_time" content="2020-01-17T15:07:46.303Z">
+<meta property="article:author" content="Tao Zhou">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="IPC">
+<meta property="article:tag" content="AIDL">
+<meta property="article:tag" content="Binder">
+<meta property="article:tag" content="Messenger">
+<meta property="article:tag" content="Socket">
+<meta property="article:tag" content="进程间通信">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://zhoutao822.coding.me/archives/c75dc4ab/socket.gif">
+
+<link rel="canonical" href="http://zhoutao822.coding.me/archives/c75dc4ab.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Android IPC-AIDL、Messenger和Socket | Tao</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Tao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhoutao822.coding.me/archives/c75dc4ab.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Tao Zhou">
+      <meta itemprop="description" content="学习笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android IPC-AIDL、Messenger和Socket
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-07-25 21:41:57" itemprop="dateCreated datePublished" datetime="2019-07-25T21:41:57+08:00">2019-07-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-17 23:07:46" itemprop="dateModified" datetime="2020-01-17T23:07:46+08:00">2020-01-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/archives/c75dc4ab.html" class="post-meta-item leancloud_visitors" data-flag-title="Android IPC-AIDL、Messenger和Socket" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/archives/c75dc4ab.html#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/archives/c75dc4ab.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>参考：</p>
+<blockquote>
+<p><a href="https://item.m.jd.com/product/11760209.html" target="_blank" rel="noopener">Android开发艺术探索</a></p>
+</blockquote>
+<p>Android系统中的每一个应用都运行在一个各自的进程中，那么不同的应用是如何进行数据交互的呢，大致分为两类，第一类我称之为伪进程间通信，其特征是不同进程都对同一个文件进行操作，数据交互通过此文件，比如两个进程共同读写同一个数据库；第二类我称之为真进程间通信，特征是基于系统级别的Binder进行服务调用从而实现的进程间通信或者Socket，具体细节后面再说。</p>
+<a id="more"></a>
+
+<h2 id="1-Socket"><a href="#1-Socket" class="headerlink" title="1. Socket"></a>1. Socket</h2><p>首先了解一下Socket，Socket是对TCP和UDP协议的封装，通过Socket建立的连接可以实现互联网中任意两个进程间的通信，不仅限于局域网或者单机多进程，而我们仅需要确定的是设备的IP和监听的端口号，下面看看Socket是如何实现局域网内从手机传数据到笔记本上。</p>
+<p>Socket的使用分为服务端和客户端，服务端需要监听自己设定的端口，客户端需要知道服务端的IP和服务端监听的端口，两者通过Socket建立连接，然后以数据流的形式通过Socket传输数据。</p>
+<p>首先是服务端，在笔记本上运行的代码，同时需要知道笔记本的IP地址（笔记本和手机在同一局域网中）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 自定义线程Server</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Server</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">    ServerSocket server = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Server</span><span class="params">(<span class="keyword">int</span> port)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Server线程初始化需要指定端口号，且服务端使用ServerSocket建立连接</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            server = <span class="keyword">new</span> ServerSocket(port);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.run();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">"服务器在启动中...等待用户的连接"</span>);</span><br><span class="line">            <span class="comment">// 一直接收用户的连接，连接之后发送一条短信给用户</span></span><br><span class="line">            <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">                <span class="comment">// 建立socket接口，accept方法是一个阻塞进程,等到有用户连接才往下走</span></span><br><span class="line">                <span class="comment">// 定义Socket类</span></span><br><span class="line">                Socket socket = server.accept();</span><br><span class="line">                <span class="comment">// 通过socket对象可以获得输出流，用来写数据</span></span><br><span class="line">                OutputStream os = socket.getOutputStream();</span><br><span class="line">                <span class="comment">// 向客户端发送消息</span></span><br><span class="line">                os.write(<span class="string">"服务器正在向你发送消息！"</span>.getBytes());</span><br><span class="line">                <span class="comment">// 在服务器上显示连接的上的电脑、</span></span><br><span class="line">                System.out.println(socket.getInetAddress().getHostAddress() + <span class="string">"连接上了！"</span>);</span><br><span class="line">                <span class="comment">// 通过socket对象可以获得输入流，用来读取用户数据</span></span><br><span class="line">                InputStream is = socket.getInputStream();</span><br><span class="line">                <span class="comment">// 读取数据</span></span><br><span class="line">                <span class="keyword">int</span> len = <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">byte</span>[] buf = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">                <span class="keyword">while</span> ((len = is.read(buf)) != -<span class="number">1</span>) &#123;</span><br><span class="line">                    <span class="comment">// 直接把获得的数据打印出来</span></span><br><span class="line">                    String msgFromClient = <span class="keyword">new</span> String(buf, <span class="number">0</span>, len);</span><br><span class="line">                    System.out.println(<span class="string">"服务器接收到客户端的数据："</span> + msgFromClient);</span><br><span class="line">                    <span class="comment">// 根据客户端传来的数据，我们再返回数据给客户端</span></span><br><span class="line">                    <span class="keyword">if</span> (msgFromClient.contains(<span class="string">"hello"</span>)) &#123;</span><br><span class="line">                        os.write(<span class="string">"hello too!!"</span>.getBytes());</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (msgFromClient.contains(<span class="string">"are"</span>)) &#123;</span><br><span class="line">                        os.write(<span class="string">"I'm fine."</span>.getBytes());</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (msgFromClient.contains(<span class="string">"bye"</span>)) &#123;</span><br><span class="line">                        os.write(<span class="string">"Bye!"</span>.getBytes());</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                os.flush();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在main函数中启用即可，这里选择监听的端口为6768</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServerTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 这里服务器只需要定义一个端口号就可以了，程序会自动获取IP地址</span></span><br><span class="line">        <span class="comment">// 但是客户端需要连接这个服务器时，需要知道它的IP地址还有端口号</span></span><br><span class="line">        <span class="comment">// ip地址的查看方法：进入cmd窗口，输入ipconfig/all可以看到</span></span><br><span class="line">        Server server = <span class="keyword">new</span> Server(<span class="number">6768</span>);</span><br><span class="line">        server.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后是客户端的设计，需要权限<code>&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;</code></p>
+<blockquote>
+<p>1.简单布局</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> <span class="keyword">implements</span> <span class="title">View</span>.<span class="title">OnClickListener</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Socket socket = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> TextView textView;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        Button button = findViewById(R.id.button);</span><br><span class="line">        button.setOnClickListener(<span class="keyword">this</span>);</span><br><span class="line">        Button button1 = findViewById(R.id.hello);</span><br><span class="line">        button1.setOnClickListener(<span class="keyword">this</span>);</span><br><span class="line">        Button button2 = findViewById(R.id.how);</span><br><span class="line">        button2.setOnClickListener(<span class="keyword">this</span>);</span><br><span class="line">        Button button3 = findViewById(R.id.bye);</span><br><span class="line">        button3.setOnClickListener(<span class="keyword">this</span>);</span><br><span class="line">        textView = findViewById(R.id.textView);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>2.定义连接Socket的方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">connectToServer</span><span class="params">(String host, <span class="keyword">int</span> port)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 需要的参数是IP和端口号，就是局域网中你的笔记本的IP和监听的端口号，对应上文的6768</span></span><br><span class="line">    <span class="keyword">while</span> (socket == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 建立连接</span></span><br><span class="line">            socket = <span class="keyword">new</span> Socket(host, port);</span><br><span class="line">            <span class="comment">// 读socket里面的数据</span></span><br><span class="line">            InputStream s = socket.getInputStream();</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">byte</span>[] buf = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">            <span class="keyword">int</span> len = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span> ((len = s.read(buf)) != -<span class="number">1</span>) &#123;</span><br><span class="line">                <span class="keyword">final</span> <span class="keyword">int</span> finalLen = len;</span><br><span class="line">                <span class="comment">// 在主线程中更新读取的数据</span></span><br><span class="line">                runOnUiThread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                        textView.setText(<span class="keyword">new</span> String(buf, <span class="number">0</span>, finalLen));</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>3.创建发送数据到服务器的线程</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SendMessThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String message;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SendMessThread</span><span class="params">(String message)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.message = message;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.run();</span><br><span class="line">        <span class="comment">//写操作</span></span><br><span class="line">        <span class="keyword">if</span> (socket != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// 向Socket中的OutputStream写数据即可</span></span><br><span class="line">                OutputStream os = socket.getOutputStream();</span><br><span class="line">                os.write((<span class="string">"客户端:"</span> + message).getBytes());</span><br><span class="line">                os.flush();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>4.最后是点击事件的处理</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">switch</span> (v.getId()) &#123;</span><br><span class="line">        <span class="keyword">case</span> R.id.button:</span><br><span class="line">            <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    <span class="comment">// 我笔记本的IP为192.168.31.43</span></span><br><span class="line">                    connectToServer(<span class="string">"192.168.31.43"</span>, <span class="number">6768</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;).start();</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> R.id.hello:</span><br><span class="line">            <span class="keyword">new</span> SendMessThread(<span class="string">"hello"</span>).start();</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> R.id.how:</span><br><span class="line">            <span class="keyword">new</span> SendMessThread(<span class="string">"how are you?"</span>).start();</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> R.id.bye:</span><br><span class="line">            <span class="keyword">new</span> SendMessThread(<span class="string">"bye"</span>).start();</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果如下：</p>
+<blockquote>
+<p>服务器（笔记本）</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">服务器在启动中...等待用户的连接</span><br><span class="line">192.168.31.100连接上了！</span><br><span class="line">服务器接收到客户端的数据：客户端:hello</span><br><span class="line">服务器接收到客户端的数据：客户端:how are you?</span><br><span class="line">服务器接收到客户端的数据：客户端:bye</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>客户端（手机）</p>
+</blockquote>
+<img src="/archives/c75dc4ab/socket.gif" class="">
+
+<p>这样就完成了服务器与客户端的对话。</p>
+<h2 id="2-AIDL"><a href="#2-AIDL" class="headerlink" title="2. AIDL"></a>2. AIDL</h2><h2 id="3"><a href="#3" class="headerlink" title="3."></a>3.</h2><h2 id="4"><a href="#4" class="headerlink" title="4."></a>4.</h2>
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">推荐文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/b0107659.html" rel="bookmark">Android框架-Gson</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/d1370632.html" rel="bookmark">Material组件-Snackbar</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/2943f9f3.html" rel="bookmark">Android-共享元素动画效果</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/bb3604db.html" rel="bookmark">Android-Q适配-存储方式</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/e182bde6.html" rel="bookmark">Material组件-Menu</a></div>
+    </li>
+  </ul>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Tao Zhou
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhoutao822.coding.me/archives/c75dc4ab.html" title="Android IPC-AIDL、Messenger和Socket">http://zhoutao822.coding.me/archives/c75dc4ab.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/IPC/" rel="tag"># IPC</a>
+              <a href="/tags/AIDL/" rel="tag"># AIDL</a>
+              <a href="/tags/Binder/" rel="tag"># Binder</a>
+              <a href="/tags/Messenger/" rel="tag"># Messenger</a>
+              <a href="/tags/Socket/" rel="tag"># Socket</a>
+              <a href="/tags/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/" rel="tag"># 进程间通信</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/archives/686da54d.html" rel="prev" title="Android框架-RxJava">
+      <i class="fa fa-chevron-left"></i> Android框架-RxJava
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/archives/8f4a6b8f.html" rel="next" title="LSGAN">
+      LSGAN <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
     let activeClass = CONFIG.comments.activeClass;
     if (CONFIG.comments.storage) {
       activeClass = localStorage.getItem('comments_active') || activeClass;
@@ -16,7 +454,120 @@
       let commentClass = event.target.classList[1];
       localStorage.setItem('comments_active', commentClass);
     });
-  }</script></div><div class="toggle sidebar-toggle"><span class="toggle-line toggle-line-first"></span> <span class="toggle-line toggle-line-middle"></span> <span class="toggle-line toggle-line-last"></span></div><aside class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc">文章目录</li><li class="sidebar-nav-overview">站点概览</li></ul><div class="post-toc-wrap sidebar-panel"><div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Socket"><span class="nav-text">1. Socket</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-AIDL"><span class="nav-text">2. AIDL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3"><span class="nav-text">3.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4"><span class="nav-text">4.</span></a></li></ol></div></div><div class="site-overview-wrap sidebar-panel"><div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"><img class="site-author-image" itemprop="image" alt="Tao Zhou" src="/images/avatar.jpg"><p class="site-author-name" itemprop="name">Tao Zhou</p><div class="site-description" itemprop="description">学习笔记</div></div><div class="site-state-wrap motion-element"><nav class="site-state"><div class="site-state-item site-state-posts"><a href="/archives/"><span class="site-state-item-count">61</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"><a href="/categories/"><span class="site-state-item-count">6</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"><a href="/tags/"><span class="site-state-item-count">126</span> <span class="site-state-item-name">标签</span></a></div></nav></div><div class="cc-license motion-element" itemprop="license"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a></div></div></div></aside><div id="sidebar-dimmer"></div></div></main><footer class="footer"><div class="footer-inner"><div class="copyright">&copy; <span itemprop="copyrightYear">2020</span> <span class="with-love"><i class="fa fa-user"></i> </span><span class="author" itemprop="copyrightHolder">Tao Zhou</span> <span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-area-chart"></i> </span><span title="站点总字数">897k</span> <span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-coffee"></i> </span><span title="站点阅读时长">13:36</span></div><div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0</div><span class="post-meta-divider">|</span><div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.0</div><script>function leancloudSelector(url) {
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Socket"><span class="nav-text">1. Socket</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-AIDL"><span class="nav-text">2. AIDL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3"><span class="nav-text">3.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4"><span class="nav-text">4.</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Tao Zhou"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Tao Zhou</p>
+  <div class="site-description" itemprop="description">学习笔记</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">61</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">126</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tao Zhou</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">897k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">13:36</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
     url = encodeURI(url);
     return document.getElementById(url).querySelector('.leancloud-visitors-count');
   }
@@ -105,7 +656,61 @@
       } else if (document.querySelectorAll('.post-title-link').length >= 1) {
         showTime(Counter);
       }
-    });</script></div></footer></div><script src="/lib/anime.min.js"></script><script src="/lib/velocity/velocity.min.js"></script><script src="/lib/velocity/velocity.ui.min.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/pisces.js"></script><script src="/js/next-boot.js"></script><script src="/js/local-search.js"></script><script>NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+    });
+  </script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
   NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
     var GUEST = ['nick', 'mail', 'link'];
     var guest = 'nick,mail,link';
@@ -129,4 +734,8 @@
       serverURLs: ''
     });
   }, window.Valine);
-});</script></body></html><!-- rebuild by neat -->
+});
+</script>
+
+</body>
+</html>
