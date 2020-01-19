@@ -493,15 +493,15 @@
     
       <category term="Material" scheme="http://zhoutao822.coding.me/tags/Material/"/>
     
+      <category term="ViewPager" scheme="http://zhoutao822.coding.me/tags/ViewPager/"/>
+    
+      <category term="RecyclerView" scheme="http://zhoutao822.coding.me/tags/RecyclerView/"/>
+    
       <category term="ToolBar" scheme="http://zhoutao822.coding.me/tags/ToolBar/"/>
     
       <category term="ContextMenu" scheme="http://zhoutao822.coding.me/tags/ContextMenu/"/>
     
       <category term="PopupMenu" scheme="http://zhoutao822.coding.me/tags/PopupMenu/"/>
-    
-      <category term="RecyclerView" scheme="http://zhoutao822.coding.me/tags/RecyclerView/"/>
-    
-      <category term="ViewPager" scheme="http://zhoutao822.coding.me/tags/ViewPager/"/>
     
       <category term="onClick" scheme="http://zhoutao822.coding.me/tags/onClick/"/>
     
@@ -619,11 +619,11 @@
     
       <category term="Material" scheme="http://zhoutao822.coding.me/tags/Material/"/>
     
-      <category term="RecyclerView" scheme="http://zhoutao822.coding.me/tags/RecyclerView/"/>
+      <category term="BottomSheetDialog" scheme="http://zhoutao822.coding.me/tags/BottomSheetDialog/"/>
     
       <category term="ViewPager" scheme="http://zhoutao822.coding.me/tags/ViewPager/"/>
     
-      <category term="BottomSheetDialog" scheme="http://zhoutao822.coding.me/tags/BottomSheetDialog/"/>
+      <category term="RecyclerView" scheme="http://zhoutao822.coding.me/tags/RecyclerView/"/>
     
   </entry>
   

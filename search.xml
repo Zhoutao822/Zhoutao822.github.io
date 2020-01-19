@@ -1969,11 +1969,11 @@
       <tags>
         <tag>Android</tag>
         <tag>Material</tag>
+        <tag>ViewPager</tag>
+        <tag>RecyclerView</tag>
         <tag>ToolBar</tag>
         <tag>ContextMenu</tag>
         <tag>PopupMenu</tag>
-        <tag>RecyclerView</tag>
-        <tag>ViewPager</tag>
         <tag>onClick</tag>
         <tag>onLongClick</tag>
         <tag>onTouchEvent</tag>
@@ -2494,9 +2494,9 @@
       <tags>
         <tag>Android</tag>
         <tag>Material</tag>
-        <tag>RecyclerView</tag>
-        <tag>ViewPager</tag>
         <tag>BottomSheetDialog</tag>
+        <tag>ViewPager</tag>
+        <tag>RecyclerView</tag>
       </tags>
   </entry>
   <entry>
@@ -4330,8 +4330,8 @@
 <h2 id="1-DNN-HMM混合系统"><a href="#1-DNN-HMM混合系统" class="headerlink" title="1. DNN-HMM混合系统"></a>1. DNN-HMM混合系统</h2><p>在前面的<code>语音识别-GMM</code>和<code>语音识别-HMM</code>中我们已经知道了，对于音频数据，经过提取特征处理后，通过GMM得到状态，然后通过HMM描述语音信号的动态变化，以预测输出。得益于DNN强大的表现学习能力，使用DNN替代GMM用于估计观察特征的概率，这样的语音识别系统性能远优于传统的GMM-HMM系统。</p>
 <a id="more"></a>
 
-<h3 id="1-1-结构"><a href="#1-1-结构" class="headerlink" title="1.1 结构"></a>1.1 结构</h3>
-
+<h3 id="1-1-结构"><a href="#1-1-结构" class="headerlink" title="1.1 结构"></a>1.1 结构</h3><!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/0db2c447fb5d8b64e.png" alt="0db2c447fb5d8b64e.png"></p>
 <p>HMM对语音信号的序列特性进行建模，DNN对所有聚类后的状态（聚类后的三音素状态）的<strong>似然度</strong>进行建模。</p>
 <p>在给定声学观察特征的条件下，我们用DNN的每个输出节点来估计连续密度HMM的某个状态的后验概率（类似于DNN的softmax输出，包括所有状态的概率，取最大值对应的状态）。DNN-HMM有两个额外的好处：训练过程可以使用维特比算法，解码通常也非常高效。</p>
 <p>对上下文相关因素的后验概率建模为</p>
@@ -4382,15 +4382,8 @@
 
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"><span class="comment"># ==============================================================================</span></span><br><span class="line"><span class="string">"""数据清洗</span></span><br><span class="line"><span class="string">版本：</span></span><br><span class="line"><span class="string">    Python：3.6.7</span></span><br><span class="line"><span class="string">参考：</span></span><br><span class="line"><span class="string">    https://www.gushiwen.org/</span></span><br><span class="line"><span class="string">将爬取到的古诗词数据进行清洗，包括content注释部分的清除，特殊符号的清除，换行符等清除，</span></span><br><span class="line"><span class="string">最终目标是将content转换为一行的仅包含中文、标点符号的内容。</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="comment">#%%</span></span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="comment"># read_csv不能直接读路径，需要赋给path再读，很奇怪</span></span><br><span class="line">path = <span class="string">r'E:\pythonprojects\craft\code\RNN\shici.csv'</span></span><br><span class="line">df = pd.read_csv(path)</span><br><span class="line">df.head(<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># VSCode使用#%%可以将代码划分为cell，直接可以运行，等同于jupyter notebook</span></span><br><span class="line"><span class="comment">#%%</span></span><br><span class="line"><span class="comment"># 需要将content中的一些特殊符号删掉或者转换为其他字符，比如换行符\n删掉，</span></span><br><span class="line"><span class="comment"># 各种括号转换为英文括号然后通过正则式删除，需要使用re进行转换</span></span><br><span class="line">symbol_dict = &#123;<span class="string">'\n'</span>: <span class="string">''</span>, <span class="string">' '</span>: <span class="string">''</span>, <span class="string">'\u3000'</span>: <span class="string">''</span>, <span class="string">'\ue112'</span>: <span class="string">''</span>, <span class="string">'\ue83d'</span>: <span class="string">''</span>,</span><br><span class="line">    <span class="string">'\ue85d'</span>: <span class="string">''</span>, <span class="string">'\ue85f'</span>: <span class="string">''</span>, <span class="string">'〖'</span>: <span class="string">''</span>, <span class="string">'𬞞'</span>: <span class="string">''</span>, <span class="string">'②'</span>: <span class="string">''</span>,</span><br><span class="line">    <span class="string">'■'</span>: <span class="string">''</span>, <span class="string">'□'</span>: <span class="string">''</span>, <span class="string">'◇'</span>: <span class="string">''</span>, <span class="string">'#'</span>: <span class="string">''</span>, <span class="string">'＊'</span>: <span class="string">''</span>, <span class="string">'＿'</span>: <span class="string">''</span>,</span><br><span class="line">    <span class="string">'&lt;'</span>: <span class="string">''</span>, <span class="string">'&gt;'</span>: <span class="string">''</span>, <span class="string">'¤'</span>: <span class="string">''</span>, <span class="string">'á'</span>: <span class="string">''</span>, <span class="string">'è'</span>: <span class="string">''</span>, <span class="string">'ì'</span>: <span class="string">''</span>,</span><br><span class="line">    <span class="string">'í'</span>: <span class="string">''</span>, <span class="string">'ù'</span>: <span class="string">''</span>, <span class="string">'—'</span>: <span class="string">''</span>, <span class="string">'﹑'</span>: <span class="string">','</span>, <span class="string">'!'</span>: <span class="string">'！'</span>, <span class="string">':'</span>: <span class="string">'：'</span>,</span><br><span class="line">    <span class="string">'．'</span>: <span class="string">'.'</span>, <span class="string">'?'</span>: <span class="string">'？'</span>, <span class="string">'‘'</span>: <span class="string">"'"</span>, <span class="string">','</span>: <span class="string">'，'</span>, <span class="string">'.'</span>: <span class="string">'。'</span>, </span><br><span class="line">    <span class="string">'’'</span>: <span class="string">"'"</span>, <span class="string">'“'</span>: <span class="string">'"'</span>, <span class="string">'”'</span>: <span class="string">'"'</span>, <span class="string">';'</span>: <span class="string">'；'</span>, <span class="string">'（'</span>: <span class="string">'('</span>, <span class="string">'）'</span>: <span class="string">')'</span>,</span><br><span class="line">    <span class="string">'【'</span>: <span class="string">'('</span>, <span class="string">'】'</span>: <span class="string">')'</span>, <span class="string">'〔'</span>: <span class="string">'('</span>, <span class="string">'〕'</span>: <span class="string">')'</span>, <span class="string">'·'</span>: <span class="string">''</span>&#125;</span><br><span class="line"><span class="comment"># 生成re的pattern，symbol_format是处理特殊字符替换的pattern</span></span><br><span class="line">rep = &#123;re.escape(k): v <span class="keyword">for</span> k, v <span class="keyword">in</span> symbol_dict.items()&#125;</span><br><span class="line">symbol_format = re.compile(<span class="string">'|'</span>.join(rep.keys()))</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">process_data</span><span class="params">(data)</span>:</span></span><br><span class="line">    <span class="string">"""利用正则式以及re处理数据，结合DataFrame.apply使用</span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        data: 输入数据str</span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">        data: 处理完成后的数据str</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="comment"># 第一步特殊字符转换</span></span><br><span class="line">    data = symbol_format.sub(<span class="keyword">lambda</span> x: rep[re.escape(x.group(<span class="number">0</span>))], data)</span><br><span class="line">    <span class="comment"># 第二步删除括号及括号中的所有内容</span></span><br><span class="line">    data = re.sub(<span class="string">u"\\&#123;.*?\\&#125;|\\[.*?\\]|\\(.*?\\)"</span>, <span class="string">""</span>, data)</span><br><span class="line">    <span class="comment"># 第三步删除大小写字母及数字</span></span><br><span class="line">    data = re.sub(<span class="string">r'[a-zA-Z0-9]+'</span>, <span class="string">''</span>, data)</span><br><span class="line">    <span class="keyword">return</span> data</span><br><span class="line"><span class="comment"># 依照上述过程清洗数据，使用apply</span></span><br><span class="line">df[<span class="string">'content'</span>] = df[<span class="string">'content'</span>].apply(process_data)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将清洗完成后的content转换为set和list，set用于确定字典，list用于确定特征向量</span></span><br><span class="line"><span class="comment"># 这里就直接保存在原始数据中了，便于对比</span></span><br><span class="line">set_format = <span class="keyword">lambda</span> x: set(x)</span><br><span class="line">list_format = <span class="keyword">lambda</span> x: list(x)</span><br><span class="line"></span><br><span class="line">df[<span class="string">'content_set'</span>] = df[<span class="string">'content'</span>].map(set_format)</span><br><span class="line">df[<span class="string">'content_list'</span>] = df[<span class="string">'content'</span>].map(list_format)</span><br><span class="line">df.head(<span class="number">5</span>)</span><br><span class="line"><span class="comment">#%%</span></span><br><span class="line">df.to_csv(<span class="string">'data.csv'</span>, index=<span class="number">0</span>) <span class="comment"># index=0表示不保存索引</span></span><br></pre></td></tr></table></figure>
 
-
-
-
-
-
-
-
-
-
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/09b4f5b23d50bed18.png" alt="09b4f5b23d50bed18.png"></p>
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/13264cee7ad8e879c.png" alt="13264cee7ad8e879c.png"></p>
 ]]></content>
       <categories>
         <category>Coding</category>
@@ -4510,8 +4503,8 @@
 </ul>
 <p>其中最常用的是平方损失，然而其缺点是对于异常点会施以较大的惩罚，因而不够robust。如果有较多异常点，则绝对值损失表现较好，但绝对值损失的缺点是在$y−f(\boldsymbol{x})=0$处不连续可导，因而不容易优化。</p>
 <p>Huber损失是对二者的综合，当$|y−f(\boldsymbol{x})|$小于一个事先指定的值$delta$时，变为平方损失，大于$delta$时，则变成类似于绝对值损失，因此也是比较robust的损失函数。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/0554cfeb35d912975.png" alt="0554cfeb35d912975.png"></p>
 <h3 id="11-2-分类问题"><a href="#11-2-分类问题" class="headerlink" title="11.2 分类问题"></a>11.2 分类问题</h3><p>对于二分类问题，$y \in {−1,+1}$，损失函数常表示为关于$yf(\boldsymbol{x})$的单调递减形式。$yf(\boldsymbol{x})$ 被称为$margin$，其作用类似于回归问题中的残差$y−f(\boldsymbol{x})$。</p>
 <ul>
 <li>0-1损失</li>
@@ -4538,11 +4531,12 @@
 </ul>
 <p>$$<br>L(y,f(\boldsymbol{x})) = \left {\begin{matrix} max(0,1-yf(\boldsymbol{x}))^2 \qquad if ;;yf(\boldsymbol{x})\geq-1 \ \qquad-4yf(\boldsymbol{x}) \qquad\qquad;; if;; yf(\boldsymbol{x})&lt;-1\end{matrix}\right.\qquad<br>$$</p>
 <p>modified huber loss结合了hinge loss和logistic loss的优点，既能在$yf(\boldsymbol{x})&gt;1$时产生稀疏解提高训练效率，又能进行概率估计。另外其对于$(yf(\boldsymbol{x})&lt;−1)$ 样本的惩罚以线性增加，这意味着受异常点的干扰较少，比较robust。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/189e05fbe446cc434.png" alt="189e05fbe446cc434.png"></p>
 <p>从上图可以看出上面介绍的这些损失函数都可以看作是0-1损失的单调连续近似函数，而因为这些损失函数通常是凸的连续函数，因此常用来代替0-1损失进行优化。它们的相同点是都随着$margin \rightarrow - \infty$而加大惩罚；不同点在于，logistic loss和hinge loss都是线性增长，而exponential loss是以指数增长。</p>
 <p>值得注意的是上图中modified huber loss的走向和exponential loss差不多，并不能看出其robust的属性。其实这和算法时间复杂度一样，成倍放大了之后才能体现出巨大差异：</p>
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/27e17cc3eb44fa376.png" alt="27e17cc3eb44fa376.png"></p>
 ]]></content>
       <categories>
         <category>Deep Learning</category>
@@ -4573,14 +4567,14 @@
 
 <p>线性激活函数，输出和输入成比例。线性激活函数的问题在于，它的导数是常数，梯度也是常数，梯度下降无法工作。</p>
 <p>$$<br>f(x) = x<br>$$</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/linear22dc05c43fe34722.png" alt="linear22dc05c43fe34722.png"></p>
 <h2 id="2-elu"><a href="#2-elu" class="headerlink" title="2. elu"></a>2. elu</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tf.keras.activations.elu(</span><br><span class="line">    x,</span><br><span class="line">    alpha&#x3D;1.0</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 
 <p>ELU（Exponential Linear Unit，指数线性单元）尝试加快学习速度。基于ELU，有可能得到比ReLU更高的分类精确度。这里$\alpha$是一个超参数（限制：$\alpha \geqslant 0$）。</p>
 <p>$$<br>f(x) =<br>\left{\begin{matrix}<br>\alpha(e^x-1), \quad  x &lt; 0\<br>x, \quad    x \geqslant 0<br>\end{matrix}\right.<br>$$</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/elu.png" alt="elu.png"></p>
 <h2 id="3-hard-sigmoid"><a href="#3-hard-sigmoid" class="headerlink" title="3. hard_sigmoid"></a>3. hard_sigmoid</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tf.keras.activations.hard_sigmoid(x)</span><br></pre></td></tr></table></figure>
 
 <p>比sigmoid函数计算更快</p>
@@ -4592,24 +4586,24 @@
 <p>默认情况导数</p>
 <p>$$<br>f’(x) =<br>\left{\begin{matrix}<br>0, \quad  x &lt; 0\<br>1, \quad    x \geqslant 0<br>\end{matrix}\right.<br>$$</p>
 <p>不幸的是，ReLU在训练时可能很脆弱，可能“死亡”。例如，通过ReLU神经元的较大梯度可能导致权重更新过头，导致神经元再也不会因为任何数据点激活。如果这一情况发生了，经过这一单元的梯度从此以后将永远为零。也就是说，ReLU单元可能在训练中不可逆地死亡，因为它们被从数据流形上踢出去了。例如，你可能发现，如果学习率设置过高，40%的网络可能“死亡”（即神经元在整个训练数据集上永远不会激活）。设置一个合适的学习率可以缓解这一问题。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/relu.png" alt="relu.png"></p>
 <h3 id="4-1-Leaky-ReLU函数"><a href="#4-1-Leaky-ReLU函数" class="headerlink" title="4.1 Leaky ReLU函数"></a>4.1 Leaky ReLU函数</h3><p>Leaky ReLU让单元未激活时能有一个很小的非零梯度。这里，很小的非零梯度是0.01。</p>
 <p>$$<br>f(x) =<br>\left{\begin{matrix}<br>0.01x, \quad  x &lt; 0\<br>x, \quad    x \geqslant 0<br>\end{matrix}\right.<br>$$</p>
 <p>导数</p>
 <p>$$<br>f’(x) =<br>\left{\begin{matrix}<br>0.01, \quad  x &lt; 0\<br>1, \quad    x \geqslant 0<br>\end{matrix}\right.<br>$$</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/leaky.png" alt="leaky.png"></p>
 <h3 id="4-2-PReLU函数"><a href="#4-2-PReLU函数" class="headerlink" title="4.2 PReLU函数"></a>4.2 PReLU函数</h3><p>PReLU（Parametric Rectified Linear Unit）函数类似Leaky ReLU，只不过将系数（很小的非零梯度）作为激活函数的参数，该参数和网络的其他参数一样，在训练过程中学习。</p>
 <p>$$<br>f(x) =<br>\left{\begin{matrix}<br>\alpha x, \quad  x &lt; 0\<br>x, \quad    x \geqslant 0<br>\end{matrix}\right.<br>$$</p>
 <h3 id="4-3-RReLU函数"><a href="#4-3-RReLU函数" class="headerlink" title="4.3 RReLU函数"></a>4.3 RReLU函数</h3><p>RReLU也类似Leaky ReLU，只不过系数（较小的非零梯度）在训练中取一定范围内的随机值，在测试时固定。</p>
 <p>$$<br>f(x_{ij}) =<br>\left{\begin{matrix}<br>\alpha_{ij} x_{ij}, \quad  x &lt; 0\<br>x_{ij}, \quad    x \geqslant 0<br>\end{matrix}\right.<br>$$</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/rand.png" alt="rand.png"></p>
 <h3 id="4-4-SReLU函数"><a href="#4-4-SReLU函数" class="headerlink" title="4.4 SReLU函数"></a>4.4 SReLU函数</h3><p>SReLU（S-shaped Rectified Linear Activation Unit，S型修正线性激活单元）由三个分段线性函数组成。系数$t_l, a_l, t_r, a_r$作为参数，将在网络训练中学习。</p>
 <p>$$<br>f_{t_l, a_l, t_r, a_r}(x) =<br>\left{\begin{matrix}<br>t_l + a_l(x - t_l), \quad  x \leqslant t_l\<br>x \quad t_l &lt; x &lt; t_r \<br>t_r + a_r(x - t_r), \quad    x \geqslant t_r<br>\end{matrix}\right.<br>$$</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/srelu.png" alt="srelu.png"></p>
 <h2 id="5-selu"><a href="#5-selu" class="headerlink" title="5. selu"></a>5. selu</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tf.keras.activations.selu(x)</span><br></pre></td></tr></table></figure>
 
 <p>SELU（Scaled Exponential Linear Unit，拉伸指数线性单元）是ELU经过拉伸的版本。</p>
@@ -4621,16 +4615,16 @@
 <p>$$<br>f(x) = \frac{1}{1 + e^{-x}}<br>$$</p>
 <p>导数为</p>
 <p>$$<br>f’(x) = f(x)(1-f(x))<br>$$</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/sigmoid.png" alt="sigmoid.png"></p>
 <h2 id="7-softmax"><a href="#7-softmax" class="headerlink" title="7. softmax"></a>7. softmax</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tf.keras.activations.softmax(</span><br><span class="line">    x,</span><br><span class="line">    axis&#x3D;-1</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 
 <p>softmax函数将原始值转换为后验分布，可用于衡量确定性。类似sigmoid，softmax将每个单元的输出值挤压到0和1之间。不过，softmax同时确保输出的总和等于1。</p>
 <p>$$<br>\sigma(z)<em>j = \frac{e^{z_j}}{\sum^K</em>{k=1}e^{z_k}}<br>$$</p>
 <p>交叉熵对参数的偏导数为</p>
 <p>$$<br>\frac{\partial L}{\partial z_i} = \sigma(z)_i - y_i<br>$$</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/softmax.png" alt="softmax.png"></p>
 <h2 id="8-softplus"><a href="#8-softplus" class="headerlink" title="8. softplus"></a>8. softplus</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tf.keras.activations.softplus(x)</span><br></pre></td></tr></table></figure>
 
 <p>SoftPlus函数的导数为逻辑（logistic）函数。大体上，ReLU和SoftPlus很相似，只不过SoftPlus在接近零处平滑可微。另外，计算ReLU及其导数要比SoftPlus容易很多。</p>
@@ -4647,16 +4641,16 @@
 <p>$$<br>f(x) = \tanh(x) = \frac{2}{1+e^{-2x}} - 1<br>$$</p>
 <p>导数</p>
 <p>$$<br>f’(x) = 1 - (f(x))^2<br>$$</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/tanh.png" alt="tanh.png"></p>
 <h2 id="11-阶跃函数"><a href="#11-阶跃函数" class="headerlink" title="11. 阶跃函数"></a>11. 阶跃函数</h2><p>通常只在单层感知器上有用，单层感知器是神经网络的早期形式，可用于分类线性可分的数据。这些函数可用于二元分类任务。</p>
 <p>$$<br>f(x) =<br>\left{\begin{matrix}<br>0, \quad  x &lt; 0\<br>1, \quad  x \geqslant 0<br>\end{matrix}\right.<br>$$</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/jieyue.png" alt="jieyue.png"></p>
 <h2 id="12-APL函数"><a href="#12-APL函数" class="headerlink" title="12. APL函数"></a>12. APL函数</h2><p>APL（Adaptive Piecewise Linear，自适应分段线性）函数</p>
 <p>$$<br>f(x) = \max(x, 0) + \sum^S_{s=1}a_i^s\max(0, -x+b^s_i)<br>$$</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/apl.png" alt="apl.png"></p>
 <p>选择激活函数时，优先选择ReLU及其变体，而不是sigmoid或tanh。同时ReLU及其变体训练起来更快。如果ReLU导致神经元死亡，使用Leaky ReLU或者ReLU的其他变体。sigmoid和tanh受到消失梯度问题的困扰，不应该在隐藏层中使用。隐藏层使用ReLU及其变体较好。使用容易求导和训练的激活函数。</p>
 ]]></content>
       <categories>
@@ -4826,8 +4820,8 @@
 <p>玻尔兹曼机的学习算法通常基于最大似然，当基于最大似然的学习规则训练时，连接两个单元的特定权重的更新仅取决于这两个单元在不同分布下收集的统计信息：$P_{model}(\boldsymbol{v})$和$\hat{P}<em>{data}(\boldsymbol{v})P</em>{model}(\boldsymbol{h}|\boldsymbol{v})$。网络的其余部分参与塑造这些统计信息，但权重可以在完全不知道网络其余部分的情况下更新。</p>
 <a id="more"></a>
 
-<h3 id="1-2-受限玻尔兹曼机"><a href="#1-2-受限玻尔兹曼机" class="headerlink" title="1.2 受限玻尔兹曼机"></a>1.2 受限玻尔兹曼机</h3>
-
+<h3 id="1-2-受限玻尔兹曼机"><a href="#1-2-受限玻尔兹曼机" class="headerlink" title="1.2 受限玻尔兹曼机"></a>1.2 受限玻尔兹曼机</h3><!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/rbm0.png" alt="rbm0.png"></p>
 <p>RBM是包含一层可观察变量和单层潜变量的无向概率图模型，它是一个二分图，观察层或潜层中的任何单元之间不允许存在连接。令观察层由一组$n_v$个二值随机变量组成，我们统称为向量$\boldsymbol{v} \in {0, 1}^{n_v \times 1}$。我们将$n_h$个二值随机变量的潜在或隐藏层记为$\boldsymbol{h} \in {0, 1}^{n_h \times 1}$，$\boldsymbol{b}\in {0, 1}^{n_v \times 1}$和$\boldsymbol{c} \in {0, 1}^{n_h \times 1}$分别是可见层和隐藏层的偏置向量。其能量函数为</p>
 <p>$$<br>E(\boldsymbol{v}, \boldsymbol{h}) = -\boldsymbol{b}^T\boldsymbol{v} - \boldsymbol{c}^T\boldsymbol{h} - \boldsymbol{v}^T\boldsymbol{W}\boldsymbol{h}<br>$$</p>
 <p>若$\boldsymbol{v} \in \mathbb{R}^{n_v \times1}$，即可见层取实值，则能量函数变为</p>
@@ -5002,8 +4996,8 @@
 <p>23.$end$ $procedure$</p>
 </blockquote>
 <h2 id="2-深度置信网络预训练"><a href="#2-深度置信网络预训练" class="headerlink" title="2. 深度置信网络预训练"></a>2. 深度置信网络预训练</h2><p>预训练的目的是为了初始化某个深度模型，比如DNN的初始值；这是由于神经网络对初始值敏感，不同的初始值可能会导致梯度下降到局部极小，但是通过预训练初始化的DNN在梯度下降过程中更容易达到全局最小。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/dbn.png" alt="dbn.png"></p>
 <p>深度置信网络（深度信念网络）DBN是第一批成功应用到深度架构训练的非卷积模型之一。DBN是从RBM衍生出的深度模型，首先我们知道一个RBM是由一个可见层和一个隐藏层组成的，那么这个隐藏层可以看作是更上一层的RBM的可见层，依此类推，我们就构建出一个深度置信网络DBN，RBM与RBM之间的权重是共享的。在这个网络中，顶层是一个无向图RBM，而下面的层次构成了一个有向图生成模型。</p>
 <p>对于这样一个DBN，我们的训练过程是：对每个数据向量$\boldsymbol{v}$，我们先计算一个隐藏层神经元期望激活值的向量（它等价于概率）$\boldsymbol{h}$；我们把这些隐藏层期望值作为训练数据来训练一个新的RBM（更上一层）。这样，每个RBM的权重都可以用来从前一层的输出中提取特征。一旦我们停止训练，我们就拥有了一个DBN所有层权重的初始值，而这个DBN隐藏层的层数刚好等于我们训练的RBM的数量。这个DBN可以进一步通过wake-sleep算法模型进行精细调整。</p>
 <p>具有$l$个隐藏层的DBN包含$l$个权重矩阵：$\boldsymbol{W}^{(1)},…,\boldsymbol{W}^{(l)}$。同时也包含$l+1$个偏置向量：$\boldsymbol{b}^{(0)},…,\boldsymbol{b}^{(l)}$，其中$\boldsymbol{b}^{(0)}$是可见层的偏置。DBN表示的概率分布由下式给出：</p>
@@ -5071,8 +5065,8 @@
 </blockquote>
 <p>循环神经网络或RNN是一类用于处理序列数据的神经网络。正如卷积网络可以很容易地扩展到具有很大宽度和高度的图像，以及处理大小可变的图像，循环网络可以扩展到更长的序列（比不基于序列的特化网络长得多）。大多数循环网络也能处理可变长度的序列。</p>
 <p>卷积操作允许网络跨时间共享参数，但是浅层的。卷积的输出是一个序列，其中输出中的每一项是相邻几项输入的函数。参数共享的概念体现在每个时间步中使用的相同卷积核。循环神经网络以不同的方式共享参数。输出的每一项是前一项的函数。输出的每一项对先前的输出应用相同的更新规则而产生。这种循环方式导致参数通过很深的计算图共享。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/rnn0.png" alt="rnn0.png"></p>
 <a id="more"></a>
 
 <h2 id="1-展开计算图"><a href="#1-展开计算图" class="headerlink" title="1. 展开计算图"></a>1. 展开计算图</h2><p>计算图是形式化一组计算结构的方式，如那些涉及将输入和参数映射到输出和损失的计算。</p>
@@ -5088,8 +5082,8 @@
 <li>我们可以在每个时间步使用相同参数的相同转移函数$f$。</li>
 </ol>
 <p>这两个因素使得学习在所有时间步和所有序列长度上操作单一的模型$f$是可能的，而不需要在所有可能时间步学习独立的模型$g^{(t)}$。学习单一的共享模型允许泛化到没有见过的序列长度（没有出现在训练集中），并且估计模型所需的训练样本远远少于不带参数共享的模型。</p>
-<h2 id="2-循环神经网络"><a href="#2-循环神经网络" class="headerlink" title="2. 循环神经网络"></a>2. 循环神经网络</h2>
-
+<h2 id="2-循环神经网络"><a href="#2-循环神经网络" class="headerlink" title="2. 循环神经网络"></a>2. 循环神经网络</h2><!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/rnn1.png" alt="rnn1.png"></p>
 <p>从图中可知，循环神经网络使用了三个权重矩阵$\boldsymbol{U, W, V}$，矩阵$\boldsymbol{U}$对输入进行处理，矩阵$\boldsymbol{W}$对状态转移进行处理，矩阵$\boldsymbol{V}$对输出进行处理；非常类似于马尔可夫链。</p>
 <p>循环神经网络的设计模式包括以下几种：</p>
 <ol>
@@ -5109,13 +5103,13 @@
 <p>偏置向量$\boldsymbol{b, c}$分别对应于输入到隐藏和隐藏到输出的连接。我们将一个输入序列映射到相同长度的输出序列。总损失就是所有时间步的损失之和。例如$L^{(t)}$为给定的$\boldsymbol{x}^{(1)},…,\boldsymbol{x}^{(t)}$后$\boldsymbol{y}^{(t)}$的负对数似然，则</p>
 <p>$$<br>L({ \boldsymbol{x}^{(1)},…,\boldsymbol{x}^{(\tau)} }, { \boldsymbol{y}^{(1)},…,\boldsymbol{y}^{(\tau)} })<br>\<br>= \sum_t L^{(t)}<br>\<br>= - \sum_t \log p_{model}(\boldsymbol{y}^{(t)}|{ \boldsymbol{x}^{(1)},…,\boldsymbol{x}^{(t)} })<br>$$</p>
 <p>关于各个参数计算这个损失函数的梯度是计算成本很高的操作。梯度计算涉及执行一次前向传播，接着是由右到左的反向传播。运行时间是$O(\tau)$，并且不能通过并行化来降低，因为前向传播图是固有循序的；每个时间步只能一前一后地计算。前向传播中的各个状态必须保存，直到它们反向传播中被再次使用，因此内存代价也是$O(\tau)$。应用于展开图且代价为$O(\tau)$的反向传播算法称为<strong>通过时间反向传播BPTT</strong>。</p>
-<h3 id="2-2-导师驱动过程和输出循环网络"><a href="#2-2-导师驱动过程和输出循环网络" class="headerlink" title="2.2 导师驱动过程和输出循环网络"></a>2.2 导师驱动过程和输出循环网络</h3>
-
+<h3 id="2-2-导师驱动过程和输出循环网络"><a href="#2-2-导师驱动过程和输出循环网络" class="headerlink" title="2.2 导师驱动过程和输出循环网络"></a>2.2 导师驱动过程和输出循环网络</h3><!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/rnn2.png" alt="rnn2.png"></p>
 <p>这个网络在一个时间步的输出和下一个时间步的隐藏单元间存在循环网络，这就导致了丢失了隐藏单元到隐藏单元间对于序列变化的信息。但是优点在于基于训练集提供的输出的理想值，我们没有必要计算前一时刻的输出，所以我们可以并行计算所有时间步的梯度。</p>
 <p>由输出反馈到模型而产生循环连接的模型可用<strong>导师驱动过程</strong>进行训练。训练模型时，导师驱动过程不再使用最大似然准则，而在时刻$t+1$接收真实值$y^{(t)}$作为输入。我们可以通过检查两个时间步的序列得知这一点。条件最大似然准则是</p>
 <p>$$<br>\log p(\boldsymbol{y}^{(1)},\boldsymbol{y}^{(2)}|\boldsymbol{x}^{(1)},\boldsymbol{x}^{(2)})<br>\<br>\log p(\boldsymbol{y}^{(2)}|\boldsymbol{y}^{(1)},\boldsymbol{x}^{(1)},\boldsymbol{x}^{(2)}) + \log p(\boldsymbol{y}^{(1)}|\boldsymbol{x}^{(1)},\boldsymbol{x}^{(2)})<br>$$</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/rnn3.png" alt="rnn3.png"></p>
 <p>我们使用导师驱动过程的最初动机是为了在缺乏隐藏到隐藏连接的模型中避免通过时间反向传播。只要模型一个时间步的输出与下一时间步计算的值存在连接，导师驱动过程仍然可以应用到这些存在隐藏到隐藏连接的模型。然而，只要隐藏单元成为较早时间步的函数，BPTT算法是必要的。因此训练某些模型时要同时使用导师驱动过程和BPTT。</p>
 <p>如果之后网络在开环 (open-loop) 模式下使用，即网络输出（或输出分布的样本）反馈作为输入，那么完全使用导师驱动过程进行训练的缺点就会出现。如上图所示，训练过程中的反馈与实际部署时的反馈是不同的。</p>
 <p>在这种情况下，训练期间该网络看到的输入与测试时看到的会有很大的不同。减轻此问题的一种方法是同时使用导师驱动过程和自由运行的输入进行训练，例如在展开循环的输出到输入路径上预测几个步骤的正确目标值。</p>
@@ -5139,11 +5133,11 @@
 <h3 id="2-4-作为有向图模型的循环网络"><a href="#2-4-作为有向图模型的循环网络" class="headerlink" title="2.4 作为有向图模型的循环网络"></a>2.4 作为有向图模型的循环网络</h3><p>本节描述没有输入$\boldsymbol{x}$的情况下，RNN如何对应于有向图模型。</p>
 <p>与前馈网络类似，原则上循环网络几乎可以使用任何损失。但必须根据任务来选择损失。如前馈网络，我们通常希望将RNN的输出解释为一个概率分布，并且我们通常使用与分布相关联的交叉熵来定义损失。均方误差是与单位高斯分布的输出相关联的交叉熵损失，例如前馈网络中所使用的。</p>
 <p>若不考虑输入$x$，仅考虑输出$y^{(t)}$与之前序列的关系，我们可以得到一个全连接图模型，这种情况下，计算的是链式条件概率，比较类似马尔可夫链</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/rnn4.png" alt="rnn4.png"></p>
 <p>若考虑引入隐藏的状态变量，则可以利用$\boldsymbol{h}$保存历史的信息，由于参数共享，RNN 的参数数目为$O(1)$且是序列长度的函数。我们可以调节RNN的参数数量来控制模型容量，但不用被迫与序列长度成比例。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/rnn5.png" alt="rnn5.png"></p>
 <p>循环网络为减少的参数数目付出的代价是优化参数可能变得困难。</p>
 <p>在循环网络中使用的参数共享的前提是相同参数可用于不同时间步的假设。也就是说，假设给定时刻$t$的变量后，时刻$t + 1$变量的条件概率分布是平稳的，这意味着之前的时间步与下个时间步之间的关系并不依赖于$t$。虽然$t$可以用作额外的输入。</p>
 <p>为了完整描述将RNN作为图模型的观点，我们必须描述如何从模型采样。我们需要执行的主要操作是简单地从每一时间步的条件分布采样。</p>
@@ -5159,22 +5153,22 @@
 <li>作为初始状态，即根据输入$\boldsymbol{x}$预测后面所有的序列；</li>
 <li>结合两种方式。</li>
 </ol>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/rnn6.png" alt="rnn6.png"></p>
 <p>对于1，输入到隐藏向量之间通过矩阵$\boldsymbol{R}$参数化，这类RNN适用于很多任务如图注，其中单个图像作为模型的输入，然后产生描述图像的词序列。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/rnn7.png" alt="rnn7.png"></p>
 <p>将可变长度的$\boldsymbol{x}$值序列映射到相同长度的$\boldsymbol{y}$值序列上分布的条件循环神经网络。</p>
 <h2 id="3-双向RNN"><a href="#3-双向RNN" class="headerlink" title="3. 双向RNN"></a>3. 双向RNN</h2><p>目前为止考虑的RNN有一种因果结构，即时刻$t$的状态只能从过去的序列$\boldsymbol{x}^{(1)},…,\boldsymbol{x}^{(t-1)}$以及当前输入$\boldsymbol{x}^{(t)}$捕获。或者在$\boldsymbol{y}$可用的情况下允许过去的$\boldsymbol{y}$影响当前状态的模型。</p>
 <p>在许多应用中，输出$\boldsymbol{y}^{(t)}$的预测可能依赖于整个输入序列。可能需要从更远的未来寻找信息区分它们。比如语音识别，音素的判断。</p>
 <p>双向RNN就是这样被发明了。双向RNN结合时间上从序列起点开始移动的RNN和另一个时间上从序列末尾开始移动的RNN。其中$\boldsymbol{h}^{(t)}$代表通过时间向前移动的子RNN的状态，$\boldsymbol{g}^{(t)}$代表通过时间向后移动的子RNN的状态。这允许输出单元$\boldsymbol{o}^{(t)}$能够计算同时依赖于过去和未来且对时刻$t$的输入值最敏感的表示，而不必指定$t$周围固定大小的窗口（这是前馈网络、卷积网络或具有固定大小的先行缓存器的常规RNN所必须要做的）。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/rnn8.png" alt="rnn8.png"></p>
 <p>扩展这个想法到2维输入，如图象，由4个RNN组成，沿四个方向：上下左右。实际上，对于这样的RNN，前向传播公式可以写成表示使用卷积的形式，计算自底向上到每一层的输入（在整合横向相互作用的特征图的循环传播之前）。</p>
 <h2 id="4-基于编码-解码的序列到序列架构"><a href="#4-基于编码-解码的序列到序列架构" class="headerlink" title="4. 基于编码-解码的序列到序列架构"></a>4. 基于编码-解码的序列到序列架构</h2><p>目的将可变长度序列映射到另一可变长度序列。</p>
 <p>我们经常将RNN的输入称为“上下文”。我们希望产生此上下文的表示$C$。这<br>个上下文$C$可能是一个概括输入序列$\boldsymbol{X} = (\boldsymbol{x}^{(1)},…,\boldsymbol{x}^{(n_x)})$的向量或者向量序列。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/rnn9.png" alt="rnn9.png"></p>
 <p>编码-解码或者序列到序列的架构，基本思路：</p>
 <ol>
 <li>编码器或输入RNN处理输入序列，编码器输出上下文$C$（通常是最终隐藏状态的简单函数）；</li>
@@ -5190,16 +5184,16 @@
 <li>从隐藏状态到输出。</li>
 </ol>
 <p>深度RNN，简而言之就是将MLP引入到RNN前向传播过程中与参数矩阵有关的位置。一般来说，简单的RNN的三个参数矩阵$\boldsymbol{U,W,V}$形状应该是$输入向量的维度 \times 输出向量的维度$，若需要保存更多的信息，我们只能简单的靠增加维度来实现，但是这样对运算来说是不合理的，显然，我们可以考虑将DNN引入进来，以增加参数矩阵的深度。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/rnn10.png" alt="rnn10.png"></p>
 <ol>
 <li>如图a，分解隐藏状态的层次；</li>
 <li>如图b，分别对三个参数矩阵应用MLP，这会导致隐藏状态到下一隐藏状态的路径加倍；</li>
 <li>如图c，引入跳跃连接缓解路径问题。</li>
 </ol>
 <h2 id="6-递归神经网络"><a href="#6-递归神经网络" class="headerlink" title="6. 递归神经网络"></a>6. 递归神经网络</h2><p>递归神经网络代表循环网络的另一个扩展，它被构造为深的树状结构而不是RNN的链状结构，因此是不同类型的计算图。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/rnn11.png" alt="rnn11.png"></p>
 <p>这类网络的潜在用途-学习推论。递归网络已成功地应用于输入是数据结构的神经网络。<br>递归网络的一个明显优势是，对于具有相同长度$\tau$的序列，深度（通过非线性操作的组合数量来衡量）可以急剧地从$\tau$减小为$O(\log \tau)$，这可能有助于解决长期依赖。<br>一个悬而未决的问题是如何以最佳的方式构造树。一种选择是使用不依赖于数据的树结构，如平衡二叉树。在某些应用领域，外部方法可以为选择适当的树结构提供借鉴。例如，处理自然语言的句子时，用于递归网络的树结构可以被固定为句子语法分析树的结构（可以由自然语言语法分析程序提供）。理想的情况下，人们希望学习器自行发现和推断适合于任意给定输入的树结构。</p>
 <h2 id="7-长期依赖的挑战"><a href="#7-长期依赖的挑战" class="headerlink" title="7. 长期依赖的挑战"></a>7. 长期依赖的挑战</h2><p>长期依赖的挑战根本问题是，经过许多阶段传播后的梯度倾向于消失（大部分情况）或爆炸（很少，但对优化过程影响很大）。</p>
 <p>循环神经网络所使用的函数组合有点像矩阵乘法，可以认为</p>
@@ -5216,8 +5210,8 @@
 <h2 id="8-回声状态网络"><a href="#8-回声状态网络" class="headerlink" title="8. 回声状态网络"></a>8. 回声状态网络</h2><p>从$\boldsymbol{h}^{(t-1)}$到$\boldsymbol{h}^{(t)}$的循环权重映射以及从$\boldsymbol{x}^{(t)}$到$\boldsymbol{h}^{(t)}$的输入权重映射是循环网络中最难学习的参数。<br>避免这种困难的方法是设定循环隐藏单元，使其能很好地捕捉过去输入历史，并且只学习输出权重。</p>
 <p>回声状态网络ESN以及流体状态机就是基于上述思想的模型。ESN和流体状态机都被称为<strong>储层计算</strong>，因为隐藏单元形成了可能捕获输入历史不同方面的临时特征池。</p>
 <p>储层计算循环网络类似于核机器，这是思考它们的一种方式：它们将任意长度的序列（到时刻$t$的输入历史）映射为一个长度固定的向量（循环状态$\boldsymbol{h}^{(t)}$），之后可以施加一个线性预测算子（通常是一个线性回归）以解决感兴趣的问题。训练准则就可以很容易地设计为输出权重的凸函数。例如，如果输出是从隐藏单元到输出目标的线性回归，训练准则就是均方误差，由于是凸的就可以用简单的学习算法可靠地解决。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/rnn12.png" alt="rnn12.png"></p>
 <p>网络结构依次是输入层、储备池和输出层，所谓的储备池就是中间的部分。这个储备池的特点是: (1)储备池中神经元的连接状态是随机的，即神经元之间是否建立连接并不是我们人工确定的；(2)储备池中的连接权重是固定的，不像传统的MLP网络使用梯度下降进行权重的更新。这样做的好处是：(1)大大降低了训练的计算量；(2)一定程度上避免了梯度下降的优化算法中出现的局部极小情况；(3)此外，在很多问题上确实有着不错的建模能力。ESN的基本思想就是由储备池生成一个随输入不断变化的复杂动态空间，当这个状态空间足够复杂时，就可以利用这些内部状态, 线性地组合处所需要的对应输出~(实际上就是传统的MLP拟合的能力)。</p>
 <p>最初的想法是使状态到状态转换函数的Jacobian矩阵的特征值接近1。循环网络的一个重要特征就是Jacobian矩阵的特征值谱$\boldsymbol{J}^{(t)} = \frac{\partial s^{(t)}}{\partial s^{(t-1)}}$。特别重要的是$\boldsymbol{J}^{(t)}$的<strong>谱半径</strong>，定义为特征值的最大绝对值。</p>
 <p>同理，在矩阵$\boldsymbol{J}$不随$t$改变的简单情况下，矩阵$\boldsymbol{J}$大于1的的特征值会导致偏差指数增大，小于1的会导致偏差变得指数小。</p>
@@ -5226,8 +5220,8 @@
 <p>非线性映射情况时，Jacobian会在每一步任意变化。因此，动态量变得更加复杂。然而，一个小的初始变化多步之后仍然会变成一个大的变化。纯线性和非线性情况的一个不同之处在于使用压缩非线性（如$\tanh$）可以使循环动态量有界。注意，即使前向传播动态量有界，反向传播的动态量仍然可能无界，例如，当$\tanh$序列都在它们状态中间的线性部分，并且由谱半径大于1的权重矩阵连接。然而，所有$\tanh$单元同时位于它们的线性激活点是非常罕见的。</p>
 <p>回声状态网络的策略是简单地固定权重使其具有一定的谱半径如3，其中信息通过时间前向传播，但会由于饱和非线性单元（如$\tanh$）的稳定作用而不会爆炸。</p>
 <p><strong>ESN的构造过程</strong></p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/rnn13.png" alt="rnn13.png"></p>
 <h2 id="9-渗漏单元和其他多时间尺度的策略"><a href="#9-渗漏单元和其他多时间尺度的策略" class="headerlink" title="9. 渗漏单元和其他多时间尺度的策略"></a>9. 渗漏单元和其他多时间尺度的策略</h2><p>处理长期依赖的一种方法是设计工作在多个时间尺度的模型，使模型的某些部分在细粒度时间尺度上操作并能处理小细节，而其他部分在粗时间尺度上操作并能把遥远过去的信息更有效地传递过来。存在多种同时构建粗细时间尺度的策略。这些策略包括在时间轴增加跳跃连接，“渗漏单元”使用不同时间常数整合信号，并去除一些用于建模细粒度时间尺度的连接。</p>
 <h3 id="9-1-时间维度的跳跃连接"><a href="#9-1-时间维度的跳跃连接" class="headerlink" title="9.1 时间维度的跳跃连接"></a>9.1 时间维度的跳跃连接</h3><p>将循环网络延时，从$t$到$t+1$延长到从$t$到$t+d$，那么梯度下降的速度与$\frac{\tau}{d}$相关而不是$\tau$。虽然仍然存在指数爆炸的可能性，但是时间跨度变长了，算法捕捉到更长的依赖性。</p>
 <h3 id="9-2-渗漏单元和一系列不同时间尺度"><a href="#9-2-渗漏单元和一系列不同时间尺度" class="headerlink" title="9.2 渗漏单元和一系列不同时间尺度"></a>9.2 渗漏单元和一系列不同时间尺度</h3><p>渗漏单元：参数更新方式为$\mu^{(t)} \leftarrow \alpha \mu^{(t-1)} + (1-\alpha)v^{(t)}$。其目的是通过一个累积的滑动平均值$\mu^{(t)}$模拟滑动平均，从而达到记住过去的信息，当$\alpha$接近1时，滑动平均值能记住过去很长一段时间的信息，当$\alpha$接近0时，关于过去的信息被迅速丢弃。</p>
@@ -5239,11 +5233,11 @@
 <p>像渗漏单元一样，门控RNN想法也是基于生成通过时间的路径，其中导数既不消失也不发生爆炸。渗漏单元通过手动选择常量的连接权重或参数化的连接权重来达到这一目的。门控RNN将其推广为在每个时间步都可能改变的连接权重。</p>
 <p>渗漏单元允许网络在较长持续时间内积累信息（诸如用于特定特征或类的线索）。然而，一旦该信息被使用，让神经网络遗忘旧的状态可能是有用的。例如，如果一个序列是由子序列组成，我们希望渗漏单元能在各子序列内积累线索，我们需要将状态设置为0以忘记旧状态的机制。我们希望神经网络学会决定何时清除状态，而不是手动决定。这就是门控RNN要做的事。</p>
 <h3 id="10-1-LSTM"><a href="#10-1-LSTM" class="headerlink" title="10.1 LSTM"></a>10.1 LSTM</h3><p>长短期记忆，通过引入自循环以产生梯度长时间持续流动的路径。同时空过另一个隐藏单元实现门控自循环的权重，累积的时间尺度可以动态地改变。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/rnn15.png" alt="rnn15.png"></p>
 <p>LSTM循环网络除了外部的RNN循环外，还具有内部的LSTM细胞循环，因此LSTM不是简单地向输入和循环单元的仿射变换之后施加一个逐元素的非线性。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/rnn14.png" alt="rnn14.png"></p>
 <ul>
 <li>最下方的<code>input, input gate, forget gate, output gate</code>的输入都是相同的，一个是当前时刻的输入$\boldsymbol{x}^{(t)}$，另一个是前一时刻的隐藏单元$\boldsymbol{h}^{(t-1)}$；</li>
 <li>最重要的部分是状态单元$s_i^{(t)}$，也就是<code>self-loop</code>对应的位置，此处自环的权重（或相关联的时间常数）由遗忘门$f_i^{(t)}$控制，由sigmoid单元将权重设置为0和1之间的值：<br>$$<br>f_i^{(t)} = \sigma(b_i^f + \sum_jU^f_{i,j}x_j^{(t)} + \sum_jW^f_{i,j}h_j^{(t-1)})<br>$$</li>
@@ -5264,8 +5258,8 @@
 </ul>
 <p>LSTM网络比简单的循环架构更易于学习长期依赖。</p>
 <h3 id="10-2-其他门控RNN"><a href="#10-2-其他门控RNN" class="headerlink" title="10.2 其他门控RNN"></a>10.2 其他门控RNN</h3><p>门控RNN的单元被称为门控循环单元GRU。与LSTM的主要区别是，单个门控单元同时控制遗忘因子和更新状态单元的决定。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/rnn16.jpg" alt="rnn16.jpg"></p>
 <p>$$<br>h_i^{(t)} = u_i^{(t-1)}h_i^{(t-1)} + (1-u_i^{t-1})\sigma(b_i + \sum_jU_{i,j}x_j^{(t)} + \sum_jW_{i,j}r_j^{(t-1)}h_j^{(t-1)})<br>$$</p>
 <p>其中$\boldsymbol{u}$代表更新门，$\boldsymbol{r}$表示复位门（重置门）</p>
 <p>$$<br>u_i^{(t)} = \sigma(b_i^u + \sum_jU^u_{i,j}x_j^{(t)} + \sum_jW^u_{i,j}h_j^{(t)})<br>\<br>r_i^{(t)} = \sigma(b_i^r + \sum_jU^r_{i,j}x_j^{(t)} + \sum_jW^r_{i,j}h_j^{(t)})<br>$$</p>
@@ -5273,8 +5267,8 @@
 <p>围绕这一主题可以设计更多的变种。例如复位门（或遗忘门）的输出可以在多个隐藏单元间共享。或者，全局门的乘积（覆盖一整组的单元，例如整一层）和一个局部门（每单元）可用于结合全局控制和局部控制。然而，一些调查发现这些LSTM和GRU架构的变种，在广泛的任务中难以明显地同时击败这两个原始架构。</p>
 <h2 id="11-优化长期依赖"><a href="#11-优化长期依赖" class="headerlink" title="11. 优化长期依赖"></a>11. 优化长期依赖</h2><p>二阶导数可能在一阶导数消失的同时消失。二阶优化算法可以大致被理解为将一阶导数除以二阶导数（在更高维数，由梯度乘以Hessian的逆）。如果二阶导数与一阶导数以类似的速率收缩，那么一阶和二阶导数的比率可保持相对恒定。不幸的是，二阶方法有许多缺点，包括高的计算成本、需要一个大的小批量、并且倾向于被吸引到鞍点。</p>
 <p>使用较简单的方法可以达到类似的结果，例如经过谨慎初始化的Nesterov动量法。应用于LSTM时，这两种方法在很大程度上会被单纯的 SGD（甚至没有动量）取代。这是机器学习中一个延续的主题，设计一个易于优化模型通常比设计出更加强大的优化算法更容易。</p>
-<h3 id="11-1-截断梯度"><a href="#11-1-截断梯度" class="headerlink" title="11.1 截断梯度"></a>11.1 截断梯度</h3>
-
+<h3 id="11-1-截断梯度"><a href="#11-1-截断梯度" class="headerlink" title="11.1 截断梯度"></a>11.1 截断梯度</h3><!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/rnn17.png" alt="rnn17.png"></p>
 <p>由于RNN中存在$\boldsymbol{h}^{(t)}$的循环，因此在梯度下降时很容易遇到临界值为1的情况，当参数大于1时，梯度下降很大，导致参数更新步伐很大。因此，需要在这样的悬崖使用更小的学习率以中和梯度下降的速度。</p>
 <p>一个简单的解决方案是<strong>截断梯度</strong>。一种方式是在参数更新之前，逐元素地截断小批量产生地参数梯度；另一种是在参数更新之前截断梯度$\boldsymbol{g}$地范数$||\boldsymbol{g}||$</p>
 <p>$$<br>if \quad ||\boldsymbol{g}|| &gt; v<br>\<br>\boldsymbol{g} \leftarrow \frac{\boldsymbol{g}v}{||\boldsymbol{g}||}<br>$$</p>
@@ -5292,8 +5286,8 @@
 <h2 id="12-外显记忆"><a href="#12-外显记忆" class="headerlink" title="12. 外显记忆"></a>12. 外显记忆</h2><p>神经网络擅长存储隐性知识，但是他们很难记住事实。被存储在神经网络参数中之前，随机梯度下降需要多次提供相同的输入，即使如此，该输入也不会被特别精确地存储。Graves et al. (2014) 推测这是因为神经网络缺乏工作存储 (workingmemory) 系统，即类似人类为实现一些目标而明确保存和操作相关信息片段的系统。这种外显记忆组件将使我们的系统不仅能够快速“故意”地存储和检索具体的事实，也能利用他们循序推论。神经网络处理序列信息的需要，改变了每个步骤向网络注入输入的方式，长期以来推理能力被认为是重要的，而不是对输入做出自动的、直观的反应。</p>
 <p>为了解决这一难题，引入了<strong>记忆网络</strong>，其中包括一组可以通过寻址机制来访问的记忆单元。记忆网络原本需要监督信号指示他们如何使用自己的记忆单元。需要明确的监督指示采取哪些行动而能学习从记忆单元读写任意内容，并通过使用基于内容的软注意机制，允许端到端的训练。这种软寻址机制已成为其他允许基于梯度优化的模拟算法机制的相关架构的标准。</p>
 <p>每个记忆单元可以被认为是 LSTM 和 GRU 中记忆单元的扩展。不同的是，网络输出一个内部状态来选择从哪个单元读取或写入，正如数字计算机读取或写入到特定地址的内存访问。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/rnn18.png" alt="rnn18.png"></p>
 <p>无论是软（允许反向传播）或随机硬性的，用于选择一个地址的机制与先前在机器翻译的背景下引入的注意力机制形式相同。甚至更早之前，注意力机制的想法就被引入了神经网络，在手写生成的情况下，有一个被约束为通过序列只向前移动的注意力机制。在机器翻译和记忆网络的情况下，每个步骤中关注的焦点可以移动到一个完全不同的地方 (相比之前的步骤)。</p>
 ]]></content>
       <categories>
@@ -5325,19 +5319,19 @@
 <p>卷积是可交换的，所以上式等价于</p>
 <p>$$<br>S(i,j) = (K * I)(i, j) = \sum_m\sum_n I(i-m,j-n)K(m,n)<br>$$</p>
 <p>核矩阵$K$的维度相对$I$很小，使用核翻转，所以第二个式子更常用，也更好理解。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/cnn0.png" alt="cnn0.png"></p>
 <p>卷积通常对应着一个非常稀疏的矩阵，这是因为核的大小通常远小于输入图像的大小。</p>
-<h2 id="2-动机"><a href="#2-动机" class="headerlink" title="2. 动机"></a>2. 动机</h2>
-
+<h2 id="2-动机"><a href="#2-动机" class="headerlink" title="2. 动机"></a>2. 动机</h2><!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/cnn3.jpg" alt="cnn3.jpg"></p>
 <p>卷积运算通过三个重要的思想来帮助改进机器学习系统：<strong>稀疏交互</strong>、<strong>参数共享</strong>、<strong>等变表示</strong>。另外卷积提供了一种处理大小可变的输入的方法。</p>
 <ol>
 <li><strong>稀疏交互</strong>：传统的DNN使用矩阵乘法建立输入与输出的连接关系。其中参数矩阵中每一个单独的参数都描述了一个输入单元与一个输出单元间的交互。这意味着每一个输出单元与每一个输入单元都产生交互。卷积网络具有稀疏交互的特征，即仅使用一个非常小的核来检测输入中有意义的特征，例如图像的边缘。具体的表现为，每一个卷积层定义多个filter（滤波器），每个filter检测输入的一种有意义的特征，比如可能有横线、竖线、圆角等等，在下一个卷积层进一步的提取特征形成卷积神经网络（还包括了操作）。那么我们仅需要保存这些filter的参数就相当于保存了整个神经网络，对比DNN，$m$个输入和$n$个输出，参数有$m \times n$且算法时间复杂度为$O(m \times n)$；稀疏连接限制每一个输出只有$k$个连接，参数有$k \times n$且算法时间复杂度为$O(k \times n)$，在实际应用中$k$比$m$小几个数量级，就能在机器学习任务中取得好的表现。</li>
 <li><strong>参数共享</strong>：是指在一个模型的多个函数中使用相同的参数。作为参数共享的同义词，我们可以说一个网络含有<strong>绑定的权重</strong>，在卷积神经网络中，核的每一个元素都作用在输入的每一位置上（是否考虑边界像素取决于对边界决策的设计）。卷积运算中的参数共享保证了我们只需要学习一个参数集合，而不是对于每一位置都需要学习一个单独的参数集合。这样$k$的数量级才能小于$m$。</li>
 <li><strong>等变表示</strong>：对于卷积，参数共享的特殊形式使得神经网络层具有对平移等变的性质。对于函数$f(x),g(x)$，若满足$f(g(x)) = g(f(x))$，则$f(x)$对于变换$g$具有等变性。例如令$g$是任意平移函数，那么先卷积再平移得到的结果与先平移再卷积得到的结果相同。但是另一些变换不是天然等变的，比如图像的缩放或者旋转变换，需要其他的一些机制来处理。</li>
 </ol>
-<h2 id="3-池化"><a href="#3-池化" class="headerlink" title="3. 池化"></a>3. 池化</h2>
-
+<h2 id="3-池化"><a href="#3-池化" class="headerlink" title="3. 池化"></a>3. 池化</h2><!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/cnn2.jpg" alt="cnn2.jpg"></p>
 <p>卷积神经网络的一个典型层包括三层。第一级是并行计算的多个卷积产生一组线性激活响应；第二级中，每一个线性激活响应会通过一个非线性激活函数，例如ReLU；第三级中，使用池化函数进一步调整这一层的输出。</p>
 <p>池化函数使用某一位置的相邻输出的总体统计特征来代替网络在该位置的输出。<br>例如，最大池化函数给出相邻矩形区域内的最大值。其他常用的池化函数包括相邻矩形区域内的平均值、$L_2$范数以及基于据中心像素距离的加权平均函数。</p>
 <p>不管采用什么样的池化函数，当输入作出少量平移时，池化能够帮助输入的表示近似不变。对于平移的不变性是指当我们对输入进行少量平移时，经过池化函数后的大多数输出并不会发生改变。<strong>局部平移不变性是一个很有用的性质，尤其是当我们关心某个特征是否出现而不关心它出现的具体位置时</strong>。例如，当判定一张图像中是否包含人脸时，我们并不需要知道眼睛的精确像素位置，我们只需要知道有一只眼睛在脸的左边，有一只在右边就行了。但在一些其他领域，保存特征的具体位置却很重要。例如当我们想要寻找一个由两条边相交而成的拐角时，我们就需要很好地保存边的位置来判定它们是否相交。</p>
@@ -5365,8 +5359,8 @@
 <p>一旦对每个像素都进行了预测，我们就可以使用各种方法来进一步处理这些预测，以便获得图像在区域上的分割。一般的想法是假设大片相连的像素倾向于对应着相同的标签。图模型可以描述相邻像素间的概率关系。或者，卷积网络可以被训练来最大化地近似图模型的训练目标。</p>
 <h2 id="7-数据类型"><a href="#7-数据类型" class="headerlink" title="7. 数据类型"></a>7. 数据类型</h2><p>卷积网络使用的数据通常包含多个通道，每个通道是时间上或空间中某一点的不同观测量。</p>
 <p>到目前为止，我们仅讨论了训练和测试数据中的每个样例都有相同的空间维度的情况。卷积网络的一个优点是它们还可以处理具有可变的空间尺度的输入。这些类型的输入不能用传统的基于矩阵乘法的神经网络来表示。这为卷积网络的使用提供了令人信服的理由，即使当计算开销和过拟合都不是主要问题时。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/cnn1.png" alt="cnn1.png"></p>
 <p>注意，使用卷积处理可变尺寸的输入，仅对输入是因为包含对同种事物的不同量的观察 (时间上不同长度的记录，空间上不同宽度的观察等) 而导致的尺寸变化这种情况才有意义。如果输入是因为它可以选择性地包括不同种类的观察而具有可变尺寸，使用卷积是不合理的。例如，如果我们正在处理大学申请，并且我们的特征包括成绩等级和标准化测试分数，但不是每个申请人都进行了标准化测试，则使用相同的权重来对成绩特征和测试分数特征进行卷积是没有意义的。</p>
 <h2 id="8-高效的卷积算法"><a href="#8-高效的卷积算法" class="headerlink" title="8. 高效的卷积算法"></a>8. 高效的卷积算法</h2><p>卷积等效于使用傅立叶变换将输入与核都转换到频域、执行两个信号的逐点相乘，再使用傅立叶逆变换转换回时域。对于某些问题的规模，这种算法可能比离散卷积的朴素实现更快。</p>
 <p>将$d$维的核表示为$d$个一维向量，等价于组合$d$个一维卷积，那么多线程运算可以起到作用。</p>
@@ -5407,8 +5401,8 @@
 <h3 id="1-1-L-2-参数正则化"><a href="#1-1-L-2-参数正则化" class="headerlink" title="1.1 $L^2$参数正则化"></a>1.1 $L^2$参数正则化</h3><p>即使用$L_2$范数作为正则项$\Omega(\theta) = \frac{1}{2}||\boldsymbol{w}||^2_2$，使权重更接近原点。其目标函数为</p>
 <p>$$<br>\tilde{J}(\boldsymbol{w};\boldsymbol{X,y}) = \frac{\alpha}{2}\boldsymbol{w}^T\boldsymbol{w} + J(\boldsymbol{w};\boldsymbol{X,y})<br>$$</p>
 <p>$L_2$正则化会根据$\frac{\lambda_i}{\lambda_i + \alpha}$因子缩放与$\boldsymbol{H}$第$i$个特征向量对齐的$\boldsymbol{w}^*$的分量。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/l1l2.jpg" alt="l1l2.jpg"></p>
 <p>沿着$\boldsymbol{H}$特征值较大的方向（如$\lambda_i \gg \alpha$）正则化的影响较小，而$\lambda_i \ll \alpha$会收缩到几乎为0（但不是0）。<br>只有在显著减小目标函数方向上的参数会保留得相对完好。在无助于目标函数减小的方向上改变参数不会显著增加梯度。这种不重要的方向对应的分量会在训练过程中因正则化而衰减掉。</p>
 <p>对于线性回归而言，代价函数是</p>
 <p>$$<br>(\boldsymbol{Xw} - \boldsymbol{y})^T(\boldsymbol{Xw} - \boldsymbol{y})<br>$$</p>
@@ -5450,8 +5444,8 @@
 <p>例如，<strong>标签平滑</strong>通过把确切分类目标从0到和1替换成$\frac{\epsilon}{k-1},1-\epsilon$，正则化具有$k$个输出的softmax函数的模型。使用softmax和明确的最大似然学习可能永远不会收敛-softmax函数永远无法真正预测0概率或1概率，因此预测更极端。通过使用权重衰减等其他正则化策略能够防止这种情况发生。</p>
 <h2 id="6-半监督学习"><a href="#6-半监督学习" class="headerlink" title="6. 半监督学习"></a>6. 半监督学习</h2><p>参考<code>语音识别-RBM和DBN</code>，通过预训练获得输入数据的统计特征。在预训练过程中使用大量的未标记数据。</p>
 <h2 id="7-多任务学习"><a href="#7-多任务学习" class="headerlink" title="7. 多任务学习"></a>7. 多任务学习</h2><p>多任务学习是通过合并几个任务中的样例来提高泛化的一种方式。当模型的一部分被多个额外的任务共享时，这部分将被约束为良好的值（共享合理），通常会带来更好的泛化能力。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/multi-task_learning.png" alt="multi-task_learning.png"></p>
 <p>该模型通常可以分为两类参数：</p>
 <ol>
 <li>具体任务的参数（从各自任务的样本中实现良好的泛化）；</li>
@@ -5608,21 +5602,21 @@
 <li>对于稀疏的数据集，对于不同的特征使用相同的学习率是否合适，稀疏特征可能不希望更新步伐和其他特征相同，如何解决这些问题；</li>
 <li>非凸问题，鞍点问题，如何解决被困在局部极小的区域，梯度变成0如何跳出。</li>
 </ul>
-<h2 id="4-常见梯度下降算法"><a href="#4-常见梯度下降算法" class="headerlink" title="4. 常见梯度下降算法"></a>4. 常见梯度下降算法</h2><h3 id="4-1-Momentum"><a href="#4-1-Momentum" class="headerlink" title="4.1 Momentum"></a>4.1 Momentum</h3>
-
+<h2 id="4-常见梯度下降算法"><a href="#4-常见梯度下降算法" class="headerlink" title="4. 常见梯度下降算法"></a>4. 常见梯度下降算法</h2><h3 id="4-1-Momentum"><a href="#4-1-Momentum" class="headerlink" title="4.1 Momentum"></a>4.1 Momentum</h3><!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/momentum.jpg" alt="momentum.jpg"></p>
 <p>Momentum（动量），核心思想是使得梯度方向不变的维度上速度变快，梯度方向有所改变的维度上的更新速度变慢，这样就可以加快收敛并减小震荡。其参数更新公式为</p>
 <p>$$<br>v_t = \gamma v_{t-1} + \eta \bigtriangledown_\theta J(\theta)<br>\<br>\theta = \theta - v_t<br>$$</p>
 <p>$\gamma$一般设置为0.9或差不多的数值，这里可以理解为通过使用$v_t$存储梯度下降的动量，这是一个累积量，每一次参数更新都对其进行累积，梯度下降方向始终一致的特征的动量存储越多，每一轮更新时变化也就越多；反之，梯度相互抵消的特征，其存储的动量较少，相较于前者，梯度下降的速度差异就体现出来。</p>
-<h3 id="4-2-Nesterov-accelerated-gradient"><a href="#4-2-Nesterov-accelerated-gradient" class="headerlink" title="4.2 Nesterov accelerated gradient"></a>4.2 Nesterov accelerated gradient</h3>
-
+<h3 id="4-2-Nesterov-accelerated-gradient"><a href="#4-2-Nesterov-accelerated-gradient" class="headerlink" title="4.2 Nesterov accelerated gradient"></a>4.2 Nesterov accelerated gradient</h3><!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/nag.jpg" alt="nag.jpg"></p>
 <p>NAG，核心思想是在Momentum步伐过大时减少下一步更新步伐，类似于刹车。其参数更新公式为</p>
 <p>$$<br>v_t = \gamma v_{t-1} + \eta \bigtriangledown_\theta J(\theta - \gamma v_{t-1})<br>\<br>\theta = \theta - v_t<br>$$</p>
 <p>$\gamma$一般设置为0.9或差不多的数值，这里可以理解为在Momentum的基础上，我们设置一个踩刹车的步骤，当前面累计的动量很多导致当前更新步伐很大时，下一步会由于$\theta - \gamma v_{t-1}$产生一个较小的梯度变化，从而实现平稳下降避免速度的太快。实验表明在RNNs上，NAG有着很好的表现。</p>
 <h3 id="4-3-Adagrad"><a href="#4-3-Adagrad" class="headerlink" title="4.3  Adagrad"></a>4.3  Adagrad</h3><p>Adagrad，核心思想是对低频的参数做较大的更新，对高频的做较小的更新，这个算法针对的是学习率，将学习率变成一种动态的自动调节的参数。其参数更新公式为</p>
 <p>$$<br>\theta_{t+1, i} = \theta_{t, i} - \frac{\eta}{\sqrt{G_{t, ii}+\epsilon}} \cdot g_{t,i}<br>$$</p>
 <p>$\eta$一般设置为0.01，$t$代表steps，$g_{t,i}$表示第$t$步第$i$个参数的$\bigtriangledown_{\theta_t} J(\theta_{t,i})$，$G_t$是对角线矩阵，每个对角线元素$G_{t, ii}$的值是在时间上累计的所有的$\theta_i$的梯度的平方和，即$G_{t, ii} = \sum^t_{k=0}g_{k, i}^2$，$\epsilon$是一个常数，避免分母为0。随着时间增加，分母越来越大，学习率逐渐下降，且低频的参数做较大的更新，对高频的做较小的更新。实验表明在稀疏输入的条件下，Adagrad有很好的表现。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/adagrad.png" alt="adagrad.png"></p>
 <h3 id="4-4-Adadelta"><a href="#4-4-Adadelta" class="headerlink" title="4.4  Adadelta"></a>4.4  Adadelta</h3><p>Adadelta，是对Adagrad的进一步优化，由于Adagrad是对整个时间上的累加，必然会导致时间越长学习率逐渐趋向0，Adadelta将这种累计限制在一个区间$w$内，使得学习率下降速度减缓。在实际使用中并不会定义$w$，而是使用均值作为替换。其参数更新公式为</p>
 <p>$$<br>E[g^2]<em>t = \gamma E[g^2]</em>{t-1} + (1-\gamma)g^2_t<br>$$</p>
 <p>$\gamma$一般设置为0.9，使用均值替换累加值，得到</p>
@@ -5634,10 +5628,10 @@
 <p>$\gamma$建议设置为0.9，使用均值替换累加值，得到</p>
 <p>$$<br>\theta_{t+1} =\theta_t - \frac{\eta}{\sqrt{E[g^2]_t + \epsilon}}g_t<br>$$</p>
 <p>$\eta$设置为0.001</p>
-
-
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/rmsp.png" alt="rmsp.png"></p>
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/nrmsp.png" alt="nrmsp.png"></p>
 <h3 id="4-6-Adam"><a href="#4-6-Adam" class="headerlink" title="4.6  Adam"></a>4.6  Adam</h3><p>Adaptive Moment Estimation（自适应矩估计），除了像Adadelta和RMSprop一样存储了过去梯度的平方$v_t$的指数衰减平均值 ，也像momentum一样保持了过去梯度$m_t$的指数衰减平均值。</p>
 <p>$$<br>m_t = \beta_1m_{t-1} + (1-\beta_1)g_t<br>\<br>v_t = \beta_2v_{t-1} + (1-\beta_2)g_t^2<br>$$</p>
 <p>如果$m_t$和$v_t$被初始化为0向量，那它们就会向0偏置，所以做了偏差校正，通过计算偏差校正后的$m_t$和$v_t$来抵消这些偏差</p>
@@ -5645,8 +5639,8 @@
 <p>其参数更新公式为</p>
 <p>$$<br>\theta_{t+1} = \theta_t - \frac{\eta}{\sqrt{\hat{v}_t}+\epsilon}\hat{m}_t<br>$$</p>
 <p>$\beta_1 = 0.9, \beta_2 = 0.999, \epsilon = 10^{-8}$为默认设置。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/adam.png" alt="adam.png"></p>
 <h3 id="4-7-AdaMax"><a href="#4-7-AdaMax" class="headerlink" title="4.7  AdaMax"></a>4.7  AdaMax</h3><p>AdaMax，修改了Adam的$v_t$，因为$v_t$可以看作是对$g_t$的$l_2$范数，AdaMax从$l_\infty$范数中选择最大的范数作为替换，以加速梯度下降，这里用$u_t$表示</p>
 <p>$$<br>u_t = \beta^\infty_2v_{t-1} + (1-\beta^\infty_2)|g_t|^\infty<br>\<br>= \max(\beta_2 \cdot v_{t-1}, |g_t|)<br>$$</p>
 <p>其参数更新公式为</p>
@@ -5685,8 +5679,8 @@
 <p>算法的核心部分proximal operator：</p>
 <p>$$<br>prox_{\lambda f}(v) = \underset{x}{\arg \min}(f(x) + \frac{1}{2\lambda}||x-v||^2)<br>$$</p>
 <p>上式描述的是求解一个离$v$不太远的点，且使$f(x)$尽可能的小，显然$f(x) \leqslant f(v)$</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/prox.jpg" alt="prox.jpg"></p>
 <p>其中加粗的黑线表示作用域，浅色的黑线表示函数f的等高线，蓝色的点对应上面式子的v点，红色点表示最终求得的x点。</p>
 <p>设待优化目标函数为$F(x)=l(x)+\phi(x)$，其中$l(x)$是连续可微的，$\phi(x)$不是处处连续的，这类优化目标在机器学习中比较常见，如$l(x)$表示最小二乘的拟合误差，$\phi(x)$表示$L1$正则化因子用于产生稀疏解。</p>
 <blockquote>
@@ -5709,10 +5703,10 @@
 </blockquote>
 <h3 id="4-10-FTRL"><a href="#4-10-FTRL" class="headerlink" title="4.10 FTRL"></a>4.10 FTRL</h3><p>Follow-the-regularized-Leader，在处理诸如逻辑回归之类的带非光滑正则化项（例如1范数，做模型复杂度控制和稀疏化）的凸优化问题上性能非常出色</p>
 <h3 id="4-11-RDA"><a href="#4-11-RDA" class="headerlink" title="4.11 RDA"></a>4.11 RDA</h3><p>Regularized Dual Averaging Algorithm（正则对偶平均算法），稀疏矩阵</p>
-<h2 id="5-梯度下降可视化及选择"><a href="#5-梯度下降可视化及选择" class="headerlink" title="5. 梯度下降可视化及选择"></a>5. 梯度下降可视化及选择</h2>
-
-
-
+<h2 id="5-梯度下降可视化及选择"><a href="#5-梯度下降可视化及选择" class="headerlink" title="5. 梯度下降可视化及选择"></a>5. 梯度下降可视化及选择</h2><!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/optimizer1.gif" alt="optimizer1.gif"></p>
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/optimizer2.gif" alt="optimizer2.gif"></p>
 <p>Adagrad, Adadelta, RMSprop 几乎很快就找到了正确的方向并前进，收敛速度也相当快，而其它方法要么很慢，要么走了很多弯路才找到。</p>
 <ul>
 <li>如果数据是稀疏的，就用自适应方法，即Adagrad, Adadelta, RMSprop, Adam</li>
@@ -5738,8 +5732,8 @@
 <h3 id="7-3-高原、鞍点和其他平坦区域"><a href="#7-3-高原、鞍点和其他平坦区域" class="headerlink" title="7.3 高原、鞍点和其他平坦区域"></a>7.3 高原、鞍点和其他平坦区域</h3><p>对于很多高维非凸函数而言，局部极小值（以及极大值）事实上都远少于另一类梯度为零的点：鞍点。鞍点附近的某些点比鞍点有更大的代价，而其他点则有更小的代价。在鞍点处，Hessian矩阵同时具有正负特征值。位于正特征值对应的特征向量方向的点比鞍点有更大的代价，反之，位于负特征值对应的特征向量方向的点有更小的代价。我们可以将鞍点视为代价函数某个横截面上的局部极小点，同时也可以视为代价函数某个横截面上的局部极大点</p>
 <p>鞍点激增对于训练算法来说有哪些影响呢？对于只使用梯度信息的一阶优化算法而言，目前情况还不清楚。鞍点附近的梯度通常会非常小。另一方面，实验中梯度下降似乎可以在许多情况下逃离鞍点。</p>
 <p>也可能存在恒值的、宽且平坦的区域。在这些区域，梯度和 Hessian 矩阵都是零。这种退化的情形是所有数值优化算法的主要问题。在凸问题中，一个宽而平坦的区间肯定包含全局极小值，但是对于一般的优化问题而言，这样的区域可能会对应着目标函数中一个较高的值。</p>
-<h3 id="7-4-悬崖和梯度爆炸"><a href="#7-4-悬崖和梯度爆炸" class="headerlink" title="7.4 悬崖和梯度爆炸"></a>7.4 悬崖和梯度爆炸</h3>
-
+<h3 id="7-4-悬崖和梯度爆炸"><a href="#7-4-悬崖和梯度爆炸" class="headerlink" title="7.4 悬崖和梯度爆炸"></a>7.4 悬崖和梯度爆炸</h3><!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/grad.jpg" alt="grad.jpg"></p>
 <p>多层神经网络通常存在像悬崖一样的斜率较大区域，这是由于几个较大的权重相乘导致的。遇到斜率极大的悬崖结构时，梯度更新会很大程度地改变参数值，通常会完全跳过这类悬崖结构。</p>
 <p><strong>梯度截断</strong>基本想法源自梯度并没有指明最佳步长，只说明了在无限小区域内的最佳方向。当<br>传统的梯度下降算法提议更新很大一步时，启发式梯度截断会干涉来减小步长，从而使其不太可能走出梯度近似为最陡下降方向的悬崖区域。悬崖结构在循环神经网络的代价函数中很常见，因为这类模型会涉及到多个因子的相乘，其中每个因子对应一个时间步。因此，长期时间序列会产生大量相乘。</p>
 <h3 id="7-5-长期依赖"><a href="#7-5-长期依赖" class="headerlink" title="7.5 长期依赖"></a>7.5 长期依赖</h3><p>当计算图变得极深时，神经网络优化算法会面临的另外一个难题就是长期依赖问题-由于变深的结构使模型丧失了学习到先前信息的能力，让优化变得极其困难。</p>
@@ -5821,8 +5815,8 @@
 </blockquote>
 <p>若我们使用同样的数据集划分，对比线性回归中准确率，我们应该会发现，神经网络的准确率相当高。</p>
 <p>训练过程中损失变化情况如下</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/nn.png" alt="nn.png"></p>
 <h3 id="2-2-Estimator实现房价预测"><a href="#2-2-Estimator实现房价预测" class="headerlink" title="2.2 Estimator实现房价预测"></a>2.2 Estimator实现房价预测</h3><p>导入库，不一定会用到，但是是可以使用的</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> fetch_california_housing</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> preprocessing</span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns <span class="comment"># 数据图形化，后面会用到</span></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd <span class="comment"># pandas输出处理</span></span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br></pre></td></tr></table></figure>
 
@@ -5835,15 +5829,15 @@
 <p>这里定义训练模型，我们定义了神经网络模型dnn和线性模型linear，进行比较，优化器都选择<code>ProximalAdagradOptimizer</code></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">dnn = tf.estimator.DNNRegressor(</span><br><span class="line">    feature_columns=feature_columns, </span><br><span class="line">    hidden_units=[<span class="number">32</span>, <span class="number">32</span>, <span class="number">16</span>, <span class="number">8</span>], </span><br><span class="line">    model_dir=<span class="string">"C://Users//Admin//Desktop//model//DNNRegressor"</span>,</span><br><span class="line">    optimizer=tf.train.ProximalAdagradOptimizer(</span><br><span class="line">        learning_rate=<span class="number">0.01</span>, </span><br><span class="line">        l1_regularization_strength=<span class="number">0.001</span>))</span><br><span class="line"></span><br><span class="line">linear = tf.estimator.LinearRegressor(</span><br><span class="line">    feature_columns=feature_columns,</span><br><span class="line">    model_dir=<span class="string">"C://Users//Admin//Desktop//model//LinearRegressor"</span>,</span><br><span class="line">    optimizer=tf.train.ProximalAdagradOptimizer(</span><br><span class="line">        learning_rate=<span class="number">0.01</span>,</span><br><span class="line">        l1_regularization_strength=<span class="number">0.001</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里循环多次是为了了解训练过程是否过拟合，对应前面输入函数num_epochs=20设置一个较小的值</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">7</span>):</span><br><span class="line">    dnn.train(input_fn=input_fn(x_train, y_train), max_steps=<span class="number">40000</span>)</span><br><span class="line">    dnn.evaluate(input_fn=input_fn(x_test, y_test, training=<span class="literal">False</span>))</span><br><span class="line">    linear.train(input_fn=input_fn(x_train, y_train), max_steps=<span class="number">40000</span>)</span><br><span class="line">    linear.evaluate(inpun=input_fn(x_test, y_test, training=<span class="literal">False</span>))</span><br></pre></td></tr></table></figure>
 
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/dnn-linear.png" alt="dnn-linear.png"></p>
 <p>从图中可以知道，线性模型的收敛速度比神经网络快，但是最终神经网络模型的效果略好一点（并不意味着神经网路一定优于线性模型），由于神经网络的结构对结果影响很大，我得到的最优的平均损失在0.50附近。<br>若分析数据进行特征工程，我想应该能得到更好的结果。</p>
 <hr>
 <p><strong>1. 首先将数据转换成Pandas形式，观察数据的一般统计量</strong></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">df = pd.DataFrame(data=data, columns=feature_names)</span><br><span class="line">df[<span class="string">'HousePrice'</span>] = target</span><br><span class="line">df.describe()</span><br></pre></td></tr></table></figure>
 
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/house0.png" alt="house0.png"></p>
 <p>从图中可以发现几个问题：</p>
 <ul>
 <li>AveRooms的最大值141，而均值和75%的值都在7以内，说明有的街区是豪宅或者统计错误，需要过滤掉这些异常值，同理AveBedrms、Population和AveOccup都存在异常值；</li>
@@ -5852,8 +5846,8 @@
 <p><strong>2. 然后我们计算各个特征之间的协方差</strong></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">corr = df.corr()</span><br><span class="line">sns.heatmap(corr)</span><br></pre></td></tr></table></figure>
 
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/corr.png" alt="corr.png"></p>
 <p>从协方差热力图中可以发现</p>
 <ul>
 <li>MedInc与房价之间有正相关的线性关系，且是这几个特征中最强的，所以我们可能会考虑使用<a href="https://arxiv.org/pdf/1606.07792.pdf" target="_blank" rel="noopener"><code>DNNLinearCombinedRegressor</code></a>并将MedInc作为线性模型特征列，其他作为神经网络特征列；</li>
@@ -5870,22 +5864,22 @@
 <p><strong>4. 分析房价与其他所有特征的二维坐标图</strong></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> name <span class="keyword">in</span> df.columns.values.tolist():</span><br><span class="line">    sns.relplot(x=name, y=<span class="string">'HousePrice'</span>,data=df)</span><br></pre></td></tr></table></figure>
 
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/house1.png" alt="house1.png"></p>
 <p>首先，我们可以发现图中确实有很多的异常点，与上面我们分析的是对应的，我们可以筛选出处于正常的样本，这几个阈值仅作参考，最终我们的数据集剩下20057个样本，少了600左右的数据</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">df = df[(df[<span class="string">'MedInc'</span>] &lt; <span class="number">10</span>) &amp; (df[<span class="string">'AveRooms'</span>] &lt; <span class="number">15</span>) &amp; (df[<span class="string">'AveBedrms'</span>] &lt; <span class="number">4</span>) &amp; (df[<span class="string">'Population'</span>] &lt; <span class="number">8000</span>) &amp; (df[<span class="string">'AveOccup'</span>] &lt; <span class="number">6</span>)]</span><br></pre></td></tr></table></figure>
 
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/house2.png" alt="house2.png"></p>
 <p>房价与房龄可以确定没有相关性，与上面分析对应，确定放弃此特征。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/house3.png" alt="house3.png"></p>
 <p>AveOtherrms、MedInc和HousePrice可以看作线性相关，放在线性层，其他数据没有可以明确描述的相关性，但是数据呈现一定分布规律。</p>
 <p><strong>5. 根据经纬度与房价的信息构造位置特征</strong></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">sns.relplot(x=<span class="string">'Latitude'</span>, y=<span class="string">'Longitude'</span>,hue=<span class="string">'HousePrice'</span>, data=df)</span><br></pre></td></tr></table></figure>
 
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/house4.png" alt="house4.png"></p>
 <p>可以分析出某些特定位置的房价是很高的，所以对于落在此区域的房子，在其他条件相同的个情况下，其房价应当会高于其他位置的房子，我的处理方式是，根据经纬度把地区划分为一个一个正方形，增加新的特征$AreaPrice = mean(HousePrice \in area)$，用当前区域内的房价的均值作为地价特征。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">df[<span class="string">'AreaPrice'</span>] = <span class="number">-1</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">11</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">12</span>):</span><br><span class="line">        rows = (df[<span class="string">'Latitude'</span>] &gt;= <span class="number">32.</span> + i) &amp; \</span><br><span class="line">        (df[<span class="string">'Latitude'</span>] &lt; <span class="number">33.</span> + i) &amp; \</span><br><span class="line">        (df[<span class="string">'Longitude'</span>] &gt;= <span class="number">-125.</span> + j) &amp; \</span><br><span class="line">        (df[<span class="string">'Longitude'</span>] &lt; <span class="number">-124.</span> + j) </span><br><span class="line">        df.loc[rows, [<span class="string">'AreaPrice'</span>]] = df[rows][<span class="string">'HousePrice'</span>].mean()</span><br></pre></td></tr></table></figure>
 
@@ -5975,8 +5969,8 @@
 </ul>
 <h2 id="2-序列与模型"><a href="#2-序列与模型" class="headerlink" title="2. 序列与模型"></a>2. 序列与模型</h2><p>马尔可夫链的每一种状态与一种输出（观察值或事件）一一对应，没有随机性。</p>
 <p>隐马尔可夫序列在各个状态引入一种随机性，用一个观测的概率分布与每一个状态对应，而不是一个确定的事件或观察值。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/hmm.png" alt="hmm.png"></p>
 <p>即我们观察到的是$x_i$，而观测值仅由隐藏的状态$y_i$决定，而当前时刻的状态$y_i$仅由前一时刻的状态$y_{i-1}$决定。</p>
 <h3 id="2-1-隐马尔可夫模型的性质"><a href="#2-1-隐马尔可夫模型的性质" class="headerlink" title="2.1 隐马尔可夫模型的性质"></a>2.1 隐马尔可夫模型的性质</h3><ul>
 <li>齐次马尔可夫链的转移概率矩阵$\boldsymbol{A}=[a_{ij}] \quad i,j = 1,2,…,N$，其中共有$N$个状态</li>
@@ -6146,8 +6140,8 @@
 </blockquote>
 <p><strong>语音识别过程：切除首尾端静音—声音划分为帧—对每一帧提取MFCC特征—若干帧对应一个状态—三个状态组成一个音素—若干音素组成单词</strong></p>
 <h2 id="1-语音识别系统的基本结构"><a href="#1-语音识别系统的基本结构" class="headerlink" title="1. 语音识别系统的基本结构"></a>1. 语音识别系统的基本结构</h2><p>语音识别系统主要由4个部分组成：信号处理和特征提取、声学模型（AM）、语言模型（LM）和解码搜索部分。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/asr.png" alt="asr.png"></p>
 <ul>
 <li>信号处理和特征提取部分以音频信号为输入，通过消除噪声和信道失真对语音进行增强，将信号从时域转化为频域，并为后面的声学模型提取合适的有代表性的特征向量；</li>
 <li>声学模型将声学和发音学的知识整合，以特征提取部分生成的特征作为输入，并为可变长特征序列生成声学模型分数；</li>
@@ -6159,40 +6153,40 @@
 
 <h2 id="2-傅里叶变换"><a href="#2-傅里叶变换" class="headerlink" title="2. 傅里叶变换"></a>2. 傅里叶变换</h2><p>傅里叶变换是一种将时域信息转换为频域信息的函数，转换后的频域信息是基于三角函数<code>sin，cos</code>的复合函数，<br>理论上来说傅里叶变换可以拟合任意形式的时域函数图像，最终得到的频谱图就包含了所有成分的频率和振幅。</p>
 <!-- ![](2018-11-14-语音识别-MFCC/ft.gif) -->
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/ft.gif" alt="ft.gif"></p>
 <p>由此可见，傅里叶变换在语音识别系统中非常实用，因为语音文件就是一个时域上的信息，我们将其映射到频域上可以得到关于声音更多的信息（音调/音色/响度？）</p>
 <p>首先看一下傅里叶变换的公式</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/dft.png" alt="dft.png"></p>
 <p>以及傅里叶逆变换</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/idft.png" alt="idft.png"></p>
 <p>而声音文件理论上是一个连续函数，但是连续不好描述，我们将声音划分为一帧一帧，每一帧表示的时间长度与这个声音文件的格式相关（不同格式采样率不同，但都是<code>ms</code>级别），所以最终我们观察到的声音信息是离散的。</p>
 <p>离散傅里叶变换</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/dtft.png" alt="dtft.png"></p>
 <p>以及离散傅里叶逆变换</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/idtft.png" alt="idtft.png"></p>
 <h2 id="3-声谱图Spectrogram"><a href="#3-声谱图Spectrogram" class="headerlink" title="3. 声谱图Spectrogram"></a>3. 声谱图Spectrogram</h2><p>首先将声音文件划分为一帧一帧，然后对每一帧的信息做快速傅里叶变换FFT，得到频谱图，纵轴是振幅（如果对振幅取对数，那么单位为<code>dB</code>分贝），横轴是频率<code>Hz</code></p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/fft.png" alt="fft.png"></p>
 <p>将得到的频谱图旋转<code>90°</code>，再将振幅映射为灰度值，而这些灰度值较大的位置称为<strong>共振峰</strong>（Formants），<strong>共振峰就是携带了声音的辨识属性</strong></p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/map.png" alt="map.png"></p>
 <p>如果将每一帧的的灰度图连接起来，我们就得到了这段声音文件的声谱图</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/link.png" alt="link.png"></p>
 <p>一个真实数据的声谱图，从图中我们可以找出共振峰，而对应最上面的声音文件；声音不属于同一部分，那么共振峰的位置也不同；声音属于统一部份，则那些帧的共振峰基本相同。根据共振峰的位置我们可以实现声音的区分（不同声音通道/不同人/不同物种），以及对帧的合并，这些信息通过HMM有助于语音识别。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/realdata.png" alt="realdata.png"></p>
 <h2 id="4-倒谱分析Cepstral-Analysis"><a href="#4-倒谱分析Cepstral-Analysis" class="headerlink" title="4. 倒谱分析Cepstral Analysis"></a>4. 倒谱分析Cepstral Analysis</h2><p>这是一帧声音文件，我们用点标注出振幅峰值点（<strong>共振峰</strong>），用线（<strong>包络</strong>）描述振幅变化过程，<strong>我们的目的是提取出包络的信息</strong></p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/formants.png" alt="formants.png"></p>
 <p>对频谱进行分解，我们可以的到包络和细节，这里默认我们已经经过对数运算，所以只需要简单叠加就能通过包络和细节还原声音信息。同时根据图像变化情况，我们将横轴当作时间，则包络属于低频成分（变化慢），细节属于高频成分（变化快），那么只需要增加一个低通滤波器，我们就可以得到包络的输出，过滤掉细节。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/detail.png" alt="detail.png"></p>
 <p>那么倒谱分析的过程为：</p>
 <ol>
 <li><p>语音信号经过傅里叶变换称为频谱<br>$$<br>X[k] = H[k]E[k]<br>\<br>\left | X[k] \right | = \left | H[k] \right | \left | E[k] \right |，只考虑幅度<br>$$</p>
@@ -6206,11 +6200,11 @@
 </ol>
 <p>$$<br>x[k] = h[k] + e[k]<br>$$</p>
 <h2 id="5-梅尔频率分析Mel-Frequency-Analysis"><a href="#5-梅尔频率分析Mel-Frequency-Analysis" class="headerlink" title="5. 梅尔频率分析Mel-Frequency Analysis"></a>5. 梅尔频率分析Mel-Frequency Analysis</h2><p>梅尔频率分析是基于人类听觉感知实验的，实验发现，如果将人耳表示为一个滤波器，那么这个滤波器的特点是在所有频率上不是均匀分布，在低频部分有更多的滤波器，在高频部分较少，并且只针对特定的某些频率有效。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/filter.png" alt="filter.png"></p>
 <p>梅尔频率倒谱系数（MFCC）考虑到了人类的听觉特征，先将线性频谱映射到基于听觉感知的梅尔非线性频谱中，然后转换到倒谱上，也就是说我们需要修改上面的步骤1，增加梅尔滤波器进行频谱映射</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/mel.png" alt="mel.png"></p>
 <p>最终通过傅里叶逆变换，我们就可以获取到MFCCs特征。</p>
 <p>总结一下步骤：</p>
 <ol>

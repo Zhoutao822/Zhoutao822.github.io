@@ -53,12 +53,14 @@
 <meta property="og:site_name" content="Tao">
 <meta property="og:description" content="参考：  《解析深度学习-语音识别实践》第6章 深度神经网络-隐马尔可夫模型混合系统  语音识别过程：切除首尾端静音-&gt;声音划分为帧-&gt;对每一帧提取MFCC特征-&gt;若干帧对应一个状态-&gt;三个状态组成一个音素-&gt;若干音素组成单词 1. DNN-HMM混合系统在前面的语音识别-GMM和语音识别-HMM中我们已经知道了，对于音频数据，经过提取特征处理后，通过GMM得到状态，">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/0db2c447fb5d8b64e.png">
 <meta property="article:published_time" content="2018-12-13T08:20:38.000Z">
-<meta property="article:modified_time" content="2020-01-17T15:07:46.283Z">
+<meta property="article:modified_time" content="2020-01-19T08:15:52.344Z">
 <meta property="article:author" content="Tao Zhou">
 <meta property="article:tag" content="Theory">
 <meta property="article:tag" content="DNN-HMM">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://114.116.9.65:7777/images/2020/01/19/0db2c447fb5d8b64e.png">
 
 <link rel="canonical" href="http://zhoutao822.coding.me/archives/cbc488cf.html">
 
@@ -238,7 +240,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-17 23:07:46" itemprop="dateModified" datetime="2020-01-17T23:07:46+08:00">2020-01-17</time>
+                <time title="修改时间：2020-01-19 16:15:52" itemprop="dateModified" datetime="2020-01-19T16:15:52+08:00">2020-01-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -306,8 +308,8 @@
 <h2 id="1-DNN-HMM混合系统"><a href="#1-DNN-HMM混合系统" class="headerlink" title="1. DNN-HMM混合系统"></a>1. DNN-HMM混合系统</h2><p>在前面的<code>语音识别-GMM</code>和<code>语音识别-HMM</code>中我们已经知道了，对于音频数据，经过提取特征处理后，通过GMM得到状态，然后通过HMM描述语音信号的动态变化，以预测输出。得益于DNN强大的表现学习能力，使用DNN替代GMM用于估计观察特征的概率，这样的语音识别系统性能远优于传统的GMM-HMM系统。</p>
 <a id="more"></a>
 
-<h3 id="1-1-结构"><a href="#1-1-结构" class="headerlink" title="1.1 结构"></a>1.1 结构</h3>
-
+<h3 id="1-1-结构"><a href="#1-1-结构" class="headerlink" title="1.1 结构"></a>1.1 结构</h3><!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/0db2c447fb5d8b64e.png" alt="0db2c447fb5d8b64e.png"></p>
 <p>HMM对语音信号的序列特性进行建模，DNN对所有聚类后的状态（聚类后的三音素状态）的<strong>似然度</strong>进行建模。</p>
 <p>在给定声学观察特征的条件下，我们用DNN的每个输出节点来估计连续密度HMM的某个状态的后验概率（类似于DNN的softmax输出，包括所有状态的概率，取最大值对应的状态）。DNN-HMM有两个额外的好处：训练过程可以使用维特比算法，解码通常也非常高效。</p>
 <p>对上下文相关因素的后验概率建模为</p>
