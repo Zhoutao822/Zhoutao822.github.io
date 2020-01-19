@@ -1,4 +1,553 @@
-<!-- build time:Sun Jan 19 2020 11:19:09 GMT+0800 (China Standard Time) --><!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2"><meta name="theme-color" content="#222"><meta name="generator" content="Hexo 4.2.0"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png"><link rel="mask-icon" href="/images/logo.svg" color="#222"><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css"><script id="hexo-configurations">var NexT=window.NexT||{},CONFIG={hostname:new URL("http://zhoutao822.coding.me").hostname,root:"/",scheme:"Pisces",version:"7.7.0",exturl:!1,sidebar:{position:"left",display:"post",padding:18,offset:12,onmobile:!1},copycode:{enable:!0,show_result:!0,style:"mac"},back2top:{enable:!0,sidebar:!1,scrollpercent:!0},bookmark:{enable:!1,color:"#222",save:"auto"},fancybox:!1,mediumzoom:!1,lazyload:!1,pangu:!1,comments:{style:"tabs",active:"valine",storage:!0,lazyload:!1,nav:null,activeClass:"valine"},algolia:{appID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"Search for Posts",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}},localsearch:{enable:!0,trigger:"auto",top_n_per_article:1,unescape:!0,preload:!0},path:"search.xml",motion:{enable:!0,async:!1,transition:{post_block:"fadeIn",post_header:"slideDownIn",post_body:"slideDownIn",coll_header:"slideLeftIn",sidebar:"slideUpIn"}}}</script><meta name="description" content="万物皆可线性参考：西瓜书第3章 线性模型1. 基本形式feature&#x2F;data：样本的属性，训练参数label&#x2F;target：样本的标签，训练结果给定由d个属性描述的示例$\boldsymbol{x} &#x3D; (x_1; x_2;…; x_d)$（通常情况下在数据集中，一个样本的表示形式为$\boldsymbol{x} &#x3D; (x_1, x_2,…,x_d)$，区别在于数组的方向），其中$x_i$是$\"><meta property="og:type" content="article"><meta property="og:title" content="线性模型"><meta property="og:url" content="http://zhoutao822.coding.me/archives/5206f73f.html"><meta property="og:site_name" content="Tao"><meta property="og:description" content="万物皆可线性参考：西瓜书第3章 线性模型1. 基本形式feature&#x2F;data：样本的属性，训练参数label&#x2F;target：样本的标签，训练结果给定由d个属性描述的示例$\boldsymbol{x} &#x3D; (x_1; x_2;…; x_d)$（通常情况下在数据集中，一个样本的表示形式为$\boldsymbol{x} &#x3D; (x_1, x_2,…,x_d)$，区别在于数组的方向），其中$x_i$是$\"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/sigmoid.jpg"><meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/lda.png"><meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/OvO.png"><meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/ecoc.png"><meta property="article:published_time" content="2018-11-07T07:00:56.000Z"><meta property="article:modified_time" content="2020-01-18T14:45:53.950Z"><meta property="article:author" content="Tao Zhou"><meta property="article:tag" content="Theory"><meta property="article:tag" content="Linear Model"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="http://114.116.9.65:7777/images/2020/01/18/sigmoid.jpg"><link rel="canonical" href="http://zhoutao822.coding.me/archives/5206f73f.html"><script id="page-configurations">CONFIG.page={sidebar:"",isHome:!1,isPost:!0}</script><title>线性模型 | Tao</title><noscript><style>.sidebar-inner,.use-motion .brand,.use-motion .collection-header,.use-motion .comments,.use-motion .menu-item,.use-motion .pagination,.use-motion .post-block,.use-motion .post-body,.use-motion .post-header{opacity:initial}.use-motion .site-subtitle,.use-motion .site-title{opacity:initial;top:initial}.use-motion .logo-line-before i{left:initial}.use-motion .logo-line-after i{right:initial}</style></noscript><link rel="alternate" href="/atom.xml" title="Tao" type="application/atom+xml"></head><body itemscope itemtype="http://schema.org/WebPage"><div class="container use-motion"><div class="headband"></div><header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-brand-container"><div class="site-meta"><div><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">Tao</span> <span class="logo-line-after"><i></i></span></a></div></div><div class="site-nav-toggle"><div class="toggle" aria-label="切换导航栏"><span class="toggle-line toggle-line-first"></span> <span class="toggle-line toggle-line-middle"></span> <span class="toggle-line toggle-line-last"></span></div></div></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a></li><li class="menu-item menu-item-search"><a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索</a></li></ul></nav><div class="site-search"><div class="popup search-popup"><div class="search-header"><span class="search-icon"><i class="fa fa-search"></i></span><div class="search-input-container"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="搜索..." spellcheck="false" type="text" id="search-input"></div><span class="popup-btn-close"><i class="fa fa-times-circle"></i></span></div><div id="search-result"></div></div><div class="search-pop-overlay"></div></div></div></header><div class="back-to-top"><i class="fa fa-arrow-up"></i> <span>0%</span></div><div class="reading-progress-bar"></div><main class="main"><div class="main-inner"><div class="content-wrap"><div class="content"><div class="posts-expand"><article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN"><link itemprop="mainEntityOfPage" href="http://zhoutao822.coding.me/archives/5206f73f.html"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="image" content="/images/avatar.jpg"><meta itemprop="name" content="Tao Zhou"><meta itemprop="description" content="学习笔记"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Tao"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">线性模型</h1><div class="post-meta"><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i> </span><span class="post-meta-item-text">发表于</span> <time title="创建时间：2018-11-07 15:00:56" itemprop="dateCreated datePublished" datetime="2018-11-07T15:00:56+08:00">2018-11-07</time> </span><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-calendar-check-o"></i> </span><span class="post-meta-item-text">更新于</span> <time title="修改时间：2020-01-18 22:45:53" itemprop="dateModified" datetime="2020-01-18T22:45:53+08:00">2020-01-18</time> </span><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i> </span><span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Machine-Learning/" itemprop="url" rel="index"><span itemprop="name">Machine Learning</span> </a></span></span><span id="/archives/5206f73f.html" class="post-meta-item leancloud_visitors" data-flag-title="线性模型" title="阅读次数"><span class="post-meta-item-icon"><i class="fa fa-eye"></i> </span><span class="post-meta-item-text">阅读次数：</span> <span class="leancloud-visitors-count"></span> </span><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-comment-o"></i> </span><span class="post-meta-item-text">Valine：</span> <a title="valine" href="/archives/5206f73f.html#comments" itemprop="discussionUrl"><span class="post-comments-count valine-comment-count" data-xid="/archives/5206f73f.html" itemprop="commentCount"></span></a></span><br><span class="post-meta-item" title="本文字数"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i> </span><span class="post-meta-item-text">本文字数：</span> <span>9.2k</span> </span><span class="post-meta-item" title="阅读时长"><span class="post-meta-item-icon"><i class="fa fa-clock-o"></i> </span><span class="post-meta-item-text">阅读时长 &asymp;</span> <span>8 分钟</span></span></div></header><div class="post-body" itemprop="articleBody"><p><strong>万物皆可线性</strong></p><p>参考：</p><blockquote><p>西瓜书第3章 线性模型</p></blockquote><h2 id="1-基本形式"><a href="#1-基本形式" class="headerlink" title="1. 基本形式"></a>1. 基本形式</h2><ul><li>feature/data：样本的属性，训练参数</li><li>label/target：样本的标签，训练结果</li></ul><p>给定由d个属性描述的示例$\boldsymbol{x} = (x_1; x_2;…; x_d)$（通常情况下在数据集中，一个样本的表示形式为$\boldsymbol{x} = (x_1, x_2,…,x_d)$，区别在于数组的方向），其中$x_i$是$\boldsymbol{x}$在第i个属性上的取值，线性模型（linear model）试图学得一个通过属性的线性组合来进行预测的函数，即</p><p>$$<br>f(\boldsymbol{x}) = w_1x_1 + w_2x_2 + … + w_dx_d + b<br>$$</p><p>一般用向量形式写成</p><p>$$<br>f(\boldsymbol{x}) = \boldsymbol{w}^T\boldsymbol{x} + b<br>$$</p><p>其中$\boldsymbol{w} = (w_1; w_2;…; w_d)$，$\boldsymbol{w}$和$b$学得之后，模型就得以确定。</p><a id="more"></a><h2 id="2-线性回归"><a href="#2-线性回归" class="headerlink" title="2. 线性回归"></a>2. 线性回归</h2><h3 id="2-1-数学推导"><a href="#2-1-数学推导" class="headerlink" title="2.1 数学推导"></a>2.1 数学推导</h3><p>给定数据集$D = {(\boldsymbol{x}<em>1, y_1), (\boldsymbol{x}_2, y_2),…, (\boldsymbol{x}_m, y_m)}$，其中$\boldsymbol{x}_i = (x</em>{i1};x_{i2};…; x_{id})$，$y_i \in \mathbb{R}$，线性回归（linear regression）试图学得一个线性模型以尽可能准确地预测实值输出标记。</p><blockquote><p>首先，从单属性出发考虑如何求解，即$D = {(x_i, y_i)}^m_{i=1}$，线性回归试图学得</p></blockquote><p>$$<br>f(x_i) = wx_i + b, 使得f(x_i) \simeq y_i<br>$$</p><p>我们使用均方误差MSE衡量$f(x)$与$y$之间的差异，并使得均方误差最小化，即</p><p>$$<br>(w^<em>, b^</em>) = \underset{(w, b)}{\arg \min}\sum^{m}<em>{i=1}(f(x_i) - y_i)^2<br>\<br>= \underset{(w, b)}{\arg \min}\sum^{m}</em>{i=1}(y_i - wx_i - b)^2<br>$$</p><p>基于均方误差最小化来进行模型求解的方法称为“最小二乘法”，即找到一条直线使得所有样本到直线的欧式距离之和最小。</p><p>求解$w$和$b$使$E_{(w, b)} = \sum^m_{i=1}(y_i - wx_i - b)^2$最小化的过程，称为线性回归模型的最小二乘“参数估计”。将$E_{(w, b)}$分别对$w$和$b$求导，得到</p><p>$$<br>\frac{\partial E_{(w, b)}}{\partial w} = 2(w\sum_{i=1}^{m}x^2_i - \sum_{i=1}^{m}(y_i - b)x_i)<br>\<br>\frac{\partial E_{(w, b)}}{\partial b} = 2(mb - \sum_{i=1}^{m}(y_i - wx_i))<br>$$</p><p>通常对凸函数$E_{(w, b)}$来说，偏导数取值为零处即为最优解，因此$w$和$b$的最优闭式解</p><p>$$<br>w = \frac{\sum_{i=1}^{m}y_i(x_i - \bar{x})}{\sum_{i=1}^{m}x_i^2 - \frac{1}{m}(\sum_{i=1}^{m}x_i)^2}<br>\<br>b = \frac{1}{m}\sum_{i=1}^{m}(y_i - wx_i)<br>$$</p><p>其中$\bar{x} = \frac{1}{m}\sum_{i=1}^{m}x_i$为$x$的均值。</p><hr><p>一般情况为样本包含d个属性，此时我们试图学得</p><p>$$<br>f(\boldsymbol{x}_i) = \boldsymbol{w}^T\boldsymbol{x}_i + b, 使得f(\boldsymbol{x}_i \simeq y_i)<br>$$</p><p>这称为“多元线性回归”.</p><p>同样利用最小二乘法对$\boldsymbol{w}$和$b$进行估计，这里令$\hat{\boldsymbol{w}} = (\boldsymbol{w}; b)$，相应的，数据集$D$表示为一个$m \times (d + 1)$的矩阵$\boldsymbol{x}$，其中每一行对应一个示例，即</p><p>$$<br>\boldsymbol{x} =<br>\begin{pmatrix}<br>x_{11}&amp; x_{12} &amp; … &amp; x_{1d} &amp; 1\<br>x_{21}&amp; x_{22} &amp; … &amp; x_{2d} &amp; 1\<br>\vdots&amp; \vdots &amp; \ddots &amp; \vdots &amp; \vdots\<br>x_{m1}&amp; x_{m2} &amp; … &amp; x_{md} &amp; 1<br>\end{pmatrix}<br>=<br>\begin{pmatrix}<br>\boldsymbol{x}^T_1&amp; 1\<br>\boldsymbol{x}^T_2&amp; 1\<br>\vdots&amp; \vdots\<br>\boldsymbol{x}^T_m&amp; 1<br>\end{pmatrix}<br>$$</p><p>把标记也写成向量形式$\boldsymbol{y} = (y_1; y_2;…; y_m)$，令$E_{\hat{\boldsymbol{w}}} = (\boldsymbol{y} - \boldsymbol{x}\hat{\boldsymbol{w}})^T(\boldsymbol{y} - \boldsymbol{x}\hat{\boldsymbol{w}})$</p><p>$$<br>\hat{\boldsymbol{w}}^* = \underset{\hat{\boldsymbol{w}}}{\arg\min}E_{\hat{\boldsymbol{w}}}<br>$$</p><p>对$\hat{\boldsymbol{w}}$求导得到</p><p>$$<br>\frac{\partial E_{\hat{\boldsymbol{w}}}}{\partial \hat{\boldsymbol{w}}} = 2\boldsymbol{x}^T(\boldsymbol{x}\hat{\boldsymbol{w}} - y)<br>$$</p><p>同理，上式为零得到最优解，但是由于求解过程中使用到逆矩阵运算，所以会有分类讨论</p><hr><ol><li>当$\boldsymbol{x}^T\boldsymbol{x}$为满秩矩阵或正定矩阵</li></ol><p>$$<br>\hat{\boldsymbol{w}}^* = (\boldsymbol{x}^T\boldsymbol{x})^{-1}\boldsymbol{x}^T\boldsymbol{y}<br>$$</p><p>代入到$f(\boldsymbol{x})$可得最终模型为</p><p>$$<br>f(\hat{\boldsymbol{x}}_i) = \hat{\boldsymbol{x}}^T_i(\boldsymbol{x}^T\boldsymbol{x})^{-1}\boldsymbol{x}^T\boldsymbol{y}<br>$$</p><ol start="2"><li>当$\boldsymbol{x}^T\boldsymbol{x}$不是满秩矩阵，例如属性数量超过样例数，则会求解出多个$\hat{\boldsymbol{w}}$，选择哪一个将由学习算法的归纳偏好决定，常见的做法是引入正则化（正则化会产生对参数的约束，从而限制最优解的范围）。</li></ol><h3 id="2-2-推广"><a href="#2-2-推广" class="headerlink" title="2.2 推广"></a>2.2 推广</h3><p>令线性回归模型逼近$y$的衍生物</p><p>$$<br>\ln y = \boldsymbol{w}^T\boldsymbol{x} + b<br>$$</p><p>这就是“对数线性回归”，它实际上是在试图让$e^{\boldsymbol{w}^T\boldsymbol{x} + b}$逼近$y$。这样就实现了从输入空间到输出空间的非线性函数映射，我们可以发现，只有左边$y$的形式改变了，而右边依旧是线性回归，这意味着我们仅仅只需要对target做修改就可以继续使用线性回归求解问题，因此也就可以把线性回归推广到分类问题上。</p><p>更一般地，考虑单调可微（光滑且连续）函数$g(\cdot)$，令</p><p>$$<br>y = g^{-1}(\boldsymbol{w}^T\boldsymbol{x} + b)<br>$$</p><p>这样得到的模型称为“广义线性模型”，其中$g(\cdot)$称为“联系函数”。</p><h3 id="2-3-结论与问题"><a href="#2-3-结论与问题" class="headerlink" title="2.3 结论与问题"></a>2.3 结论与问题</h3><ul><li>根据最优解方程，我们似乎可以直接计算出参数，而不需要训练过程；</li><li>如果样例数目很大（百万、千万、…）而且属性数量也很大（十万、百万、…），计算矩阵相乘需要极大的内存和计算能力，这种方式很不现实，也就是说在数据集很小的情况下可以使用方程求解，其他情况需要用另一种方式逼近完美解（梯度下降）；</li><li>由推广可知，线性回归也可以用于分类问题，将分类问题看做分类概率的近似求解，那么我们就将分类问题转换成回归问题了，此时我们训练模型的目标变成了分类概率，最后根据分类概率确定分类结果。</li></ul><h2 id="3-对数几率回归"><a href="#3-对数几率回归" class="headerlink" title="3. 对数几率回归"></a>3. 对数几率回归</h2><h3 id="3-1-说明"><a href="#3-1-说明" class="headerlink" title="3.1 说明"></a>3.1 说明</h3><p>从广义线性模型可知，对于二分类问题，我们需要找到一个单调可微的函数将分类任务的真实标记$y$与线性回归模型的预测值联系起来。</p><p>二分类输出标记$y \in {0, 1}$，而线性回归模型产生的预测值$z = \boldsymbol{w}^T\boldsymbol{x} + b$是实值，需要将$z$转换成0/1值。单位阶跃函数与sigmoid函数</p><p><img src="http://114.116.9.65:7777/images/2020/01/18/sigmoid.jpg" alt="sigmoid.jpg"></p><p>由于单位阶跃函数不连续，所以不能作为$g^-(\cdot)$，所以使用与单位阶跃函数形状类似的sigmoid函数（也有其他类似的函数）</p><p>$$<br>y = \frac{1}{1 + e^{-(\boldsymbol{w}^T\boldsymbol{x} + b)}}<br>$$</p><p>分类问题变成线性回归问题</p><p>$$<br>\ln \frac{y}{1-y} = \boldsymbol{w}^T\boldsymbol{x} + b<br>$$</p><p>若将$y$视为样本$\boldsymbol{x}$作为正例的可能性，则$1-y$是其反例可能性，两者的比值</p><p>$$<br>\frac{y}{1-y}<br>$$</p><p>称为“几率”，反映了$\boldsymbol{x}$作为正例的相对可能性。对其取对数则得到“对数几率”</p><p>$$<br>\ln \frac{y}{1-y}<br>$$</p><h3 id="3-2-数学推导"><a href="#3-2-数学推导" class="headerlink" title="3.2 数学推导"></a>3.2 数学推导</h3><p>将$y$视为类后验概率估计$p(y=1\mid\boldsymbol{x})$，则$1-y$视为$p(y=0\mid\boldsymbol{x})$</p><p>$$<br>\ln \frac{p(y=1\mid\boldsymbol{x})}{p(y=0\mid\boldsymbol{x})} = \boldsymbol{w}^T\boldsymbol{x} + b<br>$$</p><p>显然有</p><p>$$<br>p(y=1\mid\boldsymbol{x}) = \frac{e^{\boldsymbol{w}^T\boldsymbol{x} + b}}{1 + e^{\boldsymbol{w}^T\boldsymbol{x} + b}}<br>\<br>p(y=0\mid\boldsymbol{x}) = \frac{1}{1 + e^{\boldsymbol{w}^T\boldsymbol{x} + b}}<br>$$</p><p>通过“极大似然法”来估计$\boldsymbol{w}$和$b$，给定数据集${(\boldsymbol{x}<em>i, y_i)}^m</em>{i=1}$，对率回归模型最大化“对数似然”</p><p>$$<br>l (\boldsymbol{w}, b) = \sum^m_{i=1}\ln p(y_i \mid \boldsymbol{x}_i; \boldsymbol{w}, b)<br>$$</p><p>即令每个样本属于其真实标记的概率越大越好。令$\beta = (\boldsymbol{w}; b)，\hat{\boldsymbol{x}} = (\boldsymbol{x}; 1)$，则$\boldsymbol{w}^T\boldsymbol{x} + b$可简写为$\beta^T\hat{\boldsymbol{x}}$，再令$p_1(\hat{\boldsymbol{x}}; \beta) = p(y=1 \mid\hat{\boldsymbol{x}};\beta)，p_0(\hat{\boldsymbol{x}}; \beta) = p(y=0 \mid\hat{\boldsymbol{x}};\beta) = 1-p_1(\hat{\boldsymbol{x}}; \beta)$，则似然项重写为</p><p>$$<br>p(y_i \mid \boldsymbol{x}_i; \boldsymbol{w}, b) = y_ip_1(\hat{\boldsymbol{x}}; \beta) + (1-y_i)p_0(\hat{\boldsymbol{x}}; \beta)<br>$$</p><p>代入上式，得到最大化对数似然等价于最小化</p><p>$$<br>l(\beta) = \sum^m_{i=1}(-y_i\beta^T\hat{\boldsymbol{x}_i} + \ln(1 + e^{\beta^T\hat{\boldsymbol{x}_i}}))<br>\<br>这里的-y_i\beta^T\hat{\boldsymbol{x}_i}不是直接计算得到的，通过等价替换，证明过程略<br>$$</p><p>上式是关于$\beta$的高阶可导连续凸函数，可以使用数值优化算法如梯度下降、牛顿法等都可以求解</p><p>$$<br>\beta^* = \underset{\beta}{\arg \min}l(\beta)<br>$$</p><hr><p>以牛顿法为例，其第$t+1$轮迭代解的更新公式为</p><p>$$<br>\beta^{t+1} = \beta^t - (\frac{\partial^2 l(\beta)}{\partial \beta \partial \beta^T})^{-1}\frac{\partial l(\beta)}{\partial \beta}<br>$$</p><p>其中关于$\beta$的一阶、二阶导数分别为</p><p>$$<br>\frac{\partial l(\beta)}{\partial\beta} = -\sum^m_{i=1}\hat{\boldsymbol{x}<em>i}(y_i - p_1(\hat{\boldsymbol{x}_i}; \beta))<br>\<br>\frac{\partial^2 l(\beta)}{\partial \beta \partial \beta^T} = \sum^m</em>{i=1}\hat{\boldsymbol{x}_i}\hat{\boldsymbol{x}_i}^Tp_1(\hat{\boldsymbol{x}_i};\beta)(1-p_1(\hat{\boldsymbol{x}_i};\beta))<br>$$</p><hr><p>使用梯度下降法求解：</p><p>$$<br>\frac{\partial l(\beta)}{\partial\beta} = \sum^m_{i=1}\hat{\boldsymbol{x}<em>i}(p_1(\hat{\boldsymbol{x}_i}; \beta) - y_i)，我们可以看到p_1其实就是预测的y值，y_i是实际值<br>\<br>\beta = \beta - \alpha \frac{\partial l(\beta)}{\partial\beta}，\alpha为学习率，控制\alpha下降速度<br>\<br>重新定义一下X为数据集矩阵，X^T为其转置，E = y</em>{pre} - y_i，则\beta = \beta - \alpha \cdot X^T \cdot E<br>$$</p><h2 id="4-线性判别分析LDA"><a href="#4-线性判别分析LDA" class="headerlink" title="4. 线性判别分析LDA"></a>4. 线性判别分析LDA</h2><h3 id="4-1-基本思想"><a href="#4-1-基本思想" class="headerlink" title="4.1 基本思想"></a>4.1 基本思想</h3><p>对二分类问题，给定训练样例集，设法将样例投影到一条直线上，使得同类样例的投影点尽可能接近、异类样例的投影点尽可能远离；在对新样例进行分类时，将其投影到同样的这条直线上，再根据投影点的位置来确定新样本的类别</p><p><img src="http://114.116.9.65:7777/images/2020/01/18/lda.png" alt="lda.png"></p><h3 id="4-2-数学推导"><a href="#4-2-数学推导" class="headerlink" title="4.2 数学推导"></a>4.2 数学推导</h3><p>给定数据集$D = {(\boldsymbol{x}<em>i, y_i)}^m</em>{i=1}，y_i \in {0, 1}$，令$X_i、\mu_i、\Sigma_i$分别表示第$i\in{0,1}$类示例的集和、均值向量、协方差矩阵。若将数据投影到直线$\boldsymbol{w}$上，则两类样本的中心在直线上的投影分别为$\boldsymbol{w}^T\mu_0$和$\boldsymbol{w}^T\mu_1$；若将所有样本点都投影到直线上，则两类样本的协方差分别为$\boldsymbol{w}^T\Sigma_0\boldsymbol{w}$和$\boldsymbol{w}^T\Sigma_1\boldsymbol{w}$，由于直线是一维空间，因此4个值均为实数。</p><p>同类样例的投影点尽可能接近，即$\boldsymbol{w}^T\Sigma_0\boldsymbol{w} + \boldsymbol{w}^T\Sigma_1\boldsymbol{w}$尽可能小；异类样例的投影点尽可能远离，即${\parallel \boldsymbol{w}^T\mu_0 - \boldsymbol{w}^T\mu_1\parallel}^2_2$尽可能大。若同时考虑二者，则最大化目标为</p><p>$$<br>J = \frac{\parallel \boldsymbol{w}^T\mu_0 - \boldsymbol{w}^T\mu_1 \parallel^2_2}{\boldsymbol{w}^T\Sigma_0\boldsymbol{w} + \boldsymbol{w}^T\Sigma_1\boldsymbol{w}}<br>\<br>= \frac{\boldsymbol{w}^T(\mu_0-\mu_1)(\mu_0-\mu_1)^T\boldsymbol{w}}{\boldsymbol{w}^T(\Sigma_0 + \Sigma_1)\boldsymbol{w}}<br>$$</p><p><strong>类间散度矩阵</strong></p><p>$$<br>S_w = \Sigma_0 + \Sigma_1<br>\<br>= \sum_{\boldsymbol{x}\in X_0}(\boldsymbol{x}-\mu_0)(\boldsymbol{x}-\mu_0)^T + \sum_{\boldsymbol{x}\in X_1}(\boldsymbol{x}-\mu_1)(\boldsymbol{x}-\mu_1)^T<br>$$</p><p><strong>类内散度矩阵</strong></p><p>$$<br>S_b = (\mu_0-\mu_1)(\mu_0-\mu_1)^T<br>$$</p><p>代入，可重写为</p><p>$$<br>J = \frac{\boldsymbol{w}^TS_b\boldsymbol{w}}{\boldsymbol{w}^TS_w\boldsymbol{w}}<br>$$</p><p>我们的目标变成了求解$\boldsymbol{w}$使得$J$最大，表达式分子和分母都是关于$\boldsymbol{w}$的二次项，因此上式的解与$\boldsymbol{w}$的长度无关，只与其方向有关。不失一般性，令$\boldsymbol{w}^TS_w\boldsymbol{w}=1$，则上式等价于</p><p>$$<br>\underset{\boldsymbol{w}}{\min} -\boldsymbol{w}^TS_b\boldsymbol{w}<br>\<br>s.t. \quad \boldsymbol{w}^TS_w\boldsymbol{w} = 1<br>$$</p><p>由拉格朗日乘子法（拉格朗日乘子系数，导数为0），上式等价于</p><p>$$<br>S_b\boldsymbol{w} = \lambda S_w \boldsymbol{w}<br>$$</p><p>又因为$S_b\boldsymbol{w}$的方向恒为$\mu_0 - \mu_1$，不妨令</p><p>$$<br>S_b\boldsymbol{w} = \lambda(\mu_0 - \mu_1)<br>$$</p><p>代入得</p><p>$$<br>\boldsymbol{w} = S_w^{-1}(\mu_0 - \mu_1)<br>$$</p><p>现在我们只需要知道$S_w^{-1}$的值就可以得到最优解，在实践中通常是对$S_w$进行奇异值分解，即$S_w = U \Sigma V^T$，这里$\Sigma$是一个实对角矩阵，其对角线上的元素是$S_w$的奇异值，然后再由$S_w^{-1} = V\Sigma^{-1}U^T$得到$S_w^{-1}$</p><h3 id="4-3-推广"><a href="#4-3-推广" class="headerlink" title="4.3 推广"></a>4.3 推广</h3><p>将LDA推广到多分类任务中，假定存在$N$个类，且第$i$类示例数为$m_i$。</p><p><strong>全局散度矩阵</strong>，$\mu$是所有示例的均值向量</p><p>$$<br>S_t = S_b + S_w<br>\<br>= \sum^m_{i=1}(\boldsymbol{x}_i - \mu)(\boldsymbol{x}_i - \mu)^T<br>$$</p><p><strong>类内散度矩阵</strong></p><p>$$<br>S_w = \sum^N_{i=1}S_{w_i}<br>\<br>其中S_{w_i} = \sum_{\boldsymbol{x} \in X_i}(\boldsymbol{x} - \mu_i)(\boldsymbol{x} - \mu_i)^T<br>$$</p><p><strong>类间散度矩阵</strong></p><p>$$<br>S_b = S_t - S_w<br>\<br>= \sum^N_{i=1}m_i(\mu_i - \mu)(\mu_i - \mu)^T<br>$$</p><hr><p>同理，优化目标变成</p><p>$$<br>\underset{W}{\max} \frac{tr(W^TS_bW)}{tr(W^TS_wW)}<br>$$</p><p>其中$W\in \mathbb{R}^{d \times (N - 1)}$，$tr(\cdot)$表示矩阵的迹</p><p>$$<br>S_bW = \lambda S_wW<br>$$</p><p>$W$的闭式解则是$S_w^{-1}S_b$的$d’$个最大非零广义特征值所对应的特征向量组成的矩阵，$d’ \leqslant N-1$。</p><p>若将$W$视为一个投影矩阵，则多分类LDA将样本投影到$d’$维空间，$d’$通常远小于$d$，因此LDA也常被视为一种降维技术。</p><h2 id="5-多分类学习"><a href="#5-多分类学习" class="headerlink" title="5. 多分类学习"></a>5. 多分类学习</h2><h3 id="5-1-一对一OvO"><a href="#5-1-一对一OvO" class="headerlink" title="5.1 一对一OvO"></a>5.1 一对一OvO</h3><blockquote><p>$N$个类别两两配对，产生$N(N-1)/2$个二分类任务，投票产生结果</p></blockquote><p><img src="http://114.116.9.65:7777/images/2020/01/18/OvO.png" alt="OvO.png"></p><h3 id="5-2-一对其余OvR"><a href="#5-2-一对其余OvR" class="headerlink" title="5.2 一对其余OvR"></a>5.2 一对其余OvR</h3><blockquote><p>$N$个类别每次选一个作为正例，其余反例，产生$N$个分类器，取置信度最大的类别标记作为结果</p></blockquote><p>区别</p><ul><li>OvR需要$N$个分类器，OvO需要$N(N-1)/2$个分类器，因此OvO的存储开销和测试时间开销通常更大；</li><li>OvR使用全部数据，OvO使用两个分类的数据，因此OvO训练时间开销通常更小；</li><li>预测性能取决于具体的数据分布，在多数情况下两者差不多。</li></ul><h3 id="5-3-多对多MvM"><a href="#5-3-多对多MvM" class="headerlink" title="5.3 多对多MvM"></a>5.3 多对多MvM</h3><blockquote><p>每次将若干类作为正类，若干个其它类作为反类，使用纠错输出码ECOC设计，将最小距离作为预测结果</p></blockquote><p><img src="http://114.116.9.65:7777/images/2020/01/18/ecoc.png" alt="ecoc.png"></p><h2 id="6-类别不平衡问题"><a href="#6-类别不平衡问题" class="headerlink" title="6. 类别不平衡问题"></a>6. 类别不平衡问题</h2><p>比如正例2个，反例998个，那么如果一个学习器始终将新样本预测为反例即可得到99.8%的准确率，可是这个有用吗？</p><p>类别不平衡就是指分类任务中不同类别的训练样例数目差别很大的情况。</p><p>若训练集中正反例数目相当，则分类器决策规则为</p><p>$$<br>若\frac{y}{1-y} &gt; 1，则预测为正例<br>$$</p><p>当训练集中正反例数目不同时，令$m^+，m^-$分别表示正反例数目，则</p><p>$$<br>若\frac{y}{1-y} &gt; \frac{m^+}{m^-}，则预测为正例<br>$$</p><p>同样的，只需要对预测值进行处理也可以实现同样的效果，即<strong>再缩放</strong></p><p>$$<br>\frac{y’}{1-y’} = \frac{y}{1-y} \times \frac{m^-}{m^+}<br>$$</p><p>当然还可以在数据采样的过程中避免出现类别不平衡：</p><ul><li>欠采样：去除过多的类别的样例，使正反样例数目相当；</li><li>过采样：增加过少的类别的样例，使正反样例数目相当；</li><li>使用再缩放</li></ul></div><div class="popular-posts-header">推荐文章</div><ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><a href="/archives/7d1dcda7.html" rel="bookmark">模型评估与选择</a></div></li><li class="popular-posts-item"><div class="popular-posts-title"><a href="/archives/8ddc7426.html" rel="bookmark">决策树</a></div></li><li class="popular-posts-item"><div class="popular-posts-title"><a href="/archives/280b588e.html" rel="bookmark">支持向量机</a></div></li><li class="popular-posts-item"><div class="popular-posts-title"><a href="/archives/fcb2659b.html" rel="bookmark">数据集</a></div></li><li class="popular-posts-item"><div class="popular-posts-title"><a href="/archives/79f15ca6.html" rel="bookmark">贝叶斯分类器</a></div></li></ul><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者： </strong>Tao Zhou</li><li class="post-copyright-link"><strong>本文链接：</strong> <a href="http://zhoutao822.coding.me/archives/5206f73f.html" title="线性模型">http://zhoutao822.coding.me/archives/5206f73f.html</a></li><li class="post-copyright-license"><strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li></ul></div><footer class="post-footer"><div class="post-tags"><a href="/tags/Theory/" rel="tag"># Theory</a> <a href="/tags/Linear-Model/" rel="tag"># Linear Model</a></div><div class="post-nav"><div class="post-nav-item"><a href="/archives/fcb2659b.html" rel="prev" title="数据集"><i class="fa fa-chevron-left"></i> 数据集</a></div><div class="post-nav-item"><a href="/archives/8ddc7426.html" rel="next" title="决策树">决策树 <i class="fa fa-chevron-right"></i></a></div></div></footer></article></div></div><div class="comments" id="valine-comments"></div><script>window.addEventListener('tabs:register', () => {
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://zhoutao822.coding.me').hostname,
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"mac"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="万物皆可线性 参考：  西瓜书第3章 线性模型  1. 基本形式 feature&#x2F;data：样本的属性，训练参数 label&#x2F;target：样本的标签，训练结果  给定由d个属性描述的示例$\boldsymbol{x} &#x3D; (x_1; x_2;…; x_d)$（通常情况下在数据集中，一个样本的表示形式为$\boldsymbol{x} &#x3D; (x_1, x_2,…,x_d)$，区别在于数组的方向），其">
+<meta property="og:type" content="article">
+<meta property="og:title" content="线性模型">
+<meta property="og:url" content="http://zhoutao822.coding.me/archives/5206f73f.html">
+<meta property="og:site_name" content="Tao">
+<meta property="og:description" content="万物皆可线性 参考：  西瓜书第3章 线性模型  1. 基本形式 feature&#x2F;data：样本的属性，训练参数 label&#x2F;target：样本的标签，训练结果  给定由d个属性描述的示例$\boldsymbol{x} &#x3D; (x_1; x_2;…; x_d)$（通常情况下在数据集中，一个样本的表示形式为$\boldsymbol{x} &#x3D; (x_1, x_2,…,x_d)$，区别在于数组的方向），其">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/sigmoid.jpg">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/lda.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/OvO.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/ecoc.png">
+<meta property="article:published_time" content="2018-11-07T07:00:56.000Z">
+<meta property="article:modified_time" content="2020-01-18T14:45:53.950Z">
+<meta property="article:author" content="Tao Zhou">
+<meta property="article:tag" content="Theory">
+<meta property="article:tag" content="Linear Model">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://114.116.9.65:7777/images/2020/01/18/sigmoid.jpg">
+
+<link rel="canonical" href="http://zhoutao822.coding.me/archives/5206f73f.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>线性模型 | Tao</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Tao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhoutao822.coding.me/archives/5206f73f.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Tao Zhou">
+      <meta itemprop="description" content="学习笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          线性模型
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-11-07 15:00:56" itemprop="dateCreated datePublished" datetime="2018-11-07T15:00:56+08:00">2018-11-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-18 22:45:53" itemprop="dateModified" datetime="2020-01-18T22:45:53+08:00">2020-01-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Machine Learning</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/archives/5206f73f.html" class="post-meta-item leancloud_visitors" data-flag-title="线性模型" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/archives/5206f73f.html#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/archives/5206f73f.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>9.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>万物皆可线性</strong></p>
+<p>参考：</p>
+<blockquote>
+<p>西瓜书第3章 线性模型</p>
+</blockquote>
+<h2 id="1-基本形式"><a href="#1-基本形式" class="headerlink" title="1. 基本形式"></a>1. 基本形式</h2><ul>
+<li>feature/data：样本的属性，训练参数</li>
+<li>label/target：样本的标签，训练结果</li>
+</ul>
+<p>给定由d个属性描述的示例$\boldsymbol{x} = (x_1; x_2;…; x_d)$（通常情况下在数据集中，一个样本的表示形式为$\boldsymbol{x} = (x_1, x_2,…,x_d)$，区别在于数组的方向），其中$x_i$是$\boldsymbol{x}$在第i个属性上的取值，线性模型（linear model）试图学得一个通过属性的线性组合来进行预测的函数，即</p>
+<p>$$<br>f(\boldsymbol{x}) = w_1x_1 + w_2x_2 + … + w_dx_d + b<br>$$</p>
+<p>一般用向量形式写成</p>
+<p>$$<br>f(\boldsymbol{x}) = \boldsymbol{w}^T\boldsymbol{x} + b<br>$$</p>
+<p>其中$\boldsymbol{w} = (w_1; w_2;…; w_d)$，$\boldsymbol{w}$和$b$学得之后，模型就得以确定。</p>
+<a id="more"></a>
+
+<h2 id="2-线性回归"><a href="#2-线性回归" class="headerlink" title="2. 线性回归"></a>2. 线性回归</h2><h3 id="2-1-数学推导"><a href="#2-1-数学推导" class="headerlink" title="2.1 数学推导"></a>2.1 数学推导</h3><p>给定数据集$D = {(\boldsymbol{x}<em>1, y_1), (\boldsymbol{x}_2, y_2),…, (\boldsymbol{x}_m, y_m)}$，其中$\boldsymbol{x}_i = (x</em>{i1};x_{i2};…; x_{id})$，$y_i \in \mathbb{R}$，线性回归（linear regression）试图学得一个线性模型以尽可能准确地预测实值输出标记。</p>
+<blockquote>
+<p>首先，从单属性出发考虑如何求解，即$D = {(x_i, y_i)}^m_{i=1}$，线性回归试图学得</p>
+</blockquote>
+<p>$$<br>f(x_i) = wx_i + b, 使得f(x_i) \simeq y_i<br>$$</p>
+<p>我们使用均方误差MSE衡量$f(x)$与$y$之间的差异，并使得均方误差最小化，即</p>
+<p>$$<br>(w^<em>, b^</em>) = \underset{(w, b)}{\arg \min}\sum^{m}<em>{i=1}(f(x_i) - y_i)^2<br>\<br> = \underset{(w, b)}{\arg \min}\sum^{m}</em>{i=1}(y_i - wx_i - b)^2<br>$$</p>
+<p>基于均方误差最小化来进行模型求解的方法称为“最小二乘法”，即找到一条直线使得所有样本到直线的欧式距离之和最小。</p>
+<p>求解$w$和$b$使$E_{(w, b)} = \sum^m_{i=1}(y_i - wx_i - b)^2$最小化的过程，称为线性回归模型的最小二乘“参数估计”。将$E_{(w, b)}$分别对$w$和$b$求导，得到</p>
+<p>$$<br>\frac{\partial E_{(w, b)}}{\partial w} = 2(w\sum_{i=1}^{m}x^2_i - \sum_{i=1}^{m}(y_i - b)x_i)<br>\<br>\frac{\partial E_{(w, b)}}{\partial b} = 2(mb - \sum_{i=1}^{m}(y_i - wx_i))<br>$$</p>
+<p>通常对凸函数$E_{(w, b)}$来说，偏导数取值为零处即为最优解，因此$w$和$b$的最优闭式解</p>
+<p>$$<br>w = \frac{\sum_{i=1}^{m}y_i(x_i - \bar{x})}{\sum_{i=1}^{m}x_i^2 - \frac{1}{m}(\sum_{i=1}^{m}x_i)^2}<br>\<br>b = \frac{1}{m}\sum_{i=1}^{m}(y_i - wx_i)<br>$$</p>
+<p>其中$\bar{x} = \frac{1}{m}\sum_{i=1}^{m}x_i$为$x$的均值。</p>
+<hr>
+<p>一般情况为样本包含d个属性，此时我们试图学得</p>
+<p>$$<br>f(\boldsymbol{x}_i) = \boldsymbol{w}^T\boldsymbol{x}_i + b, 使得f(\boldsymbol{x}_i \simeq y_i)<br>$$</p>
+<p>这称为“多元线性回归”.</p>
+<p>同样利用最小二乘法对$\boldsymbol{w}$和$b$进行估计，这里令$\hat{\boldsymbol{w}} = (\boldsymbol{w}; b)$，相应的，数据集$D$表示为一个$m \times (d + 1)$的矩阵$\boldsymbol{x}$，其中每一行对应一个示例，即</p>
+<p>$$<br>\boldsymbol{x} =<br>\begin{pmatrix}<br> x_{11}&amp; x_{12} &amp; … &amp; x_{1d} &amp; 1\<br> x_{21}&amp; x_{22} &amp; … &amp; x_{2d} &amp; 1\<br> \vdots&amp; \vdots &amp; \ddots &amp; \vdots &amp; \vdots\<br> x_{m1}&amp; x_{m2} &amp; … &amp; x_{md} &amp; 1<br>\end{pmatrix}<br>=<br>\begin{pmatrix}<br> \boldsymbol{x}^T_1&amp; 1\<br> \boldsymbol{x}^T_2&amp; 1\<br> \vdots&amp; \vdots\<br> \boldsymbol{x}^T_m&amp; 1<br>\end{pmatrix}<br>$$</p>
+<p>把标记也写成向量形式$\boldsymbol{y} = (y_1; y_2;…; y_m)$，令$E_{\hat{\boldsymbol{w}}} = (\boldsymbol{y} - \boldsymbol{x}\hat{\boldsymbol{w}})^T(\boldsymbol{y} - \boldsymbol{x}\hat{\boldsymbol{w}})$</p>
+<p>$$<br>\hat{\boldsymbol{w}}^* = \underset{\hat{\boldsymbol{w}}}{\arg\min}E_{\hat{\boldsymbol{w}}}<br>$$</p>
+<p>对$\hat{\boldsymbol{w}}$求导得到</p>
+<p>$$<br>\frac{\partial E_{\hat{\boldsymbol{w}}}}{\partial \hat{\boldsymbol{w}}} = 2\boldsymbol{x}^T(\boldsymbol{x}\hat{\boldsymbol{w}} - y)<br>$$</p>
+<p>同理，上式为零得到最优解，但是由于求解过程中使用到逆矩阵运算，所以会有分类讨论</p>
+<hr>
+<ol>
+<li>当$\boldsymbol{x}^T\boldsymbol{x}$为满秩矩阵或正定矩阵</li>
+</ol>
+<p>$$<br>\hat{\boldsymbol{w}}^* = (\boldsymbol{x}^T\boldsymbol{x})^{-1}\boldsymbol{x}^T\boldsymbol{y}<br>$$</p>
+<p>代入到$f(\boldsymbol{x})$可得最终模型为</p>
+<p>$$<br>f(\hat{\boldsymbol{x}}_i) = \hat{\boldsymbol{x}}^T_i(\boldsymbol{x}^T\boldsymbol{x})^{-1}\boldsymbol{x}^T\boldsymbol{y}<br>$$</p>
+<ol start="2">
+<li>当$\boldsymbol{x}^T\boldsymbol{x}$不是满秩矩阵，例如属性数量超过样例数，则会求解出多个$\hat{\boldsymbol{w}}$，选择哪一个将由学习算法的归纳偏好决定，常见的做法是引入正则化（正则化会产生对参数的约束，从而限制最优解的范围）。</li>
+</ol>
+<h3 id="2-2-推广"><a href="#2-2-推广" class="headerlink" title="2.2 推广"></a>2.2 推广</h3><p>令线性回归模型逼近$y$的衍生物</p>
+<p>$$<br>\ln y = \boldsymbol{w}^T\boldsymbol{x} + b<br>$$</p>
+<p>这就是“对数线性回归”，它实际上是在试图让$e^{\boldsymbol{w}^T\boldsymbol{x} + b}$逼近$y$。这样就实现了从输入空间到输出空间的非线性函数映射，我们可以发现，只有左边$y$的形式改变了，而右边依旧是线性回归，这意味着我们仅仅只需要对target做修改就可以继续使用线性回归求解问题，因此也就可以把线性回归推广到分类问题上。</p>
+<p>更一般地，考虑单调可微（光滑且连续）函数$g(\cdot)$，令</p>
+<p>$$<br>y = g^{-1}(\boldsymbol{w}^T\boldsymbol{x} + b)<br>$$</p>
+<p>这样得到的模型称为“广义线性模型”，其中$g(\cdot)$称为“联系函数”。</p>
+<h3 id="2-3-结论与问题"><a href="#2-3-结论与问题" class="headerlink" title="2.3 结论与问题"></a>2.3 结论与问题</h3><ul>
+<li>根据最优解方程，我们似乎可以直接计算出参数，而不需要训练过程；</li>
+<li>如果样例数目很大（百万、千万、…）而且属性数量也很大（十万、百万、…），计算矩阵相乘需要极大的内存和计算能力，这种方式很不现实，也就是说在数据集很小的情况下可以使用方程求解，其他情况需要用另一种方式逼近完美解（梯度下降）；</li>
+<li>由推广可知，线性回归也可以用于分类问题，将分类问题看做分类概率的近似求解，那么我们就将分类问题转换成回归问题了，此时我们训练模型的目标变成了分类概率，最后根据分类概率确定分类结果。</li>
+</ul>
+<h2 id="3-对数几率回归"><a href="#3-对数几率回归" class="headerlink" title="3. 对数几率回归"></a>3. 对数几率回归</h2><h3 id="3-1-说明"><a href="#3-1-说明" class="headerlink" title="3.1 说明"></a>3.1 说明</h3><p>从广义线性模型可知，对于二分类问题，我们需要找到一个单调可微的函数将分类任务的真实标记$y$与线性回归模型的预测值联系起来。</p>
+<p>二分类输出标记$y \in {0, 1}$，而线性回归模型产生的预测值$z = \boldsymbol{w}^T\boldsymbol{x} + b$是实值，需要将$z$转换成0/1值。单位阶跃函数与sigmoid函数</p>
+<!-- ![](images/sigmoid.jpg) -->
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/18/sigmoid.jpg" alt="sigmoid.jpg"></p>
+<p>由于单位阶跃函数不连续，所以不能作为$g^-(\cdot)$，所以使用与单位阶跃函数形状类似的sigmoid函数（也有其他类似的函数）</p>
+<p>$$<br>y = \frac{1}{1 + e^{-(\boldsymbol{w}^T\boldsymbol{x} + b)}}<br>$$</p>
+<p>分类问题变成线性回归问题</p>
+<p>$$<br>\ln \frac{y}{1-y} = \boldsymbol{w}^T\boldsymbol{x} + b<br>$$</p>
+<p>若将$y$视为样本$\boldsymbol{x}$作为正例的可能性，则$1-y$是其反例可能性，两者的比值</p>
+<p>$$<br>\frac{y}{1-y}<br>$$</p>
+<p>称为“几率”，反映了$\boldsymbol{x}$作为正例的相对可能性。对其取对数则得到“对数几率”</p>
+<p>$$<br>\ln \frac{y}{1-y}<br>$$</p>
+<h3 id="3-2-数学推导"><a href="#3-2-数学推导" class="headerlink" title="3.2 数学推导"></a>3.2 数学推导</h3><p>将$y$视为类后验概率估计$p(y=1\mid\boldsymbol{x})$，则$1-y$视为$p(y=0\mid\boldsymbol{x})$</p>
+<p>$$<br>\ln \frac{p(y=1\mid\boldsymbol{x})}{p(y=0\mid\boldsymbol{x})} = \boldsymbol{w}^T\boldsymbol{x} + b<br>$$</p>
+<p>显然有</p>
+<p>$$<br>p(y=1\mid\boldsymbol{x}) = \frac{e^{\boldsymbol{w}^T\boldsymbol{x} + b}}{1 + e^{\boldsymbol{w}^T\boldsymbol{x} + b}}<br>\<br>p(y=0\mid\boldsymbol{x}) = \frac{1}{1 + e^{\boldsymbol{w}^T\boldsymbol{x} + b}}<br>$$</p>
+<p>通过“极大似然法”来估计$\boldsymbol{w}$和$b$，给定数据集${(\boldsymbol{x}<em>i, y_i)}^m</em>{i=1}$，对率回归模型最大化“对数似然”</p>
+<p>$$<br>l (\boldsymbol{w}, b) = \sum^m_{i=1}\ln p(y_i \mid \boldsymbol{x}_i; \boldsymbol{w}, b)<br>$$</p>
+<p>即令每个样本属于其真实标记的概率越大越好。令$\beta = (\boldsymbol{w}; b)，\hat{\boldsymbol{x}} = (\boldsymbol{x}; 1)$，则$\boldsymbol{w}^T\boldsymbol{x} + b$可简写为$\beta^T\hat{\boldsymbol{x}}$，再令$p_1(\hat{\boldsymbol{x}}; \beta) = p(y=1 \mid\hat{\boldsymbol{x}};\beta)，p_0(\hat{\boldsymbol{x}}; \beta) = p(y=0 \mid\hat{\boldsymbol{x}};\beta) = 1-p_1(\hat{\boldsymbol{x}}; \beta)$，则似然项重写为</p>
+<p>$$<br>p(y_i \mid \boldsymbol{x}_i; \boldsymbol{w}, b) = y_ip_1(\hat{\boldsymbol{x}}; \beta) + (1-y_i)p_0(\hat{\boldsymbol{x}}; \beta)<br>$$</p>
+<p>代入上式，得到最大化对数似然等价于最小化</p>
+<p>$$<br>l(\beta) = \sum^m_{i=1}(-y_i\beta^T\hat{\boldsymbol{x}_i} + \ln(1 + e^{\beta^T\hat{\boldsymbol{x}_i}}))<br>\<br>这里的-y_i\beta^T\hat{\boldsymbol{x}_i}不是直接计算得到的，通过等价替换，证明过程略<br>$$</p>
+<p>上式是关于$\beta$的高阶可导连续凸函数，可以使用数值优化算法如梯度下降、牛顿法等都可以求解</p>
+<p>$$<br>\beta^* = \underset{\beta}{\arg \min}l(\beta)<br>$$</p>
+<hr>
+<p>以牛顿法为例，其第$t+1$轮迭代解的更新公式为</p>
+<p>$$<br>\beta^{t+1} = \beta^t - (\frac{\partial^2 l(\beta)}{\partial \beta \partial \beta^T})^{-1}\frac{\partial l(\beta)}{\partial \beta}<br>$$</p>
+<p>其中关于$\beta$的一阶、二阶导数分别为</p>
+<p>$$<br>\frac{\partial l(\beta)}{\partial\beta} = -\sum^m_{i=1}\hat{\boldsymbol{x}<em>i}(y_i - p_1(\hat{\boldsymbol{x}_i}; \beta))<br>\<br>\frac{\partial^2 l(\beta)}{\partial \beta \partial \beta^T} = \sum^m</em>{i=1}\hat{\boldsymbol{x}_i}\hat{\boldsymbol{x}_i}^Tp_1(\hat{\boldsymbol{x}_i};\beta)(1-p_1(\hat{\boldsymbol{x}_i};\beta))<br>$$</p>
+<hr>
+<p>使用梯度下降法求解：</p>
+<p>$$<br>\frac{\partial l(\beta)}{\partial\beta} = \sum^m_{i=1}\hat{\boldsymbol{x}<em>i}(p_1(\hat{\boldsymbol{x}_i}; \beta) - y_i)，我们可以看到p_1其实就是预测的y值，y_i是实际值<br>\<br>\beta = \beta - \alpha \frac{\partial l(\beta)}{\partial\beta}，\alpha为学习率，控制\alpha下降速度<br>\<br>重新定义一下X为数据集矩阵，X^T为其转置，E = y</em>{pre} - y_i，则\beta = \beta - \alpha \cdot X^T \cdot E<br>$$</p>
+<h2 id="4-线性判别分析LDA"><a href="#4-线性判别分析LDA" class="headerlink" title="4. 线性判别分析LDA"></a>4. 线性判别分析LDA</h2><h3 id="4-1-基本思想"><a href="#4-1-基本思想" class="headerlink" title="4.1 基本思想"></a>4.1 基本思想</h3><p>对二分类问题，给定训练样例集，设法将样例投影到一条直线上，使得同类样例的投影点尽可能接近、异类样例的投影点尽可能远离；在对新样例进行分类时，将其投影到同样的这条直线上，再根据投影点的位置来确定新样本的类别</p>
+<!-- ![](images/lda.png) -->
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/18/lda.png" alt="lda.png"></p>
+<h3 id="4-2-数学推导"><a href="#4-2-数学推导" class="headerlink" title="4.2 数学推导"></a>4.2 数学推导</h3><p>给定数据集$D = {(\boldsymbol{x}<em>i, y_i)}^m</em>{i=1}，y_i \in {0, 1}$，令$X_i、\mu_i、\Sigma_i$分别表示第$i\in{0,1}$类示例的集和、均值向量、协方差矩阵。若将数据投影到直线$\boldsymbol{w}$上，则两类样本的中心在直线上的投影分别为$\boldsymbol{w}^T\mu_0$和$\boldsymbol{w}^T\mu_1$；若将所有样本点都投影到直线上，则两类样本的协方差分别为$\boldsymbol{w}^T\Sigma_0\boldsymbol{w}$和$\boldsymbol{w}^T\Sigma_1\boldsymbol{w}$，由于直线是一维空间，因此4个值均为实数。</p>
+<p>同类样例的投影点尽可能接近，即$\boldsymbol{w}^T\Sigma_0\boldsymbol{w} + \boldsymbol{w}^T\Sigma_1\boldsymbol{w}$尽可能小；异类样例的投影点尽可能远离，即${\parallel \boldsymbol{w}^T\mu_0 - \boldsymbol{w}^T\mu_1\parallel}^2_2$尽可能大。若同时考虑二者，则最大化目标为</p>
+<p>$$<br>J = \frac{\parallel \boldsymbol{w}^T\mu_0 - \boldsymbol{w}^T\mu_1 \parallel^2_2}{\boldsymbol{w}^T\Sigma_0\boldsymbol{w} + \boldsymbol{w}^T\Sigma_1\boldsymbol{w}}<br>\<br>= \frac{\boldsymbol{w}^T(\mu_0-\mu_1)(\mu_0-\mu_1)^T\boldsymbol{w}}{\boldsymbol{w}^T(\Sigma_0 + \Sigma_1)\boldsymbol{w}}<br>$$</p>
+<p><strong>类间散度矩阵</strong></p>
+<p>$$<br>S_w = \Sigma_0 + \Sigma_1<br>\<br>= \sum_{\boldsymbol{x}\in X_0}(\boldsymbol{x}-\mu_0)(\boldsymbol{x}-\mu_0)^T + \sum_{\boldsymbol{x}\in X_1}(\boldsymbol{x}-\mu_1)(\boldsymbol{x}-\mu_1)^T<br>$$</p>
+<p><strong>类内散度矩阵</strong></p>
+<p>$$<br>S_b = (\mu_0-\mu_1)(\mu_0-\mu_1)^T<br>$$</p>
+<p>代入，可重写为</p>
+<p>$$<br>J = \frac{\boldsymbol{w}^TS_b\boldsymbol{w}}{\boldsymbol{w}^TS_w\boldsymbol{w}}<br>$$</p>
+<p>我们的目标变成了求解$\boldsymbol{w}$使得$J$最大，表达式分子和分母都是关于$\boldsymbol{w}$的二次项，因此上式的解与$\boldsymbol{w}$的长度无关，只与其方向有关。不失一般性，令$\boldsymbol{w}^TS_w\boldsymbol{w}=1$，则上式等价于</p>
+<p>$$<br>\underset{\boldsymbol{w}}{\min} -\boldsymbol{w}^TS_b\boldsymbol{w}<br>\<br>s.t. \quad \boldsymbol{w}^TS_w\boldsymbol{w} = 1<br>$$</p>
+<p>由拉格朗日乘子法（拉格朗日乘子系数，导数为0），上式等价于</p>
+<p>$$<br>S_b\boldsymbol{w} = \lambda S_w \boldsymbol{w}<br>$$</p>
+<p>又因为$S_b\boldsymbol{w}$的方向恒为$\mu_0 - \mu_1$，不妨令</p>
+<p>$$<br>S_b\boldsymbol{w} = \lambda(\mu_0 - \mu_1)<br>$$</p>
+<p>代入得</p>
+<p>$$<br>\boldsymbol{w} = S_w^{-1}(\mu_0 - \mu_1)<br>$$</p>
+<p>现在我们只需要知道$S_w^{-1}$的值就可以得到最优解，在实践中通常是对$S_w$进行奇异值分解，即$S_w = U \Sigma V^T$，这里$\Sigma$是一个实对角矩阵，其对角线上的元素是$S_w$的奇异值，然后再由$S_w^{-1} = V\Sigma^{-1}U^T$得到$S_w^{-1}$</p>
+<h3 id="4-3-推广"><a href="#4-3-推广" class="headerlink" title="4.3 推广"></a>4.3 推广</h3><p>将LDA推广到多分类任务中，假定存在$N$个类，且第$i$类示例数为$m_i$。</p>
+<p><strong>全局散度矩阵</strong>，$\mu$是所有示例的均值向量</p>
+<p>$$<br>S_t = S_b + S_w<br>\<br>= \sum^m_{i=1}(\boldsymbol{x}_i - \mu)(\boldsymbol{x}_i - \mu)^T<br>$$</p>
+<p><strong>类内散度矩阵</strong></p>
+<p>$$<br>S_w = \sum^N_{i=1}S_{w_i}<br>\<br>其中S_{w_i} = \sum_{\boldsymbol{x} \in X_i}(\boldsymbol{x} - \mu_i)(\boldsymbol{x} - \mu_i)^T<br>$$</p>
+<p><strong>类间散度矩阵</strong></p>
+<p>$$<br>S_b = S_t - S_w<br>\<br>= \sum^N_{i=1}m_i(\mu_i - \mu)(\mu_i - \mu)^T<br>$$</p>
+<hr>
+<p>同理，优化目标变成</p>
+<p>$$<br>\underset{W}{\max} \frac{tr(W^TS_bW)}{tr(W^TS_wW)}<br>$$</p>
+<p>其中$W\in \mathbb{R}^{d \times (N - 1)}$，$tr(\cdot)$表示矩阵的迹</p>
+<p>$$<br>S_bW = \lambda S_wW<br>$$</p>
+<p>$W$的闭式解则是$S_w^{-1}S_b$的$d’$个最大非零广义特征值所对应的特征向量组成的矩阵，$d’ \leqslant N-1$。</p>
+<p>若将$W$视为一个投影矩阵，则多分类LDA将样本投影到$d’$维空间，$d’$通常远小于$d$，因此LDA也常被视为一种降维技术。</p>
+<h2 id="5-多分类学习"><a href="#5-多分类学习" class="headerlink" title="5. 多分类学习"></a>5. 多分类学习</h2><h3 id="5-1-一对一OvO"><a href="#5-1-一对一OvO" class="headerlink" title="5.1 一对一OvO"></a>5.1 一对一OvO</h3><blockquote>
+<p>$N$个类别两两配对，产生$N(N-1)/2$个二分类任务，投票产生结果</p>
+</blockquote>
+<!-- ![](images/OvO.png) -->
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/18/OvO.png" alt="OvO.png"></p>
+<h3 id="5-2-一对其余OvR"><a href="#5-2-一对其余OvR" class="headerlink" title="5.2 一对其余OvR"></a>5.2 一对其余OvR</h3><blockquote>
+<p>$N$个类别每次选一个作为正例，其余反例，产生$N$个分类器，取置信度最大的类别标记作为结果</p>
+</blockquote>
+<p>区别</p>
+<ul>
+<li>OvR需要$N$个分类器，OvO需要$N(N-1)/2$个分类器，因此OvO的存储开销和测试时间开销通常更大；</li>
+<li>OvR使用全部数据，OvO使用两个分类的数据，因此OvO训练时间开销通常更小；</li>
+<li>预测性能取决于具体的数据分布，在多数情况下两者差不多。</li>
+</ul>
+<h3 id="5-3-多对多MvM"><a href="#5-3-多对多MvM" class="headerlink" title="5.3 多对多MvM"></a>5.3 多对多MvM</h3><blockquote>
+<p>每次将若干类作为正类，若干个其它类作为反类，使用纠错输出码ECOC设计，将最小距离作为预测结果</p>
+</blockquote>
+<!-- ![](images/ecoc.png) -->
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/18/ecoc.png" alt="ecoc.png"></p>
+<h2 id="6-类别不平衡问题"><a href="#6-类别不平衡问题" class="headerlink" title="6. 类别不平衡问题"></a>6. 类别不平衡问题</h2><p>比如正例2个，反例998个，那么如果一个学习器始终将新样本预测为反例即可得到99.8%的准确率，可是这个有用吗？</p>
+<p>类别不平衡就是指分类任务中不同类别的训练样例数目差别很大的情况。</p>
+<p>若训练集中正反例数目相当，则分类器决策规则为</p>
+<p>$$<br>若\frac{y}{1-y} &gt; 1，则预测为正例<br>$$</p>
+<p>当训练集中正反例数目不同时，令$m^+，m^-$分别表示正反例数目，则</p>
+<p>$$<br>若\frac{y}{1-y} &gt; \frac{m^+}{m^-}，则预测为正例<br>$$</p>
+<p>同样的，只需要对预测值进行处理也可以实现同样的效果，即<strong>再缩放</strong></p>
+<p>$$<br>\frac{y’}{1-y’} = \frac{y}{1-y} \times \frac{m^-}{m^+}<br>$$</p>
+<p>当然还可以在数据采样的过程中避免出现类别不平衡：</p>
+<ul>
+<li>欠采样：去除过多的类别的样例，使正反样例数目相当；</li>
+<li>过采样：增加过少的类别的样例，使正反样例数目相当；</li>
+<li>使用再缩放</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">推荐文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/7d1dcda7.html" rel="bookmark">模型评估与选择</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/8ddc7426.html" rel="bookmark">决策树</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/280b588e.html" rel="bookmark">支持向量机</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/fcb2659b.html" rel="bookmark">数据集</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/79f15ca6.html" rel="bookmark">贝叶斯分类器</a></div>
+    </li>
+  </ul>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Tao Zhou
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhoutao822.coding.me/archives/5206f73f.html" title="线性模型">http://zhoutao822.coding.me/archives/5206f73f.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Theory/" rel="tag"># Theory</a>
+              <a href="/tags/Linear-Model/" rel="tag"># Linear Model</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/archives/fcb2659b.html" rel="prev" title="数据集">
+      <i class="fa fa-chevron-left"></i> 数据集
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/archives/8ddc7426.html" rel="next" title="决策树">
+      决策树 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
     let activeClass = CONFIG.comments.activeClass;
     if (CONFIG.comments.storage) {
       activeClass = localStorage.getItem('comments_active') || activeClass;
@@ -16,7 +565,120 @@
       let commentClass = event.target.classList[1];
       localStorage.setItem('comments_active', commentClass);
     });
-  }</script></div><div class="toggle sidebar-toggle"><span class="toggle-line toggle-line-first"></span> <span class="toggle-line toggle-line-middle"></span> <span class="toggle-line toggle-line-last"></span></div><aside class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc">文章目录</li><li class="sidebar-nav-overview">站点概览</li></ul><div class="post-toc-wrap sidebar-panel"><div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-基本形式"><span class="nav-text">1. 基本形式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-线性回归"><span class="nav-text">2. 线性回归</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-数学推导"><span class="nav-text">2.1 数学推导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-推广"><span class="nav-text">2.2 推广</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-结论与问题"><span class="nav-text">2.3 结论与问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-对数几率回归"><span class="nav-text">3. 对数几率回归</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-说明"><span class="nav-text">3.1 说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-数学推导"><span class="nav-text">3.2 数学推导</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-线性判别分析LDA"><span class="nav-text">4. 线性判别分析LDA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-基本思想"><span class="nav-text">4.1 基本思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-数学推导"><span class="nav-text">4.2 数学推导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-推广"><span class="nav-text">4.3 推广</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-多分类学习"><span class="nav-text">5. 多分类学习</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-一对一OvO"><span class="nav-text">5.1 一对一OvO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-一对其余OvR"><span class="nav-text">5.2 一对其余OvR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-多对多MvM"><span class="nav-text">5.3 多对多MvM</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-类别不平衡问题"><span class="nav-text">6. 类别不平衡问题</span></a></li></ol></div></div><div class="site-overview-wrap sidebar-panel"><div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"><img class="site-author-image" itemprop="image" alt="Tao Zhou" src="/images/avatar.jpg"><p class="site-author-name" itemprop="name">Tao Zhou</p><div class="site-description" itemprop="description">学习笔记</div></div><div class="site-state-wrap motion-element"><nav class="site-state"><div class="site-state-item site-state-posts"><a href="/archives/"><span class="site-state-item-count">61</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"><a href="/categories/"><span class="site-state-item-count">6</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"><a href="/tags/"><span class="site-state-item-count">126</span> <span class="site-state-item-name">标签</span></a></div></nav></div><div class="cc-license motion-element" itemprop="license"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a></div></div></div></aside><div id="sidebar-dimmer"></div></div></main><footer class="footer"><div class="footer-inner"><div class="copyright">&copy; <span itemprop="copyrightYear">2020</span> <span class="with-love"><i class="fa fa-user"></i> </span><span class="author" itemprop="copyrightHolder">Tao Zhou</span> <span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-area-chart"></i> </span><span title="站点总字数">897k</span> <span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-coffee"></i> </span><span title="站点阅读时长">13:36</span></div><div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0</div><span class="post-meta-divider">|</span><div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.0</div><script>function leancloudSelector(url) {
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-基本形式"><span class="nav-text">1. 基本形式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-线性回归"><span class="nav-text">2. 线性回归</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-数学推导"><span class="nav-text">2.1 数学推导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-推广"><span class="nav-text">2.2 推广</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-结论与问题"><span class="nav-text">2.3 结论与问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-对数几率回归"><span class="nav-text">3. 对数几率回归</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-说明"><span class="nav-text">3.1 说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-数学推导"><span class="nav-text">3.2 数学推导</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-线性判别分析LDA"><span class="nav-text">4. 线性判别分析LDA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-基本思想"><span class="nav-text">4.1 基本思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-数学推导"><span class="nav-text">4.2 数学推导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-推广"><span class="nav-text">4.3 推广</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-多分类学习"><span class="nav-text">5. 多分类学习</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-一对一OvO"><span class="nav-text">5.1 一对一OvO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-一对其余OvR"><span class="nav-text">5.2 一对其余OvR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-多对多MvM"><span class="nav-text">5.3 多对多MvM</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-类别不平衡问题"><span class="nav-text">6. 类别不平衡问题</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Tao Zhou"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Tao Zhou</p>
+  <div class="site-description" itemprop="description">学习笔记</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">61</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">126</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tao Zhou</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">897k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">13:36</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
     url = encodeURI(url);
     return document.getElementById(url).querySelector('.leancloud-visitors-count');
   }
@@ -105,7 +767,58 @@
       } else if (document.querySelectorAll('.post-title-link').length >= 1) {
         showTime(Counter);
       }
-    });</script></div></footer></div><script src="/lib/anime.min.js"></script><script src="/lib/velocity/velocity.min.js"></script><script src="/lib/velocity/velocity.ui.min.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/pisces.js"></script><script src="/js/next-boot.js"></script><script src="/js/local-search.js"></script><script type="text/x-mathjax-config">MathJax.Ajax.config.path['mhchem'] = '//cdn.jsdelivr.net/npm/mathjax-mhchem@3';
+    });
+  </script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+    MathJax.Ajax.config.path['mhchem'] = '//cdn.jsdelivr.net/npm/mathjax-mhchem@3';
 
   MathJax.Hub.Config({
     tex2jax: {
@@ -144,9 +857,21 @@
       }
       element.classList.add('has-jax');
     }
-  });</script><script>NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
     MathJax.Hub.Typeset();
-  }, window.MathJax);</script><script>NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
   NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
     var GUEST = ['nick', 'mail', 'link'];
     var guest = 'nick,mail,link';
@@ -170,4 +895,8 @@
       serverURLs: ''
     });
   }, window.Valine);
-});</script></body></html><!-- rebuild by neat -->
+});
+</script>
+
+</body>
+</html>

@@ -1,4 +1,426 @@
-<!-- build time:Sun Jan 19 2020 11:19:08 GMT+0800 (China Standard Time) --><!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2"><meta name="theme-color" content="#222"><meta name="generator" content="Hexo 4.2.0"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png"><link rel="mask-icon" href="/images/logo.svg" color="#222"><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css"><script id="hexo-configurations">var NexT=window.NexT||{},CONFIG={hostname:new URL("http://zhoutao822.coding.me").hostname,root:"/",scheme:"Pisces",version:"7.7.0",exturl:!1,sidebar:{position:"left",display:"post",padding:18,offset:12,onmobile:!1},copycode:{enable:!0,show_result:!0,style:"mac"},back2top:{enable:!0,sidebar:!1,scrollpercent:!0},bookmark:{enable:!1,color:"#222",save:"auto"},fancybox:!1,mediumzoom:!1,lazyload:!1,pangu:!1,comments:{style:"tabs",active:"valine",storage:!0,lazyload:!1,nav:null,activeClass:"valine"},algolia:{appID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"Search for Posts",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}},localsearch:{enable:!0,trigger:"auto",top_n_per_article:1,unescape:!0,preload:!0},path:"search.xml",motion:{enable:!0,async:!1,transition:{post_block:"fadeIn",post_header:"slideDownIn",post_body:"slideDownIn",coll_header:"slideLeftIn",sidebar:"slideUpIn"}}}</script><meta name="description" content="参考：Chevereto Free Docker使用Docker轻松搭建个人图床chevereto"><meta property="og:type" content="article"><meta property="og:title" content="Docker-Ubuntu服务器安装chevereto图床"><meta property="og:url" content="http://zhoutao822.coding.me/archives/44250e0e.html"><meta property="og:site_name" content="Tao"><meta property="og:description" content="参考：Chevereto Free Docker使用Docker轻松搭建个人图床chevereto"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/chevereto4.png"><meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/chevereto1.png"><meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/chevereto2.png"><meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/chevereto3.png"><meta property="article:published_time" content="2020-01-14T11:47:47.000Z"><meta property="article:modified_time" content="2020-01-18T14:54:02.613Z"><meta property="article:author" content="Tao Zhou"><meta property="article:tag" content="Ubuntu"><meta property="article:tag" content="Docker"><meta property="article:tag" content="Chevereto"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="http://114.116.9.65:7777/images/2020/01/18/chevereto4.png"><link rel="canonical" href="http://zhoutao822.coding.me/archives/44250e0e.html"><script id="page-configurations">CONFIG.page={sidebar:"",isHome:!1,isPost:!0}</script><title>Docker-Ubuntu服务器安装chevereto图床 | Tao</title><noscript><style>.sidebar-inner,.use-motion .brand,.use-motion .collection-header,.use-motion .comments,.use-motion .menu-item,.use-motion .pagination,.use-motion .post-block,.use-motion .post-body,.use-motion .post-header{opacity:initial}.use-motion .site-subtitle,.use-motion .site-title{opacity:initial;top:initial}.use-motion .logo-line-before i{left:initial}.use-motion .logo-line-after i{right:initial}</style></noscript><link rel="alternate" href="/atom.xml" title="Tao" type="application/atom+xml"></head><body itemscope itemtype="http://schema.org/WebPage"><div class="container use-motion"><div class="headband"></div><header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-brand-container"><div class="site-meta"><div><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">Tao</span> <span class="logo-line-after"><i></i></span></a></div></div><div class="site-nav-toggle"><div class="toggle" aria-label="切换导航栏"><span class="toggle-line toggle-line-first"></span> <span class="toggle-line toggle-line-middle"></span> <span class="toggle-line toggle-line-last"></span></div></div></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a></li><li class="menu-item menu-item-search"><a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索</a></li></ul></nav><div class="site-search"><div class="popup search-popup"><div class="search-header"><span class="search-icon"><i class="fa fa-search"></i></span><div class="search-input-container"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="搜索..." spellcheck="false" type="text" id="search-input"></div><span class="popup-btn-close"><i class="fa fa-times-circle"></i></span></div><div id="search-result"></div></div><div class="search-pop-overlay"></div></div></div></header><div class="back-to-top"><i class="fa fa-arrow-up"></i> <span>0%</span></div><div class="reading-progress-bar"></div><main class="main"><div class="main-inner"><div class="content-wrap"><div class="content"><div class="posts-expand"><article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN"><link itemprop="mainEntityOfPage" href="http://zhoutao822.coding.me/archives/44250e0e.html"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="image" content="/images/avatar.jpg"><meta itemprop="name" content="Tao Zhou"><meta itemprop="description" content="学习笔记"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Tao"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Docker-Ubuntu服务器安装chevereto图床</h1><div class="post-meta"><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i> </span><span class="post-meta-item-text">发表于</span> <time title="创建时间：2020-01-14 19:47:47" itemprop="dateCreated datePublished" datetime="2020-01-14T19:47:47+08:00">2020-01-14</time> </span><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-calendar-check-o"></i> </span><span class="post-meta-item-text">更新于</span> <time title="修改时间：2020-01-18 22:54:02" itemprop="dateModified" datetime="2020-01-18T22:54:02+08:00">2020-01-18</time> </span><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i> </span><span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Tips/" itemprop="url" rel="index"><span itemprop="name">Tips</span> </a></span></span><span id="/archives/44250e0e.html" class="post-meta-item leancloud_visitors" data-flag-title="Docker-Ubuntu服务器安装chevereto图床" title="阅读次数"><span class="post-meta-item-icon"><i class="fa fa-eye"></i> </span><span class="post-meta-item-text">阅读次数：</span> <span class="leancloud-visitors-count"></span> </span><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-comment-o"></i> </span><span class="post-meta-item-text">Valine：</span> <a title="valine" href="/archives/44250e0e.html#comments" itemprop="discussionUrl"><span class="post-comments-count valine-comment-count" data-xid="/archives/44250e0e.html" itemprop="commentCount"></span></a></span><br><span class="post-meta-item" title="本文字数"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i> </span><span class="post-meta-item-text">本文字数：</span> <span>3.4k</span> </span><span class="post-meta-item" title="阅读时长"><span class="post-meta-item-icon"><i class="fa fa-clock-o"></i> </span><span class="post-meta-item-text">阅读时长 &asymp;</span> <span>3 分钟</span></span></div></header><div class="post-body" itemprop="articleBody"><p>参考：</p><blockquote><p><a href="https://hub.docker.com/r/nmtan/chevereto/" target="_blank" rel="noopener">Chevereto Free Docker</a><br><a href="https://zealot.top/%E4%BD%BF%E7%94%A8Docker%E8%BD%BB%E6%9D%BE%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%9B%BE%E5%BA%8Achevereto.html" target="_blank" rel="noopener">使用Docker轻松搭建个人图床chevereto</a></p></blockquote><p><img src="http://114.116.9.65:7777/images/2020/01/18/chevereto4.png" alt="chevereto4.png"></p><a id="more"></a><h2 id="1-Ubuntu服务器安装docker"><a href="#1-Ubuntu服务器安装docker" class="headerlink" title="1. Ubuntu服务器安装docker"></a>1. Ubuntu服务器安装docker</h2><p><strong>强烈建议在ubuntu上使用apt安装docker，brew安装docker会出现很多问题</strong></p><p>需要安装两个关键包<code>docker</code>和<code>docker-compose</code>，前者是docker容器，后者是一个可以根据<code>docker-compose.yml</code>配置文件快速部署docker应用的软件，后续会使用到。</p><p>使用<code>sudo apt install docker.io</code>以及<code>sudo apt install docker-compose</code>安装（如果你想尝试使用brew也可以按照以下方式使用）。</p><p>首先查看一下docker相关包</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">ubuntu@VM-0-9-ubuntu ~ brew search docker</span><br><span class="line">==&gt; Formulae</span><br><span class="line">docker                             docker-ls                          docker-machine-parallels</span><br><span class="line">docker-clean                       docker-machine                     docker-slim</span><br><span class="line">docker-completion                  docker-machine-completion          docker-squash</span><br><span class="line">docker-compose                     docker-machine-driver-hyperkit     docker-swarm</span><br><span class="line">docker-compose-completion          docker-machine-driver-vmware       docker2aci</span><br><span class="line">docker-credential-helper           docker-machine-driver-vultr        dockerize</span><br><span class="line">docker-credential-helper-ecr       docker-machine-driver-xhyve        lazydocker</span><br><span class="line">docker-gen                         docker-machine-nfs</span><br><span class="line"></span><br><span class="line">==&gt; Casks</span><br><span class="line">homebrew/cask-versions/docker-edge                   homebrew/cask/docker-toolbox</span><br><span class="line">homebrew/cask/docker</span><br></pre></td></tr></table></figure><p>执行<code>brew install docker</code>以及<code>brew install docker-compose</code></p><p>安装完成查看版本信息并<strong>开启docker服务<code>sudo systemctl stop docker</code></strong>，然后可以执行<code>docker run hello-world</code>测试docker是否可以正常运行</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">ubuntu@VM-0-9-ubuntu ~ docker-compose -v</span><br><span class="line">docker-compose version 1.25.1, build unknown</span><br><span class="line">ubuntu@VM-0-9-ubuntu ~ docker -v        </span><br><span class="line">Docker version 19.03.5, build 633a0ea</span><br><span class="line">ubuntu@VM-0-9-ubuntu ~ sudo systemctl stop docker</span><br><span class="line"></span><br><span class="line">ubuntu@VM-0-9-ubuntu ~ docker run hello-world</span><br><span class="line">Unable to find image 'hello-world:latest' locally</span><br><span class="line">latest: Pulling from library/hello-world</span><br><span class="line">1b930d010525: Pull complete </span><br><span class="line">Digest: sha256:d1668a9a1f5b42ed3f46b70b9cb7c88fd8bdc8a2d73509bb0041cf436018fbf5</span><br><span class="line">Status: Downloaded newer image for hello-world:latest</span><br><span class="line"></span><br><span class="line">Hello from Docker!</span><br><span class="line">This message shows that your installation appears to be working correctly.</span><br></pre></td></tr></table></figure><h2 id="2-配置docker-compose"><a href="#2-配置docker-compose" class="headerlink" title="2. 配置docker-compose"></a>2. 配置docker-compose</h2><p>Chevereto支持通过docker部署，这样方便进行管理而且不会影响服务器环境，数据保存和导入也更加方便。使用<code>docker-compose</code>可以快速部署，并且配置一些数据卷挂载以及依赖容器等等。</p><p>首先在根目录下创建一个隐藏文件夹<code>.chevereto</code>存放我们的配置文件以及挂载的数据卷，进入<code>.chevereto</code>目录，并新建一个<code>docker-compose.yml</code>文件，以及三个文件夹<code>chevereto_images、conf、database</code>，<code>docker-compose.yml</code>内容如下：</p><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'3'</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">db:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">mariadb</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">chevereto-mysql</span></span><br><span class="line">    <span class="comment"># 挂载容器中的mysql数据卷到本地database文件夹</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./database:/var/lib/mysql:rw</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">chevereto-net</span></span><br><span class="line">    <span class="comment"># 设置容器中的mysql的root用户密码以及其他用户</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">MYSQL_ROOT_PASSWORD:</span> <span class="string">root</span></span><br><span class="line">      <span class="attr">MYSQL_DATABASE:</span> <span class="string">chevereto</span></span><br><span class="line">      <span class="attr">MYSQL_USER:</span> <span class="string">chevereto</span></span><br><span class="line">      <span class="attr">MYSQL_PASSWORD:</span> <span class="string">chevereto</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">chevereto:</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">db</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nmtan/chevereto</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">chevereto</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">chevereto-net</span></span><br><span class="line">    <span class="comment"># 设置CHEVERETO_DB的一些参数</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">CHEVERETO_DB_HOST:</span> <span class="string">db</span></span><br><span class="line">      <span class="attr">CHEVERETO_DB_USERNAME:</span> <span class="string">chevereto</span></span><br><span class="line">      <span class="attr">CHEVERETO_DB_PASSWORD:</span> <span class="string">chevereto</span></span><br><span class="line">      <span class="attr">CHEVERETO_DB_NAME:</span> <span class="string">chevereto</span></span><br><span class="line">      <span class="attr">CHEVERETO_DB_PREFIX:</span> <span class="string">chv_</span></span><br><span class="line">    <span class="comment"># 挂载容器中的images文件夹到本地的chevereto_images文件夹，以及</span></span><br><span class="line">    <span class="comment"># 将本地的conf/upload.ini配置文件挂载到容器的/usr/local/etc/php/conf.d/中</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./chevereto_images:/var/www/html/images:rw</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./conf/upload.ini:/usr/local/etc/php/conf.d/upload.ini:ro</span></span><br><span class="line">    <span class="comment"># 端口映射，本机:容器，需要配置安全组</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">7777</span><span class="string">:80</span></span><br><span class="line"></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">chevereto-net:</span></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">database:</span></span><br><span class="line">  <span class="attr">chevereto_images:</span></span><br></pre></td></tr></table></figure><p>我们创建的三个文件夹分别挂载了不同的容器文件夹，<code>chevereto_images</code>和<code>database</code>用于数据迁移，<code>/conf/upload.ini</code>用于配置上传文件限制。</p><p>在<code>conf</code>目录中创建<code>upload.ini</code>，这个可以取消2MB文件上传限制，内容如下：</p><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">PHP:</span><br><span class="line"><span class="attr">max_execution_time</span> = <span class="number">60</span><span class="comment">;</span></span><br><span class="line"><span class="attr">memory_limit</span> = <span class="number">256</span>M<span class="comment">;</span></span><br><span class="line"><span class="attr">upload_max_filesize</span> = <span class="number">256</span>M<span class="comment">;</span></span><br><span class="line"><span class="attr">post_max_size</span> =  <span class="number">256</span>M<span class="comment">;</span></span><br></pre></td></tr></table></figure><p>然后修改权限<code>sudo chown -R www-data:www-data database chevereto_images conf</code>，最后启动<code>docker-compose up -d</code>，然后就可以通过IP+端口号访问chevereto图床了（<strong>应该只能通过http访问，https是不可以的</strong>）。首次登录如下：</p><p><img src="http://114.116.9.65:7777/images/2020/01/18/chevereto1.png" alt="chevereto1.png"></p><p>修改语言为中文</p><p><img src="http://114.116.9.65:7777/images/2020/01/18/chevereto2.png" alt="chevereto2.png"></p><p>可以看到文件上传大小被修改为上面的<code>uploda.ini</code>的内容了</p><p><img src="http://114.116.9.65:7777/images/2020/01/18/chevereto3.png" alt="chevereto3.png"></p><h2 id="3-数据迁移"><a href="#3-数据迁移" class="headerlink" title="3. 数据迁移"></a>3. 数据迁移</h2><p>上面我们的<code>database</code>文件夹保存的是我们的账号信息、配置信息等等，<code>chevereto_images</code>保存了我们上传的图片数据，如果我们需要从当前服务器迁移到另一个服务器只需要保存好<code>.chevereto</code>中的所有内容，然后全部放到另一个服务器的<code>.chevereto</code>目录中，同样设置权限，然后安装<code>docker</code>和<code>docker-compose</code>，然后执行<code>docker-compose up -d</code>就可以直接运行，我们的数据也会一起同步过来。</p></div><div class="popular-posts-header">推荐文章</div><ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><a href="/archives/2.9125e+72.html" rel="bookmark">Docker-Ubuntu服务器安装Seafile私人网盘</a></div></li><li class="popular-posts-item"><div class="popular-posts-title"><a href="/archives/3a6fd8b5.html" rel="bookmark">Ubuntu+linuxbrew+zsh+oh-my-zsh</a></div></li><li class="popular-posts-item"><div class="popular-posts-title"><a href="/archives/46c7a56d.html" rel="bookmark">Homebrew+MySQL+DataGrip</a></div></li><li class="popular-posts-item"><div class="popular-posts-title"><a href="/archives/eb46b14b.html" rel="bookmark">Mac+Anaconda+PyCharm/VSCode环境搭建</a></div></li><li class="popular-posts-item"><div class="popular-posts-title"><a href="/archives/b6ef4fe0.html" rel="bookmark">Git命令</a></div></li></ul><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者： </strong>Tao Zhou</li><li class="post-copyright-link"><strong>本文链接：</strong> <a href="http://zhoutao822.coding.me/archives/44250e0e.html" title="Docker-Ubuntu服务器安装chevereto图床">http://zhoutao822.coding.me/archives/44250e0e.html</a></li><li class="post-copyright-license"><strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li></ul></div><footer class="post-footer"><div class="post-tags"><a href="/tags/Ubuntu/" rel="tag"># Ubuntu</a> <a href="/tags/Docker/" rel="tag"># Docker</a> <a href="/tags/Chevereto/" rel="tag"># Chevereto</a></div><div class="post-nav"><div class="post-nav-item"><a href="/archives/46c7a56d.html" rel="prev" title="Homebrew+MySQL+DataGrip"><i class="fa fa-chevron-left"></i> Homebrew+MySQL+DataGrip</a></div><div class="post-nav-item"><a href="/archives/2.9125e+72.html" rel="next" title="Docker-Ubuntu服务器安装Seafile私人网盘">Docker-Ubuntu服务器安装Seafile私人网盘 <i class="fa fa-chevron-right"></i></a></div></div></footer></article></div></div><div class="comments" id="valine-comments"></div><script>window.addEventListener('tabs:register', () => {
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://zhoutao822.coding.me').hostname,
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"mac"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="参考：  Chevereto Free Docker使用Docker轻松搭建个人图床chevereto">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker-Ubuntu服务器安装chevereto图床">
+<meta property="og:url" content="http://zhoutao822.coding.me/archives/44250e0e.html">
+<meta property="og:site_name" content="Tao">
+<meta property="og:description" content="参考：  Chevereto Free Docker使用Docker轻松搭建个人图床chevereto">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/chevereto4.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/chevereto1.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/chevereto2.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/chevereto3.png">
+<meta property="article:published_time" content="2020-01-14T11:47:47.000Z">
+<meta property="article:modified_time" content="2020-01-18T14:54:02.613Z">
+<meta property="article:author" content="Tao Zhou">
+<meta property="article:tag" content="Ubuntu">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="Chevereto">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://114.116.9.65:7777/images/2020/01/18/chevereto4.png">
+
+<link rel="canonical" href="http://zhoutao822.coding.me/archives/44250e0e.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Docker-Ubuntu服务器安装chevereto图床 | Tao</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Tao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhoutao822.coding.me/archives/44250e0e.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Tao Zhou">
+      <meta itemprop="description" content="学习笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Docker-Ubuntu服务器安装chevereto图床
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-14 19:47:47" itemprop="dateCreated datePublished" datetime="2020-01-14T19:47:47+08:00">2020-01-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-18 22:54:02" itemprop="dateModified" datetime="2020-01-18T22:54:02+08:00">2020-01-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Tips/" itemprop="url" rel="index">
+                    <span itemprop="name">Tips</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/archives/44250e0e.html" class="post-meta-item leancloud_visitors" data-flag-title="Docker-Ubuntu服务器安装chevereto图床" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/archives/44250e0e.html#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/archives/44250e0e.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>参考：</p>
+<blockquote>
+<p><a href="https://hub.docker.com/r/nmtan/chevereto/" target="_blank" rel="noopener">Chevereto Free Docker</a><br><a href="https://zealot.top/%E4%BD%BF%E7%94%A8Docker%E8%BD%BB%E6%9D%BE%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%9B%BE%E5%BA%8Achevereto.html" target="_blank" rel="noopener">使用Docker轻松搭建个人图床chevereto</a></p>
+</blockquote>
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/18/chevereto4.png" alt="chevereto4.png"></p>
+<a id="more"></a>
+
+<h2 id="1-Ubuntu服务器安装docker"><a href="#1-Ubuntu服务器安装docker" class="headerlink" title="1. Ubuntu服务器安装docker"></a>1. Ubuntu服务器安装docker</h2><p><strong>强烈建议在ubuntu上使用apt安装docker，brew安装docker会出现很多问题</strong></p>
+<p>需要安装两个关键包<code>docker</code>和<code>docker-compose</code>，前者是docker容器，后者是一个可以根据<code>docker-compose.yml</code>配置文件快速部署docker应用的软件，后续会使用到。</p>
+<p>使用<code>sudo apt install docker.io</code>以及<code>sudo apt install docker-compose</code>安装（如果你想尝试使用brew也可以按照以下方式使用）。</p>
+<p>首先查看一下docker相关包</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">ubuntu@VM-0-9-ubuntu ~ brew search docker</span><br><span class="line">==&gt; Formulae</span><br><span class="line">docker                             docker-ls                          docker-machine-parallels</span><br><span class="line">docker-clean                       docker-machine                     docker-slim</span><br><span class="line">docker-completion                  docker-machine-completion          docker-squash</span><br><span class="line">docker-compose                     docker-machine-driver-hyperkit     docker-swarm</span><br><span class="line">docker-compose-completion          docker-machine-driver-vmware       docker2aci</span><br><span class="line">docker-credential-helper           docker-machine-driver-vultr        dockerize</span><br><span class="line">docker-credential-helper-ecr       docker-machine-driver-xhyve        lazydocker</span><br><span class="line">docker-gen                         docker-machine-nfs</span><br><span class="line"></span><br><span class="line">==&gt; Casks</span><br><span class="line">homebrew/cask-versions/docker-edge                   homebrew/cask/docker-toolbox</span><br><span class="line">homebrew/cask/docker</span><br></pre></td></tr></table></figure>
+
+<p>执行<code>brew install docker</code>以及<code>brew install docker-compose</code></p>
+<p>安装完成查看版本信息并<strong>开启docker服务<code>sudo systemctl stop docker</code></strong>，然后可以执行<code>docker run hello-world</code>测试docker是否可以正常运行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">ubuntu@VM-0-9-ubuntu ~ docker-compose -v</span><br><span class="line">docker-compose version 1.25.1, build unknown</span><br><span class="line">ubuntu@VM-0-9-ubuntu ~ docker -v        </span><br><span class="line">Docker version 19.03.5, build 633a0ea</span><br><span class="line">ubuntu@VM-0-9-ubuntu ~ sudo systemctl stop docker</span><br><span class="line"></span><br><span class="line">ubuntu@VM-0-9-ubuntu ~ docker run hello-world</span><br><span class="line">Unable to find image 'hello-world:latest' locally</span><br><span class="line">latest: Pulling from library/hello-world</span><br><span class="line">1b930d010525: Pull complete </span><br><span class="line">Digest: sha256:d1668a9a1f5b42ed3f46b70b9cb7c88fd8bdc8a2d73509bb0041cf436018fbf5</span><br><span class="line">Status: Downloaded newer image for hello-world:latest</span><br><span class="line"></span><br><span class="line">Hello from Docker!</span><br><span class="line">This message shows that your installation appears to be working correctly.</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-配置docker-compose"><a href="#2-配置docker-compose" class="headerlink" title="2. 配置docker-compose"></a>2. 配置docker-compose</h2><p>Chevereto支持通过docker部署，这样方便进行管理而且不会影响服务器环境，数据保存和导入也更加方便。使用<code>docker-compose</code>可以快速部署，并且配置一些数据卷挂载以及依赖容器等等。</p>
+<p>首先在根目录下创建一个隐藏文件夹<code>.chevereto</code>存放我们的配置文件以及挂载的数据卷，进入<code>.chevereto</code>目录，并新建一个<code>docker-compose.yml</code>文件，以及三个文件夹<code>chevereto_images、conf、database</code>，<code>docker-compose.yml</code>内容如下：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'3'</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">db:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">mariadb</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">chevereto-mysql</span></span><br><span class="line">    <span class="comment"># 挂载容器中的mysql数据卷到本地database文件夹</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./database:/var/lib/mysql:rw</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">chevereto-net</span></span><br><span class="line">    <span class="comment"># 设置容器中的mysql的root用户密码以及其他用户</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">MYSQL_ROOT_PASSWORD:</span> <span class="string">root</span></span><br><span class="line">      <span class="attr">MYSQL_DATABASE:</span> <span class="string">chevereto</span></span><br><span class="line">      <span class="attr">MYSQL_USER:</span> <span class="string">chevereto</span></span><br><span class="line">      <span class="attr">MYSQL_PASSWORD:</span> <span class="string">chevereto</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">chevereto:</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">db</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nmtan/chevereto</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">chevereto</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">chevereto-net</span></span><br><span class="line">    <span class="comment"># 设置CHEVERETO_DB的一些参数</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">CHEVERETO_DB_HOST:</span> <span class="string">db</span></span><br><span class="line">      <span class="attr">CHEVERETO_DB_USERNAME:</span> <span class="string">chevereto</span></span><br><span class="line">      <span class="attr">CHEVERETO_DB_PASSWORD:</span> <span class="string">chevereto</span></span><br><span class="line">      <span class="attr">CHEVERETO_DB_NAME:</span> <span class="string">chevereto</span></span><br><span class="line">      <span class="attr">CHEVERETO_DB_PREFIX:</span> <span class="string">chv_</span></span><br><span class="line">    <span class="comment"># 挂载容器中的images文件夹到本地的chevereto_images文件夹，以及</span></span><br><span class="line">    <span class="comment"># 将本地的conf/upload.ini配置文件挂载到容器的/usr/local/etc/php/conf.d/中</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./chevereto_images:/var/www/html/images:rw</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./conf/upload.ini:/usr/local/etc/php/conf.d/upload.ini:ro</span></span><br><span class="line">    <span class="comment"># 端口映射，本机:容器，需要配置安全组</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">7777</span><span class="string">:80</span></span><br><span class="line"></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">chevereto-net:</span></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">database:</span></span><br><span class="line">  <span class="attr">chevereto_images:</span></span><br></pre></td></tr></table></figure>
+
+<p>我们创建的三个文件夹分别挂载了不同的容器文件夹，<code>chevereto_images</code>和<code>database</code>用于数据迁移，<code>/conf/upload.ini</code>用于配置上传文件限制。</p>
+<p>在<code>conf</code>目录中创建<code>upload.ini</code>，这个可以取消2MB文件上传限制，内容如下：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">PHP:</span><br><span class="line"><span class="attr">max_execution_time</span> = <span class="number">60</span><span class="comment">;</span></span><br><span class="line"><span class="attr">memory_limit</span> = <span class="number">256</span>M<span class="comment">;</span></span><br><span class="line"><span class="attr">upload_max_filesize</span> = <span class="number">256</span>M<span class="comment">;</span></span><br><span class="line"><span class="attr">post_max_size</span> =  <span class="number">256</span>M<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后修改权限<code>sudo chown -R www-data:www-data database chevereto_images conf</code>，最后启动<code>docker-compose up -d</code>，然后就可以通过IP+端口号访问chevereto图床了（<strong>应该只能通过http访问，https是不可以的</strong>）。首次登录如下：</p>
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/18/chevereto1.png" alt="chevereto1.png"></p>
+<p>修改语言为中文</p>
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/18/chevereto2.png" alt="chevereto2.png"></p>
+<p>可以看到文件上传大小被修改为上面的<code>uploda.ini</code>的内容了</p>
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/18/chevereto3.png" alt="chevereto3.png"></p>
+<h2 id="3-数据迁移"><a href="#3-数据迁移" class="headerlink" title="3. 数据迁移"></a>3. 数据迁移</h2><p>上面我们的<code>database</code>文件夹保存的是我们的账号信息、配置信息等等，<code>chevereto_images</code>保存了我们上传的图片数据，如果我们需要从当前服务器迁移到另一个服务器只需要保存好<code>.chevereto</code>中的所有内容，然后全部放到另一个服务器的<code>.chevereto</code>目录中，同样设置权限，然后安装<code>docker</code>和<code>docker-compose</code>，然后执行<code>docker-compose up -d</code>就可以直接运行，我们的数据也会一起同步过来。</p>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">推荐文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/2.9125e+72.html" rel="bookmark">Docker-Ubuntu服务器安装Seafile私人网盘</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/46c7a56d.html" rel="bookmark">Homebrew+MySQL+DataGrip</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/3a6fd8b5.html" rel="bookmark">Ubuntu+linuxbrew+zsh+oh-my-zsh</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/eb46b14b.html" rel="bookmark">Mac+Anaconda+PyCharm/VSCode环境搭建</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/b6ef4fe0.html" rel="bookmark">Git命令</a></div>
+    </li>
+  </ul>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Tao Zhou
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhoutao822.coding.me/archives/44250e0e.html" title="Docker-Ubuntu服务器安装chevereto图床">http://zhoutao822.coding.me/archives/44250e0e.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Ubuntu/" rel="tag"># Ubuntu</a>
+              <a href="/tags/Docker/" rel="tag"># Docker</a>
+              <a href="/tags/Chevereto/" rel="tag"># Chevereto</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/archives/46c7a56d.html" rel="prev" title="Homebrew+MySQL+DataGrip">
+      <i class="fa fa-chevron-left"></i> Homebrew+MySQL+DataGrip
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/archives/2.9125e+72.html" rel="next" title="Docker-Ubuntu服务器安装Seafile私人网盘">
+      Docker-Ubuntu服务器安装Seafile私人网盘 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
     let activeClass = CONFIG.comments.activeClass;
     if (CONFIG.comments.storage) {
       activeClass = localStorage.getItem('comments_active') || activeClass;
@@ -16,7 +438,120 @@
       let commentClass = event.target.classList[1];
       localStorage.setItem('comments_active', commentClass);
     });
-  }</script></div><div class="toggle sidebar-toggle"><span class="toggle-line toggle-line-first"></span> <span class="toggle-line toggle-line-middle"></span> <span class="toggle-line toggle-line-last"></span></div><aside class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc">文章目录</li><li class="sidebar-nav-overview">站点概览</li></ul><div class="post-toc-wrap sidebar-panel"><div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Ubuntu服务器安装docker"><span class="nav-text">1. Ubuntu服务器安装docker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-配置docker-compose"><span class="nav-text">2. 配置docker-compose</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-数据迁移"><span class="nav-text">3. 数据迁移</span></a></li></ol></div></div><div class="site-overview-wrap sidebar-panel"><div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"><img class="site-author-image" itemprop="image" alt="Tao Zhou" src="/images/avatar.jpg"><p class="site-author-name" itemprop="name">Tao Zhou</p><div class="site-description" itemprop="description">学习笔记</div></div><div class="site-state-wrap motion-element"><nav class="site-state"><div class="site-state-item site-state-posts"><a href="/archives/"><span class="site-state-item-count">61</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"><a href="/categories/"><span class="site-state-item-count">6</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"><a href="/tags/"><span class="site-state-item-count">126</span> <span class="site-state-item-name">标签</span></a></div></nav></div><div class="cc-license motion-element" itemprop="license"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a></div></div></div></aside><div id="sidebar-dimmer"></div></div></main><footer class="footer"><div class="footer-inner"><div class="copyright">&copy; <span itemprop="copyrightYear">2020</span> <span class="with-love"><i class="fa fa-user"></i> </span><span class="author" itemprop="copyrightHolder">Tao Zhou</span> <span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-area-chart"></i> </span><span title="站点总字数">897k</span> <span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-coffee"></i> </span><span title="站点阅读时长">13:36</span></div><div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0</div><span class="post-meta-divider">|</span><div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.0</div><script>function leancloudSelector(url) {
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Ubuntu服务器安装docker"><span class="nav-text">1. Ubuntu服务器安装docker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-配置docker-compose"><span class="nav-text">2. 配置docker-compose</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-数据迁移"><span class="nav-text">3. 数据迁移</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Tao Zhou"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Tao Zhou</p>
+  <div class="site-description" itemprop="description">学习笔记</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">61</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">126</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tao Zhou</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">897k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">13:36</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
     url = encodeURI(url);
     return document.getElementById(url).querySelector('.leancloud-visitors-count');
   }
@@ -105,7 +640,61 @@
       } else if (document.querySelectorAll('.post-title-link').length >= 1) {
         showTime(Counter);
       }
-    });</script></div></footer></div><script src="/lib/anime.min.js"></script><script src="/lib/velocity/velocity.min.js"></script><script src="/lib/velocity/velocity.ui.min.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/pisces.js"></script><script src="/js/next-boot.js"></script><script src="/js/local-search.js"></script><script>NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+    });
+  </script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
   NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
     var GUEST = ['nick', 'mail', 'link'];
     var guest = 'nick,mail,link';
@@ -129,4 +718,8 @@
       serverURLs: ''
     });
   }, window.Valine);
-});</script></body></html><!-- rebuild by neat -->
+});
+</script>
+
+</body>
+</html>
