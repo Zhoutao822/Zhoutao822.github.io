@@ -1,4 +1,439 @@
-<!-- build time:Sat Jan 18 2020 23:11:40 GMT+0800 (China Standard Time) --><!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2"><meta name="theme-color" content="#222"><meta name="generator" content="Hexo 4.2.0"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png"><link rel="mask-icon" href="/images/logo.svg" color="#222"><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css"><script id="hexo-configurations">var NexT=window.NexT||{},CONFIG={hostname:new URL("http://zhoutao822.coding.me").hostname,root:"/",scheme:"Pisces",version:"7.7.0",exturl:!1,sidebar:{position:"left",display:"post",padding:18,offset:12,onmobile:!1},copycode:{enable:!0,show_result:!0,style:"mac"},back2top:{enable:!0,sidebar:!1,scrollpercent:!0},bookmark:{enable:!1,color:"#222",save:"auto"},fancybox:!1,mediumzoom:!1,lazyload:!1,pangu:!1,comments:{style:"tabs",active:"valine",storage:!0,lazyload:!1,nav:null,activeClass:"valine"},algolia:{appID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"Search for Posts",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}},localsearch:{enable:!0,trigger:"auto",top_n_per_article:1,unescape:!0,preload:!0},path:"search.xml",motion:{enable:!0,async:!1,transition:{post_block:"fadeIn",post_header:"slideDownIn",post_body:"slideDownIn",coll_header:"slideLeftIn",sidebar:"slideUpIn"}}}</script><meta name="description" content="参考：《解析深度学习-语音识别实践》第2章 混合高斯模型语音识别过程：切除首尾端静音—声音划分为帧—对每一帧提取MFCC特征—若干帧对应一个状态—三个状态组成一个音素—若干音素组成单词1. 高斯分布高斯分布又叫正态分布，在现实生活中充满了高斯分布，比如考试的分数、人的身高是一维高斯分布，图像处理领域的高斯模糊是二维高斯分布等等，通过高斯分布，我们可以很好的描述一类随机变量。对于连续型标量随机变量$"><meta property="og:type" content="article"><meta property="og:title" content="语音识别-GMM"><meta property="og:url" content="http://zhoutao822.coding.me/archives/24da735a.html"><meta property="og:site_name" content="Tao"><meta property="og:description" content="参考：《解析深度学习-语音识别实践》第2章 混合高斯模型语音识别过程：切除首尾端静音—声音划分为帧—对每一帧提取MFCC特征—若干帧对应一个状态—三个状态组成一个音素—若干音素组成单词1. 高斯分布高斯分布又叫正态分布，在现实生活中充满了高斯分布，比如考试的分数、人的身高是一维高斯分布，图像处理领域的高斯模糊是二维高斯分布等等，通过高斯分布，我们可以很好的描述一类随机变量。对于连续型标量随机变量$"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/gmm01.png"><meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/gmm0243a11433bb97d251.png"><meta property="article:published_time" content="2018-11-13T09:14:49.000Z"><meta property="article:modified_time" content="2020-01-18T14:50:50.129Z"><meta property="article:author" content="Tao Zhou"><meta property="article:tag" content="Theory"><meta property="article:tag" content="GMM"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="http://114.116.9.65:7777/images/2020/01/18/gmm01.png"><link rel="canonical" href="http://zhoutao822.coding.me/archives/24da735a.html"><script id="page-configurations">CONFIG.page={sidebar:"",isHome:!1,isPost:!0}</script><title>语音识别-GMM | Tao</title><noscript><style>.sidebar-inner,.use-motion .brand,.use-motion .collection-header,.use-motion .comments,.use-motion .menu-item,.use-motion .pagination,.use-motion .post-block,.use-motion .post-body,.use-motion .post-header{opacity:initial}.use-motion .site-subtitle,.use-motion .site-title{opacity:initial;top:initial}.use-motion .logo-line-before i{left:initial}.use-motion .logo-line-after i{right:initial}</style></noscript><link rel="alternate" href="/atom.xml" title="Tao" type="application/atom+xml"></head><body itemscope itemtype="http://schema.org/WebPage"><div class="container use-motion"><div class="headband"></div><header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-brand-container"><div class="site-meta"><div><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">Tao</span> <span class="logo-line-after"><i></i></span></a></div></div><div class="site-nav-toggle"><div class="toggle" aria-label="切换导航栏"><span class="toggle-line toggle-line-first"></span> <span class="toggle-line toggle-line-middle"></span> <span class="toggle-line toggle-line-last"></span></div></div></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a></li><li class="menu-item menu-item-search"><a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索</a></li></ul></nav><div class="site-search"><div class="popup search-popup"><div class="search-header"><span class="search-icon"><i class="fa fa-search"></i></span><div class="search-input-container"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="搜索..." spellcheck="false" type="text" id="search-input"></div><span class="popup-btn-close"><i class="fa fa-times-circle"></i></span></div><div id="search-result"></div></div><div class="search-pop-overlay"></div></div></div></header><div class="back-to-top"><i class="fa fa-arrow-up"></i> <span>0%</span></div><div class="reading-progress-bar"></div><main class="main"><div class="main-inner"><div class="content-wrap"><div class="content"><div class="posts-expand"><article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN"><link itemprop="mainEntityOfPage" href="http://zhoutao822.coding.me/archives/24da735a.html"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="image" content="/images/avatar.jpg"><meta itemprop="name" content="Tao Zhou"><meta itemprop="description" content="学习笔记"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Tao"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">语音识别-GMM</h1><div class="post-meta"><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i> </span><span class="post-meta-item-text">发表于</span> <time title="创建时间：2018-11-13 17:14:49" itemprop="dateCreated datePublished" datetime="2018-11-13T17:14:49+08:00">2018-11-13</time> </span><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-calendar-check-o"></i> </span><span class="post-meta-item-text">更新于</span> <time title="修改时间：2020-01-18 22:50:50" itemprop="dateModified" datetime="2020-01-18T22:50:50+08:00">2020-01-18</time> </span><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i> </span><span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Speech-Recognition/" itemprop="url" rel="index"><span itemprop="name">Speech Recognition</span> </a></span></span><span id="/archives/24da735a.html" class="post-meta-item leancloud_visitors" data-flag-title="语音识别-GMM" title="阅读次数"><span class="post-meta-item-icon"><i class="fa fa-eye"></i> </span><span class="post-meta-item-text">阅读次数：</span> <span class="leancloud-visitors-count"></span> </span><span class="post-meta-item"><span class="post-meta-item-icon"><i class="fa fa-comment-o"></i> </span><span class="post-meta-item-text">Valine：</span> <a title="valine" href="/archives/24da735a.html#comments" itemprop="discussionUrl"><span class="post-comments-count valine-comment-count" data-xid="/archives/24da735a.html" itemprop="commentCount"></span></a></span><br><span class="post-meta-item" title="本文字数"><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i> </span><span class="post-meta-item-text">本文字数：</span> <span>4.8k</span> </span><span class="post-meta-item" title="阅读时长"><span class="post-meta-item-icon"><i class="fa fa-clock-o"></i> </span><span class="post-meta-item-text">阅读时长 &asymp;</span> <span>4 分钟</span></span></div></header><div class="post-body" itemprop="articleBody"><p>参考：</p><blockquote><p>《解析深度学习-语音识别实践》第2章 混合高斯模型</p></blockquote><p><strong>语音识别过程：切除首尾端静音—声音划分为帧—对每一帧提取MFCC特征—若干帧对应一个状态—三个状态组成一个音素—若干音素组成单词</strong></p><h2 id="1-高斯分布"><a href="#1-高斯分布" class="headerlink" title="1. 高斯分布"></a>1. 高斯分布</h2><p>高斯分布又叫正态分布，在现实生活中充满了高斯分布，比如考试的分数、人的身高是一维高斯分布，图像处理领域的高斯模糊是二维高斯分布等等，通过高斯分布，我们可以很好的描述一类随机变量。</p><p>对于连续型标量随机变量$x$来说，若$x$服从正态分布，则其概率密度函数是</p><p>$$<br>p(x) = \frac{1}{(2\pi)^{1/2}\sigma} \exp[-\frac{1}{2}(\frac{x - \mu}{\sigma})^2] = N(x; \mu, \sigma^2)<br>\<br>(-\infty &lt; x &lt; \infty; \sigma &gt; 0)<br>$$</p><a id="more"></a><hr><p>对于多元正态随机变量$\boldsymbol{x} = (x_1, x_2,…,x_D)^T$，其联合概率密度</p><p>$$<br>p(\boldsymbol{x}) = \frac{1}{(2\pi)^{D/2}|\boldsymbol{\Sigma}|^{1/2}} \exp[-\frac{1}{2}(\boldsymbol{x} - \boldsymbol{\mu})^T\boldsymbol{\Sigma}^{-1}(\boldsymbol{x}-\boldsymbol{\mu})] = N(\boldsymbol{x};\boldsymbol{\mu}, \boldsymbol{\Sigma})<br>\<br>其中 \boldsymbol{\mu} = E(\boldsymbol{x}) \in \mathbb{R}^D; \boldsymbol{\Sigma} = E[(\boldsymbol{x} - \bar{\boldsymbol{x}})(\boldsymbol{x} - \bar{\boldsymbol{x}})^T] \in \mathbb{R}^{D \times D}<br>$$</p><hr><p>对于一个标量连续随机变量x，若其服从混合高斯分布，其概率密度函数</p><p>$$<br>p(x) = \sum^{M}<em>{m=1}\frac{c_m}{(2\pi)^{1/2}\sigma_m}\exp[-\frac{1}{2}(\frac{x-\mu_m}{\sigma_m})^2]<br>\<br>= \sum^{M}</em>{m=1}c_mN(x;\mu_m,\sigma^2_m)，其中\sum^M_{m=1}c_m = 1，E(x) = \sum^{M}_{m=1}c_m\mu_m<br>$$</p><hr><p>推广到多变量的多元混合高斯分布，其联合概率密度函数为</p><p>$$<br>p(\boldsymbol{x}) = \sum^{M}<em>{m=1}\frac{c_m}{(2\pi)^{D/2}|\boldsymbol{\Sigma}_m|^{1/2}}\exp[-\frac{1}{2}(\boldsymbol{x} - \boldsymbol{\mu}_m)^T\boldsymbol{\Sigma}^{-1}_m(\boldsymbol{x} - \boldsymbol{\mu}_m)]<br>\<br>= \sum^{M}</em>{m=1}c_mN(\boldsymbol{x};\boldsymbol{\mu}_m,\boldsymbol{\Sigma}_m)<br>$$</p><p>在多元混合高斯分布中，如果变量x的维度D很大（比如40），那么使用全协方差矩阵（非对角）（$\Sigma_m$）将引入大量参数（大约为$M \times D^2$）。为了减少这个数量，可以使用对角协方差矩阵。当M很大时，也可以限制所有的协方差为相同矩阵，对所有的混合成分m，将参数$\Sigma_m$绑定在一起。</p><h2 id="2-GMM示例"><a href="#2-GMM示例" class="headerlink" title="2. GMM示例"></a>2. GMM示例</h2><p>对于这样的二维数据分布，如何进行分类，若使用单个高斯成分，那么一个椭圆可以描述整体，但是根据观察，实际上这些数据应该属于两个不同的高斯成分，也就是说可以分为两类。</p><p><img src="http://114.116.9.65:7777/images/2020/01/18/gmm01.png" alt="gmm01.png"></p><p>那么我们使用两个二维高斯分布来描述这个分布，当然最后的结果使用了$c_m$进行叠加</p><p><img src="http://114.116.9.65:7777/images/2020/01/18/gmm0243a11433bb97d251.png" alt="gmm0243a11433bb97d251.png"></p><p>对于上例，我们定义$\boldsymbol{x} = (x_1, x_2)^T，M = 2$，则其GMM形式为</p><p>$$<br>p(\boldsymbol{x}) = c_1N(\boldsymbol{\mu}_1, \boldsymbol{\sigma}_1) + c_2N(\boldsymbol{\mu}_2, \boldsymbol{\sigma}_2)<br>$$</p><p>那么我们需要求解的参数为$(c_1, \boldsymbol{\mu}_1, \boldsymbol{\sigma}_1; c_2, \boldsymbol{\mu}_2, \boldsymbol{\sigma}_2)$</p><h2 id="3-参数估计"><a href="#3-参数估计" class="headerlink" title="3. 参数估计"></a>3. 参数估计</h2><p>这里使用EM算法（EM算法必收敛）估计参数变量$\Theta = {c_m, \boldsymbol{\mu}_m, \boldsymbol{\sigma}_m}$，首先回顾一下，GMM表示形式</p><p>$$<br>p(\boldsymbol{x}) = \sum^{M}_{m=1}c_mN(\boldsymbol{x};\boldsymbol{\mu}_m,\boldsymbol{\sigma}^2_m)<br>$$</p><p>其中$c_m$可以看作第m个高斯成分被选中的概率。我们引入一个新的M维变量$\boldsymbol{z}$，$z_m$只能取0或1；$z_m = 1$表示第m类被选中的概率$c_m$，即$p(z_m = 1) = c_m，且\sum^M_{m=1} z_m = 1$，所以$\boldsymbol{z}$的联合概率分布：</p><p>$$<br>p(\boldsymbol{z}) = p(z_1)p(z_2)…p(z_M) = \prod_{m=1}^{M}c_m^{z_m}<br>$$</p><p>又因为对于属于某一个高斯成分的数据来说（$z_m = 1$），其分布必定是高斯分布，所以</p><p>$$<br>p(\boldsymbol{x}|z_m = 1) = N(\boldsymbol{x}|\boldsymbol{\mu}_m, \boldsymbol{\sigma}_m)<br>$$</p><p>进而上式等价于</p><p>$$<br>p(\boldsymbol{x}|\boldsymbol{z}) = \prod_{m=1}^{M}N(\boldsymbol{x}|\boldsymbol{\mu}_m, \boldsymbol{\sigma}_m)^{z_m}<br>$$</p><p>我们有了$p(\boldsymbol{z})和p(\boldsymbol{x}|\boldsymbol{z})$，那么可以计算$p(\boldsymbol{x})$</p><p>$$<br>p(\boldsymbol{x}) = \sum_Z p(\boldsymbol{x}|\boldsymbol{z})p(\boldsymbol{z})<br>\<br>= \sum^{M}_{m=1}c_mN(\boldsymbol{x};\boldsymbol{\mu}_m,\boldsymbol{\sigma}^2_m)，z_m = 0的项在连乘中为1<br>$$</p><p>所以最终又回到了GMM的表示形式，但是我们增加了<strong>隐含变量z</strong>用于描述我们已经知道有多少个高斯成分。</p><hr><p>在贝叶斯的思想下，$p(\boldsymbol{z})$是先验概率，$p(\boldsymbol{x}|\boldsymbol{z})$是似然概率，我们可以求解出后验概率$p(\boldsymbol{z}|\boldsymbol{x})$。</p><p>E步：基于当前迭代轮数（用j表示），针对某个高斯成分m，用给定观察值$\boldsymbol{x}^{(t)}$计算得到的后验概率$t = 1, …, N，（N是采样率）$</p><p>$$<br>h^{(j)}<em>m(t) = p(z_m^{(j)}=1|\boldsymbol{x}^{(t)})<br>\<br>= \frac{p(z_m^{(j)}=1)p(\boldsymbol{x}^{(t)}|z_m^{(j)}=1)}{p(\boldsymbol{x}^{(t)})}<br>\<br>= \frac{p(z_m^{(j)}=1)p(\boldsymbol{x}^{(t)}|z_m^{(j)}=1)}{\sum^M</em>{i=1}p(z_i=1)p(\boldsymbol{x}^{(t)}|z_i=1)}<br>\<br>= \frac{c_m^{(j)}N(\boldsymbol{x}^{(t)}; \boldsymbol{\mu}<em>m^{(j)}, \boldsymbol{\sigma}_m^{(j)})}{\sum^M</em>{i=1}c_i^{(j)}N(\boldsymbol{x}^{(t)}; \boldsymbol{\mu}_i^{(j)}, \boldsymbol{\sigma}_i^{(j)})}<br>$$</p><p>M步：基于后验概率估计参数$\Theta$</p><p>$$<br>c_m^{(j + 1)} = \frac{1}{N}\sum^N_{t=1}h_m^{(j)}(t)<br>\<br>\boldsymbol{\mu}<em>m^{(j + 1)} = \frac{\sum^N</em>{t=1}h_m^{(j)}(t)\boldsymbol{x}^{(t)}}{\sum^N_{t=1}h_m^{(j)}(t)}<br>\<br>\boldsymbol{\sigma}<em>m^{(j + 1)} = \frac{\sum^N</em>{t=1}h_m^{(j)}(t)[\boldsymbol{x}^{(t)} - \boldsymbol{\mu}<em>m^{(j)}][\boldsymbol{x}^{(t)} - \boldsymbol{\mu}_m^{(j)}]^T}{\sum^N</em>{t=1}h_m^{(j)}(t)}<br>$$</p><p>计算对数似然函数</p><p>$$<br>\ln p(\boldsymbol{x};c, \boldsymbol{\mu}, \boldsymbol{\sigma}) = \sum^N_{t=1}\ln{(\sum^M_{m=1}c_mN(\boldsymbol{x}^{(t)}|\boldsymbol{\mu}_m, \boldsymbol{\sigma}_m))}<br>$$</p><p>先对$\Theta$进行初始化，然后执行E步，得到后验概率h，然后执行M步，计算新的$\Theta$，并更新参数，计算对数似然，直到参数收敛或对数似然收敛。</p><h2 id="4-代码实现"><a href="#4-代码实现" class="headerlink" title="4. 代码实现"></a>4. 代码实现</h2><h3 id="4-1-sklearn实现"><a href="#4-1-sklearn实现" class="headerlink" title="4.1 sklearn实现"></a>4.1 sklearn实现</h3><p>使用<code>sklearn.mixture.GaussianMixture</code></p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_wine</span><br><span class="line"><span class="keyword">from</span> sklearn.mixture <span class="keyword">import</span> GaussianMixture</span><br><span class="line"><span class="comment"># 这里使用酒类数据，数据集包括178个样本，每个样本由13个特征表示，以及一个标签，标签0、1、2分别表示3种酒</span></span><br><span class="line">rawData = load_wine()</span><br><span class="line"></span><br><span class="line">data = rawData[<span class="string">'data'</span>]</span><br><span class="line">target = rawData[<span class="string">'target'</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定n_components分类数，我们已知有3种酒</span></span><br><span class="line">gmm = GaussianMixture(n_components=<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定初始化的均值，同时根据先后顺序分配种类标签，指定means_init属性可以避免分类过程中分类标签与target不同</span></span><br><span class="line">gmm.means_init = np.array([data[target == i].mean(axis=<span class="number">0</span>) <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">3</span>)])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里就不划分测试集，直接对训练数据预测</span></span><br><span class="line">prediction = gmm.fit_predict(data, y=target)</span><br><span class="line">print(prediction)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 计算训练集上的准确率</span></span><br><span class="line">acc = np.mean(np.equal(prediction, target).astype(np.float))</span><br><span class="line">print(<span class="string">'GMM prediction accuracy: &#123;:.4f&#125;'</span>.format(acc))</span><br></pre></td></tr></table></figure><blockquote><p>GMM prediction accuracy: 0.8034</p></blockquote></div><div class="popular-posts-header">推荐文章</div><ul class="popular-posts"><li class="popular-posts-item"><div class="popular-posts-title"><a href="/archives/7d1dcda7.html" rel="bookmark">模型评估与选择</a></div></li><li class="popular-posts-item"><div class="popular-posts-title"><a href="/archives/8ddc7426.html" rel="bookmark">决策树</a></div></li><li class="popular-posts-item"><div class="popular-posts-title"><a href="/archives/280b588e.html" rel="bookmark">支持向量机</a></div></li><li class="popular-posts-item"><div class="popular-posts-title"><a href="/archives/4b26bf35.html" rel="bookmark">语音识别-MFCC</a></div></li><li class="popular-posts-item"><div class="popular-posts-title"><a href="/archives/2f863467.html" rel="bookmark">语音识别-HMM</a></div></li></ul><div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者： </strong>Tao Zhou</li><li class="post-copyright-link"><strong>本文链接：</strong> <a href="http://zhoutao822.coding.me/archives/24da735a.html" title="语音识别-GMM">http://zhoutao822.coding.me/archives/24da735a.html</a></li><li class="post-copyright-license"><strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li></ul></div><footer class="post-footer"><div class="post-tags"><a href="/tags/Theory/" rel="tag"># Theory</a> <a href="/tags/GMM/" rel="tag"># GMM</a></div><div class="post-nav"><div class="post-nav-item"><a href="/archives/c516f6f0.html" rel="prev" title="线性模型-coding"><i class="fa fa-chevron-left"></i> 线性模型-coding</a></div><div class="post-nav-item"><a href="/archives/b6ef4fe0.html" rel="next" title="Git命令">Git命令 <i class="fa fa-chevron-right"></i></a></div></div></footer></article></div></div><div class="comments" id="valine-comments"></div><script>window.addEventListener('tabs:register', () => {
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://zhoutao822.coding.me').hostname,
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"mac"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="参考：  《解析深度学习-语音识别实践》第2章 混合高斯模型  语音识别过程：切除首尾端静音—声音划分为帧—对每一帧提取MFCC特征—若干帧对应一个状态—三个状态组成一个音素—若干音素组成单词 1. 高斯分布高斯分布又叫正态分布，在现实生活中充满了高斯分布，比如考试的分数、人的身高是一维高斯分布，图像处理领域的高斯模糊是二维高斯分布等等，通过高斯分布，我们可以很好的描述一类随机变量。 对于连续型标">
+<meta property="og:type" content="article">
+<meta property="og:title" content="语音识别-GMM">
+<meta property="og:url" content="http://zhoutao822.coding.me/archives/24da735a.html">
+<meta property="og:site_name" content="Tao">
+<meta property="og:description" content="参考：  《解析深度学习-语音识别实践》第2章 混合高斯模型  语音识别过程：切除首尾端静音—声音划分为帧—对每一帧提取MFCC特征—若干帧对应一个状态—三个状态组成一个音素—若干音素组成单词 1. 高斯分布高斯分布又叫正态分布，在现实生活中充满了高斯分布，比如考试的分数、人的身高是一维高斯分布，图像处理领域的高斯模糊是二维高斯分布等等，通过高斯分布，我们可以很好的描述一类随机变量。 对于连续型标">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/gmm01.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/gmm0243a11433bb97d251.png">
+<meta property="article:published_time" content="2018-11-13T09:14:49.000Z">
+<meta property="article:modified_time" content="2020-01-18T14:50:50.129Z">
+<meta property="article:author" content="Tao Zhou">
+<meta property="article:tag" content="Theory">
+<meta property="article:tag" content="GMM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://114.116.9.65:7777/images/2020/01/18/gmm01.png">
+
+<link rel="canonical" href="http://zhoutao822.coding.me/archives/24da735a.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>语音识别-GMM | Tao</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Tao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhoutao822.coding.me/archives/24da735a.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Tao Zhou">
+      <meta itemprop="description" content="学习笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          语音识别-GMM
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-11-13 17:14:49" itemprop="dateCreated datePublished" datetime="2018-11-13T17:14:49+08:00">2018-11-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-18 22:50:50" itemprop="dateModified" datetime="2020-01-18T22:50:50+08:00">2020-01-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Speech-Recognition/" itemprop="url" rel="index">
+                    <span itemprop="name">Speech Recognition</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/archives/24da735a.html" class="post-meta-item leancloud_visitors" data-flag-title="语音识别-GMM" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/archives/24da735a.html#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/archives/24da735a.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>参考：</p>
+<blockquote>
+<p>《解析深度学习-语音识别实践》第2章 混合高斯模型</p>
+</blockquote>
+<p><strong>语音识别过程：切除首尾端静音—声音划分为帧—对每一帧提取MFCC特征—若干帧对应一个状态—三个状态组成一个音素—若干音素组成单词</strong></p>
+<h2 id="1-高斯分布"><a href="#1-高斯分布" class="headerlink" title="1. 高斯分布"></a>1. 高斯分布</h2><p>高斯分布又叫正态分布，在现实生活中充满了高斯分布，比如考试的分数、人的身高是一维高斯分布，图像处理领域的高斯模糊是二维高斯分布等等，通过高斯分布，我们可以很好的描述一类随机变量。</p>
+<p>对于连续型标量随机变量$x$来说，若$x$服从正态分布，则其概率密度函数是</p>
+<p>$$<br>p(x) = \frac{1}{(2\pi)^{1/2}\sigma} \exp[-\frac{1}{2}(\frac{x - \mu}{\sigma})^2] = N(x; \mu, \sigma^2)<br>\<br>(-\infty &lt; x &lt; \infty; \sigma &gt; 0)<br>$$</p>
+<a id="more"></a>
+<hr>
+<p>对于多元正态随机变量$\boldsymbol{x} = (x_1, x_2,…,x_D)^T$，其联合概率密度</p>
+<p>$$<br>p(\boldsymbol{x}) = \frac{1}{(2\pi)^{D/2}|\boldsymbol{\Sigma}|^{1/2}} \exp[-\frac{1}{2}(\boldsymbol{x} - \boldsymbol{\mu})^T\boldsymbol{\Sigma}^{-1}(\boldsymbol{x}-\boldsymbol{\mu})] = N(\boldsymbol{x};\boldsymbol{\mu}, \boldsymbol{\Sigma})<br>\<br>其中 \boldsymbol{\mu} = E(\boldsymbol{x}) \in \mathbb{R}^D; \boldsymbol{\Sigma} = E[(\boldsymbol{x} - \bar{\boldsymbol{x}})(\boldsymbol{x} - \bar{\boldsymbol{x}})^T] \in \mathbb{R}^{D \times D}<br>$$</p>
+<hr>
+<p>对于一个标量连续随机变量x，若其服从混合高斯分布，其概率密度函数</p>
+<p>$$<br>p(x) = \sum^{M}<em>{m=1}\frac{c_m}{(2\pi)^{1/2}\sigma_m}\exp[-\frac{1}{2}(\frac{x-\mu_m}{\sigma_m})^2]<br>\<br>= \sum^{M}</em>{m=1}c_mN(x;\mu_m,\sigma^2_m)，其中\sum^M_{m=1}c_m = 1，E(x) = \sum^{M}_{m=1}c_m\mu_m<br>$$</p>
+<hr>
+<p>推广到多变量的多元混合高斯分布，其联合概率密度函数为</p>
+<p>$$<br>p(\boldsymbol{x}) = \sum^{M}<em>{m=1}\frac{c_m}{(2\pi)^{D/2}|\boldsymbol{\Sigma}_m|^{1/2}}\exp[-\frac{1}{2}(\boldsymbol{x} - \boldsymbol{\mu}_m)^T\boldsymbol{\Sigma}^{-1}_m(\boldsymbol{x} - \boldsymbol{\mu}_m)]<br>\<br>= \sum^{M}</em>{m=1}c_mN(\boldsymbol{x};\boldsymbol{\mu}_m,\boldsymbol{\Sigma}_m)<br>$$</p>
+<p>在多元混合高斯分布中，如果变量x的维度D很大（比如40），那么使用全协方差矩阵（非对角）（$\Sigma_m$）将引入大量参数（大约为$M \times D^2$）。为了减少这个数量，可以使用对角协方差矩阵。当M很大时，也可以限制所有的协方差为相同矩阵，对所有的混合成分m，将参数$\Sigma_m$绑定在一起。</p>
+<h2 id="2-GMM示例"><a href="#2-GMM示例" class="headerlink" title="2. GMM示例"></a>2. GMM示例</h2><p>对于这样的二维数据分布，如何进行分类，若使用单个高斯成分，那么一个椭圆可以描述整体，但是根据观察，实际上这些数据应该属于两个不同的高斯成分，也就是说可以分为两类。</p>
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/18/gmm01.png" alt="gmm01.png"></p>
+<p>那么我们使用两个二维高斯分布来描述这个分布，当然最后的结果使用了$c_m$进行叠加</p>
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/18/gmm0243a11433bb97d251.png" alt="gmm0243a11433bb97d251.png"></p>
+<p>对于上例，我们定义$\boldsymbol{x} = (x_1, x_2)^T，M = 2$，则其GMM形式为</p>
+<p>$$<br>p(\boldsymbol{x}) = c_1N(\boldsymbol{\mu}_1, \boldsymbol{\sigma}_1) + c_2N(\boldsymbol{\mu}_2, \boldsymbol{\sigma}_2)<br>$$</p>
+<p>那么我们需要求解的参数为$(c_1, \boldsymbol{\mu}_1, \boldsymbol{\sigma}_1; c_2, \boldsymbol{\mu}_2, \boldsymbol{\sigma}_2)$</p>
+<h2 id="3-参数估计"><a href="#3-参数估计" class="headerlink" title="3. 参数估计"></a>3. 参数估计</h2><p>这里使用EM算法（EM算法必收敛）估计参数变量$\Theta = {c_m, \boldsymbol{\mu}_m, \boldsymbol{\sigma}_m}$，首先回顾一下，GMM表示形式</p>
+<p>$$<br>p(\boldsymbol{x}) = \sum^{M}_{m=1}c_mN(\boldsymbol{x};\boldsymbol{\mu}_m,\boldsymbol{\sigma}^2_m)<br>$$</p>
+<p>其中$c_m$可以看作第m个高斯成分被选中的概率。我们引入一个新的M维变量$\boldsymbol{z}$，$z_m$只能取0或1；$z_m = 1$表示第m类被选中的概率$c_m$，即$p(z_m = 1) = c_m，且\sum^M_{m=1} z_m = 1$，所以$\boldsymbol{z}$的联合概率分布：</p>
+<p>$$<br>p(\boldsymbol{z}) = p(z_1)p(z_2)…p(z_M) = \prod_{m=1}^{M}c_m^{z_m}<br>$$</p>
+<p>又因为对于属于某一个高斯成分的数据来说（$z_m = 1$），其分布必定是高斯分布，所以</p>
+<p>$$<br>p(\boldsymbol{x}|z_m = 1) = N(\boldsymbol{x}|\boldsymbol{\mu}_m, \boldsymbol{\sigma}_m)<br>$$</p>
+<p>进而上式等价于</p>
+<p>$$<br>p(\boldsymbol{x}|\boldsymbol{z}) = \prod_{m=1}^{M}N(\boldsymbol{x}|\boldsymbol{\mu}_m, \boldsymbol{\sigma}_m)^{z_m}<br>$$</p>
+<p>我们有了$p(\boldsymbol{z})和p(\boldsymbol{x}|\boldsymbol{z})$，那么可以计算$p(\boldsymbol{x})$</p>
+<p>$$<br>p(\boldsymbol{x}) = \sum_Z p(\boldsymbol{x}|\boldsymbol{z})p(\boldsymbol{z})<br>\<br>= \sum^{M}_{m=1}c_mN(\boldsymbol{x};\boldsymbol{\mu}_m,\boldsymbol{\sigma}^2_m)，z_m = 0的项在连乘中为1<br>$$</p>
+<p>所以最终又回到了GMM的表示形式，但是我们增加了<strong>隐含变量z</strong>用于描述我们已经知道有多少个高斯成分。</p>
+<hr>
+<p>在贝叶斯的思想下，$p(\boldsymbol{z})$是先验概率，$p(\boldsymbol{x}|\boldsymbol{z})$是似然概率，我们可以求解出后验概率$p(\boldsymbol{z}|\boldsymbol{x})$。</p>
+<p>E步：基于当前迭代轮数（用j表示），针对某个高斯成分m，用给定观察值$\boldsymbol{x}^{(t)}$计算得到的后验概率$t = 1, …, N，（N是采样率）$</p>
+<p>$$<br>h^{(j)}<em>m(t) = p(z_m^{(j)}=1|\boldsymbol{x}^{(t)})<br>\<br>= \frac{p(z_m^{(j)}=1)p(\boldsymbol{x}^{(t)}|z_m^{(j)}=1)}{p(\boldsymbol{x}^{(t)})}<br>\<br>= \frac{p(z_m^{(j)}=1)p(\boldsymbol{x}^{(t)}|z_m^{(j)}=1)}{\sum^M</em>{i=1}p(z_i=1)p(\boldsymbol{x}^{(t)}|z_i=1)}<br>\<br>= \frac{c_m^{(j)}N(\boldsymbol{x}^{(t)}; \boldsymbol{\mu}<em>m^{(j)}, \boldsymbol{\sigma}_m^{(j)})}{\sum^M</em>{i=1}c_i^{(j)}N(\boldsymbol{x}^{(t)}; \boldsymbol{\mu}_i^{(j)}, \boldsymbol{\sigma}_i^{(j)})}<br>$$</p>
+<p>M步：基于后验概率估计参数$\Theta$</p>
+<p>$$<br>c_m^{(j + 1)} = \frac{1}{N}\sum^N_{t=1}h_m^{(j)}(t)<br>\<br>\boldsymbol{\mu}<em>m^{(j + 1)} = \frac{\sum^N</em>{t=1}h_m^{(j)}(t)\boldsymbol{x}^{(t)}}{\sum^N_{t=1}h_m^{(j)}(t)}<br>\<br>\boldsymbol{\sigma}<em>m^{(j + 1)} = \frac{\sum^N</em>{t=1}h_m^{(j)}(t)[\boldsymbol{x}^{(t)} - \boldsymbol{\mu}<em>m^{(j)}][\boldsymbol{x}^{(t)} - \boldsymbol{\mu}_m^{(j)}]^T}{\sum^N</em>{t=1}h_m^{(j)}(t)}<br>$$</p>
+<p>计算对数似然函数</p>
+<p>$$<br>\ln p(\boldsymbol{x};c, \boldsymbol{\mu}, \boldsymbol{\sigma}) = \sum^N_{t=1}\ln{(\sum^M_{m=1}c_mN(\boldsymbol{x}^{(t)}|\boldsymbol{\mu}_m, \boldsymbol{\sigma}_m))}<br>$$</p>
+<p>先对$\Theta$进行初始化，然后执行E步，得到后验概率h，然后执行M步，计算新的$\Theta$，并更新参数，计算对数似然，直到参数收敛或对数似然收敛。</p>
+<h2 id="4-代码实现"><a href="#4-代码实现" class="headerlink" title="4. 代码实现"></a>4. 代码实现</h2><h3 id="4-1-sklearn实现"><a href="#4-1-sklearn实现" class="headerlink" title="4.1 sklearn实现"></a>4.1 sklearn实现</h3><p>使用<code>sklearn.mixture.GaussianMixture</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_wine</span><br><span class="line"><span class="keyword">from</span> sklearn.mixture <span class="keyword">import</span> GaussianMixture</span><br><span class="line"><span class="comment"># 这里使用酒类数据，数据集包括178个样本，每个样本由13个特征表示，以及一个标签，标签0、1、2分别表示3种酒</span></span><br><span class="line">rawData = load_wine()</span><br><span class="line"></span><br><span class="line">data = rawData[<span class="string">'data'</span>]</span><br><span class="line">target = rawData[<span class="string">'target'</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定n_components分类数，我们已知有3种酒</span></span><br><span class="line">gmm = GaussianMixture(n_components=<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定初始化的均值，同时根据先后顺序分配种类标签，指定means_init属性可以避免分类过程中分类标签与target不同</span></span><br><span class="line">gmm.means_init = np.array([data[target == i].mean(axis=<span class="number">0</span>) <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">3</span>)])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里就不划分测试集，直接对训练数据预测</span></span><br><span class="line">prediction = gmm.fit_predict(data, y=target)</span><br><span class="line">print(prediction)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 计算训练集上的准确率</span></span><br><span class="line">acc = np.mean(np.equal(prediction, target).astype(np.float))</span><br><span class="line">print(<span class="string">'GMM prediction accuracy: &#123;:.4f&#125;'</span>.format(acc))</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>GMM prediction accuracy: 0.8034</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">推荐文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/7d1dcda7.html" rel="bookmark">模型评估与选择</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/280b588e.html" rel="bookmark">支持向量机</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/8ddc7426.html" rel="bookmark">决策树</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/4b26bf35.html" rel="bookmark">语音识别-MFCC</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/2f863467.html" rel="bookmark">语音识别-HMM</a></div>
+    </li>
+  </ul>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Tao Zhou
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhoutao822.coding.me/archives/24da735a.html" title="语音识别-GMM">http://zhoutao822.coding.me/archives/24da735a.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Theory/" rel="tag"># Theory</a>
+              <a href="/tags/GMM/" rel="tag"># GMM</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/archives/c516f6f0.html" rel="prev" title="线性模型-coding">
+      <i class="fa fa-chevron-left"></i> 线性模型-coding
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/archives/b6ef4fe0.html" rel="next" title="Git命令">
+      Git命令 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
     let activeClass = CONFIG.comments.activeClass;
     if (CONFIG.comments.storage) {
       activeClass = localStorage.getItem('comments_active') || activeClass;
@@ -16,7 +451,120 @@
       let commentClass = event.target.classList[1];
       localStorage.setItem('comments_active', commentClass);
     });
-  }</script></div><div class="toggle sidebar-toggle"><span class="toggle-line toggle-line-first"></span> <span class="toggle-line toggle-line-middle"></span> <span class="toggle-line toggle-line-last"></span></div><aside class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc">文章目录</li><li class="sidebar-nav-overview">站点概览</li></ul><div class="post-toc-wrap sidebar-panel"><div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-高斯分布"><span class="nav-text">1. 高斯分布</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-GMM示例"><span class="nav-text">2. GMM示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-参数估计"><span class="nav-text">3. 参数估计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-代码实现"><span class="nav-text">4. 代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-sklearn实现"><span class="nav-text">4.1 sklearn实现</span></a></li></ol></li></ol></div></div><div class="site-overview-wrap sidebar-panel"><div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"><img class="site-author-image" itemprop="image" alt="Tao Zhou" src="/images/avatar.jpg"><p class="site-author-name" itemprop="name">Tao Zhou</p><div class="site-description" itemprop="description">学习笔记</div></div><div class="site-state-wrap motion-element"><nav class="site-state"><div class="site-state-item site-state-posts"><a href="/archives/"><span class="site-state-item-count">61</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"><a href="/categories/"><span class="site-state-item-count">6</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"><a href="/tags/"><span class="site-state-item-count">126</span> <span class="site-state-item-name">标签</span></a></div></nav></div><div class="cc-license motion-element" itemprop="license"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a></div></div></div></aside><div id="sidebar-dimmer"></div></div></main><footer class="footer"><div class="footer-inner"><div class="copyright">&copy; <span itemprop="copyrightYear">2020</span> <span class="with-love"><i class="fa fa-user"></i> </span><span class="author" itemprop="copyrightHolder">Tao Zhou</span> <span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-area-chart"></i> </span><span title="站点总字数">897k</span> <span class="post-meta-divider">|</span> <span class="post-meta-item-icon"><i class="fa fa-coffee"></i> </span><span title="站点阅读时长">13:36</span></div><div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0</div><span class="post-meta-divider">|</span><div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.0</div><script>function leancloudSelector(url) {
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-高斯分布"><span class="nav-text">1. 高斯分布</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-GMM示例"><span class="nav-text">2. GMM示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-参数估计"><span class="nav-text">3. 参数估计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-代码实现"><span class="nav-text">4. 代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-sklearn实现"><span class="nav-text">4.1 sklearn实现</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Tao Zhou"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Tao Zhou</p>
+  <div class="site-description" itemprop="description">学习笔记</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">61</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">126</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tao Zhou</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">897k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">13:36</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
     url = encodeURI(url);
     return document.getElementById(url).querySelector('.leancloud-visitors-count');
   }
@@ -105,7 +653,58 @@
       } else if (document.querySelectorAll('.post-title-link').length >= 1) {
         showTime(Counter);
       }
-    });</script></div></footer></div><script src="/lib/anime.min.js"></script><script src="/lib/velocity/velocity.min.js"></script><script src="/lib/velocity/velocity.ui.min.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/pisces.js"></script><script src="/js/next-boot.js"></script><script src="/js/local-search.js"></script><script type="text/x-mathjax-config">MathJax.Ajax.config.path['mhchem'] = '//cdn.jsdelivr.net/npm/mathjax-mhchem@3';
+    });
+  </script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+    MathJax.Ajax.config.path['mhchem'] = '//cdn.jsdelivr.net/npm/mathjax-mhchem@3';
 
   MathJax.Hub.Config({
     tex2jax: {
@@ -144,9 +743,21 @@
       }
       element.classList.add('has-jax');
     }
-  });</script><script>NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
     MathJax.Hub.Typeset();
-  }, window.MathJax);</script><script>NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
   NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
     var GUEST = ['nick', 'mail', 'link'];
     var guest = 'nick,mail,link';
@@ -170,4 +781,8 @@
       serverURLs: ''
     });
   }, window.Valine);
-});</script></body></html><!-- rebuild by neat -->
+});
+</script>
+
+</body>
+</html>
