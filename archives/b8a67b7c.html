@@ -53,12 +53,18 @@
 <meta property="og:site_name" content="Tao">
 <meta property="og:description" content="道高一尺魔高一丈，魔高一尺道高一丈 参考：  Generative Adversarial Networks[GAN学习系列] 初识GAN[GAN学习系列2] GAN的起源令人拍案叫绝的Wasserstein GANTips and tricks to make GANs workImage-to-Image Translation with Conditional Adversarial Net">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/1f0b378fcabfd36c7.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/216e62e351d8cc292.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/3279e8cd93152cfbd.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/40bd67b4be7a9365f.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/5f601eac50c9eb3e3.png">
 <meta property="article:published_time" content="2019-01-03T13:26:22.000Z">
-<meta property="article:modified_time" content="2020-01-17T15:07:46.290Z">
+<meta property="article:modified_time" content="2020-01-19T04:18:10.873Z">
 <meta property="article:author" content="Tao Zhou">
 <meta property="article:tag" content="Theory">
 <meta property="article:tag" content="GAN">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://114.116.9.65:7777/images/2020/01/19/1f0b378fcabfd36c7.png">
 
 <link rel="canonical" href="http://zhoutao822.coding.me/archives/b8a67b7c.html">
 
@@ -238,7 +244,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-17 23:07:46" itemprop="dateModified" datetime="2020-01-17T23:07:46+08:00">2020-01-17</time>
+                <time title="修改时间：2020-01-19 12:18:10" itemprop="dateModified" datetime="2020-01-19T12:18:10+08:00">2020-01-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -307,8 +313,8 @@
 <p>GAN 主要就是两个网络组成，生成器网络(Generator)和判别器网络(Discriminator)，通过这两个网络的互相博弈，让生成器网络最终能够学习到输入数据的分布，这也就是 GAN 想达到的目的：学习输入数据的分布。</p>
 <a id="more"></a>
 
-<h2 id="1-基本原理"><a href="#1-基本原理" class="headerlink" title="1. 基本原理"></a>1. 基本原理</h2>
-
+<h2 id="1-基本原理"><a href="#1-基本原理" class="headerlink" title="1. 基本原理"></a>1. 基本原理</h2><!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/1f0b378fcabfd36c7.png" alt="1f0b378fcabfd36c7.png"></p>
 <ul>
 <li>D 是判别器，负责对输入的真实数据和由 G 生成的假数据进行判断，其输出是 0 和 1，即它本质上是一个二值分类器，目标就是对输入为真实数据输出是 1，对假数据的输入，输出是 0；</li>
 <li>G 是生成器，它接收的是一个随机噪声，并生成图像。</li>
@@ -357,8 +363,8 @@
 <li>从高斯分布中采样得到随机噪声</li>
 <li>当进行插值操作的时候，从大圆进行该操作，而不要直接从点 A 到 点 B 直线操作，如下图所示</li>
 </ul>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/216e62e351d8cc292.png" alt="216e62e351d8cc292.png"></p>
 <h3 id="3-4-BatchNorm"><a href="#3-4-BatchNorm" class="headerlink" title="3.4 BatchNorm"></a>3.4 BatchNorm</h3><ul>
 <li>采用 mini-batch BatchNorm，要保证每个 mini-batch 都是真实图片或者都是生成图片</li>
 <li>不采用 BatchNorm 的时候，可以采用 instance normalization（对每个样本的规范化操作，减均值除以标准差）</li>
@@ -421,8 +427,8 @@
 <li>训练和测试阶段，在 G 的几层使用</li>
 </ul>
 <h2 id="4-对抗样本"><a href="#4-对抗样本" class="headerlink" title="4. 对抗样本"></a>4. 对抗样本</h2><p><strong>对抗样本(adversarial example)，它是指经过精心计算得到的用于误导分类器的样本</strong>。例如下图就是一个例子，左边是一个熊猫，但是添加了少量随机噪声变成右图后，分类器给出的预测类别却是长臂猿，但视觉上左右两幅图片并没有太大改变。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/3279e8cd93152cfbd.png" alt="3279e8cd93152cfbd.png"></p>
 <p>这是因为图像分类器本质上是高维空间的一个复杂的决策边界。当然涉及到图像分类的时候，由于是高维空间而不是简单的两维或者三维空间，我们无法画出这个边界出来。但是我们可以肯定的是，训练完成后，分类器是无法泛化到所有数据上，除非我们的训练集包含了分类类别的所有数据，但实际上我们做不到。而做不到泛化到所有数据的分类器，其实就会过拟合训练集的数据，这也就是我们可以利用的一点。</p>
 <p>我们可以给图片添加一个非常接近于 0 的随机噪声，这可以通过控制噪声的 L2 范数来实现。L2 范数可以看做是一个向量的长度，这里有个诀窍就是图片的像素越多，即图片尺寸越大，其平均 L2 范数也就越大。因此，当添加的噪声的范数足够低，那么视觉上你不会觉得这张图片有什么不同，正如上述右边的图片一样，看起来依然和左边原始图片一模一样；但是，在向量空间上，添加噪声后的图片和原始图片已经有很大的距离了。</p>
 <p>因为在 L2 范数看来，对于熊猫和长臂猿的决策边界并没有那么远，添加了非常微弱的随机噪声的图片可能就远离了熊猫的决策边界内，到达长臂猿的预测范围内，因此欺骗了分类器。</p>
@@ -434,16 +440,16 @@
 <p>对于生成器G来说，其更新梯度为</p>
 <p>$$<br>\bigtriangledown_{\theta_g}\frac{1}{m} \sum^m_{i=1}\log(1-D(G(\boldsymbol{z}^{(i)})))<br>$$</p>
 <p>这里根据它们的损失函数分析下，G 网络的训练目标就是让<strong>D(G(z)) 趋近于 1</strong>，这也是让其 loss 变小的做法；而 D 网络的训练目标是区分真假数据，自然是让<strong>D(x) 趋近于 1，而 D(G(z)) 趋近于 0</strong>。这就是两个网络相互对抗，彼此博弈的过程了。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/40bd67b4be7a9365f.png" alt="40bd67b4be7a9365f.png"></p>
 <p>上图中，黑色曲线表示输入数据 x 的实际分布，绿色曲线表示的是 G 网络生成数据的分布，我们的目标自然是希望着两条曲线可以相互重合，也就是两个数据分布一致了。而蓝色的曲线表示的是生成数据对应于 D 的分布。</p>
 <p>在 a 图中是刚开始训练的时候，D 的分类能力还不是最好，因此有所波动，而生成数据的分布也自然和真实数据分布不同，毕竟 G 网络输入是随机生成的噪声；到了 b 图的时候，D 网络的分类能力就比较好了，可以看到对于真实数据和生成数据，它是明显可以区分出来，也就是给出的概率是不同的；</p>
 <p>而绿色的曲线，即 G 网络的目标是学习真实数据的分布，所以它会往蓝色曲线方向移动，也就是 c 图了，并且因为 G 和 D 是相互对抗的，当 G 网络提升，也会影响 D 网络的分辨能力。论文中，Ian Goodfellow 做出了证明，当假设 G 网络不变，训练 D 网络，最优的情况会是：</p>
 <p>$$<br>D_G^*(\boldsymbol{x}) = \frac{p_{data}(\boldsymbol{x})}{p_{data}(\boldsymbol{x}) + p_g(\boldsymbol{x})}<br>$$</p>
 <p>也就是当生成数据的分布$p_g(x)$趋近于真实数据分布$p_{data}(x)$的时候，D 网络输出的概率$D_G^*(x)$会趋近于 0.5，也就是 d 图的结果，这也是最终希望达到的训练结果，这时候 G 和 D 网络也就达到一个平衡状态。</p>
 <h2 id="6-算法"><a href="#6-算法" class="headerlink" title="6. 算法"></a>6. 算法</h2><p>论文给出的算法实现过程如下所示</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/5f601eac50c9eb3e3.png" alt="5f601eac50c9eb3e3.png"></p>
 <p>这里包含了一些训练的技巧和方法：</p>
 <ol>
 <li>首先 G 和 D 是同步训练，但两者训练次数不一样，通常是<strong>D 网络训练 k 次后，G 训练一次</strong>。主要原因是 GAN 刚开始训练时候会很不稳定；</li>

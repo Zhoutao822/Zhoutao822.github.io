@@ -53,13 +53,17 @@
 <meta property="og:site_name" content="Tao">
 <meta property="og:description" content="参考：  Introduction to Gradient Boosted Decision TreesGBDT：梯度提升决策树  1. Regression Decision Tree 回归树参考决策树 2. Boosting Decision Tree 提升树BDT由多棵回归树来集成，属于Boosting算法一种，因此它的算法思想为：首先训练一个初始的回归决策树，决策树的深度、叶结点数、最小分">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/2142d058159520761.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/18772c30181281c41.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/0052ac28870fd7202.png">
 <meta property="article:published_time" content="2019-01-03T13:30:49.000Z">
-<meta property="article:modified_time" content="2020-01-17T15:07:46.287Z">
+<meta property="article:modified_time" content="2020-01-19T04:22:25.627Z">
 <meta property="article:author" content="Tao Zhou">
 <meta property="article:tag" content="Theory">
 <meta property="article:tag" content="GBDT">
 <meta property="article:tag" content="BDT">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://114.116.9.65:7777/images/2020/01/19/2142d058159520761.png">
 
 <link rel="canonical" href="http://zhoutao822.coding.me/archives/b4ab55fe.html">
 
@@ -239,7 +243,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-17 23:07:46" itemprop="dateModified" datetime="2020-01-17T23:07:46+08:00">2020-01-17</time>
+                <time title="修改时间：2020-01-19 12:22:25" itemprop="dateModified" datetime="2020-01-19T12:22:25+08:00">2020-01-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -305,17 +309,17 @@
 </blockquote>
 <h2 id="1-Regression-Decision-Tree-回归树"><a href="#1-Regression-Decision-Tree-回归树" class="headerlink" title="1. Regression Decision Tree 回归树"></a>1. Regression Decision Tree 回归树</h2><p>参考<code>决策树</code></p>
 <h2 id="2-Boosting-Decision-Tree-提升树"><a href="#2-Boosting-Decision-Tree-提升树" class="headerlink" title="2. Boosting Decision Tree 提升树"></a>2. Boosting Decision Tree 提升树</h2><p>BDT由多棵回归树来集成，属于Boosting算法一种，因此它的算法思想为：首先训练一个初始的回归决策树，决策树的深度、叶结点数、最小分类数等等是预先设定好的，也就意味着单个决策树的性能不一定是非常好的（对比单一决策树），然后我们根据这棵决策树预测各个样本的预测值，然后与样本的真实值计算残差（真实值-预测值），然后再将所有样本的残差作为下一个决策树预测的目标，继续生成决策树。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/2142d058159520761.png" alt="2142d058159520761.png"></p>
 <a id="more"></a>
 
 <h2 id="3-Gradient-Boosting-Decision-Tree-梯度提升决策树"><a href="#3-Gradient-Boosting-Decision-Tree-梯度提升决策树" class="headerlink" title="3. Gradient Boosting Decision Tree 梯度提升决策树"></a>3. Gradient Boosting Decision Tree 梯度提升决策树</h2><p>GBDT又叫MART（Multiple Additive Regression Tree），GBDT通常用来做回归预测，调整后也可以用于分类。</p>
 <p>首先是损失函数对应的梯度计算结果</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/18772c30181281c41.png" alt="18772c30181281c41.png"></p>
 <p>但是上图中绝对值损失和Huber损失的优化方式比较复杂，因此GBDT采取的措施是：利用损失函数的负梯度在当前模型的值，作为回归问题中提升树算法的残差的近似值，拟合一个回归树。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/0052ac28870fd7202.png" alt="0052ac28870fd7202.png"></p>
 <ol>
 <li>首先初始化一个决策树，仅有一个根节点，估计使损失函数极小化的常数值$\gamma$；</li>
 <li>计算损失函数的负梯度在当前模型的值，将它作为残差的估计；</li>

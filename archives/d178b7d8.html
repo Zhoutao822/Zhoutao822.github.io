@@ -53,14 +53,25 @@
 <meta property="og:site_name" content="Tao">
 <meta property="og:description" content="参考：  《深度学习》第14章 自编码器  自编码器autoencoder是神经网络的一种，经过训练后能尝试将输入复制到输出。 自编码器可以看作两个部分：一个由函数$\boldsymbol{h} &#x3D; f(\boldsymbol{x})$表示的编码器和一个生成重构的解码器$\boldsymbol{r}&#x3D;g(\boldsymbol{h})$。但是如果一个自编码器只是简单地学会处处设置为$g(f(\bo">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/07e4cdb0725dc1a4f.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/1a23380310c4540c3.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/2b32c9d9b628e403b.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/33c3276895f4e972d.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/4f257f4afc83f01c5.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/5b4681512ea9d03b1.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/6cf295ede7a3d6491.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/766bed1cf93e86bdc.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/8c8df4d30677de582.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/949b9f25e12366078.png">
 <meta property="article:published_time" content="2019-01-03T13:25:43.000Z">
-<meta property="article:modified_time" content="2020-01-17T15:07:46.289Z">
+<meta property="article:modified_time" content="2020-01-19T04:20:11.731Z">
 <meta property="article:author" content="Tao Zhou">
 <meta property="article:tag" content="Theory">
 <meta property="article:tag" content="DAE">
 <meta property="article:tag" content="CAE">
 <meta property="article:tag" content="PSD">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://114.116.9.65:7777/images/2020/01/19/07e4cdb0725dc1a4f.png">
 
 <link rel="canonical" href="http://zhoutao822.coding.me/archives/d178b7d8.html">
 
@@ -240,7 +251,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-17 23:07:46" itemprop="dateModified" datetime="2020-01-17T23:07:46+08:00">2020-01-17</time>
+                <time title="修改时间：2020-01-19 12:20:11" itemprop="dateModified" datetime="2020-01-19T12:20:11+08:00">2020-01-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -306,8 +317,8 @@
 </blockquote>
 <p>自编码器autoencoder是神经网络的一种，经过训练后能尝试将输入复制到输出。</p>
 <p>自编码器可以看作两个部分：一个由函数$\boldsymbol{h} = f(\boldsymbol{x})$表示的编码器和一个生成重构的解码器$\boldsymbol{r}=g(\boldsymbol{h})$。但是如果一个自编码器只是简单地学会处处设置为$g(f(\boldsymbol{x})) = \boldsymbol{x}$，那么这个自编码器毫无意义。相反我们不应该将自编码器设计成输入到输出完全相等。通常需要加入一些约束，使得自编码器的输出与训练数据的输入相似而不相同。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/07e4cdb0725dc1a4f.png" alt="07e4cdb0725dc1a4f.png"></p>
 <a id="more"></a>
 
 <h2 id="1-欠完备自编码器"><a href="#1-欠完备自编码器" class="headerlink" title="1. 欠完备自编码器"></a>1. 欠完备自编码器</h2><p>通过限制$\boldsymbol{h}$的维度比$\boldsymbol{x}$小，这种编码维度小于输入维度的自编码器称为<strong>欠完备</strong>自编码器。显然，欠完备自编码器可以实现两个功能：降维和学习数据分布中最显著的特征。</p>
@@ -354,12 +365,12 @@
 <p>$$<br>p_{encoder}(\boldsymbol{h}|\boldsymbol{x}) = p_{model}(\boldsymbol{h}|\boldsymbol{x})<br>$$</p>
 <p>以及一个随机解码器</p>
 <p>$$<br>p_{decoder}(\boldsymbol{x}|\boldsymbol{h}) = p_{model}(\boldsymbol{x}|\boldsymbol{h})<br>$$</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/1a23380310c4540c3.png" alt="1a23380310c4540c3.png"></p>
 <p>通常情况下，编码器和解码器的分布没有必要是与唯一一个联合分布$p_{model}(\boldsymbol{x}; \boldsymbol{h})$相容的条件分布。</p>
 <h2 id="5-去噪自编码器"><a href="#5-去噪自编码器" class="headerlink" title="5. 去噪自编码器"></a>5. 去噪自编码器</h2><p><strong>去噪自编码器</strong>DAE是一类接受损坏数据作为输入，并训练来预测原始未被损坏数据作为输出的自编码器。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/2b32c9d9b628e403b.png" alt="2b32c9d9b628e403b.png"></p>
 <p>DAE的训练过程如上图所示，引入了一个损坏过程$C(\tilde{\boldsymbol{x}}|\boldsymbol{x})$，这个条件分布代表给定数据样本$\boldsymbol{x}$产生损坏样本$\tilde{\boldsymbol{x}}$的概率。自编码器则根据一下过程，从训练数据对$(\boldsymbol{x}, \tilde{\boldsymbol{x}})$中学习重构分布$P_{reconstruct}(\boldsymbol{x}|\tilde{\boldsymbol{x}})$：</p>
 <ol>
 <li>从训练数据中采一个训练样本$\boldsymbol{x}$；</li>
@@ -374,8 +385,8 @@
 <p>$$<br>\bigtriangledown_{\boldsymbol{x}} \log p(\boldsymbol{x})<br>$$</p>
 <p>对于现在讨论的自编码器，理解学习$\log p_{data}$的梯度场是学习$p_{data}$结构的一种方式就足够了。</p>
 <p>DAE的训练准则（条件高斯$p(\boldsymbol{x}|\boldsymbol{h})$）能让自编码器学到能估计数据分布得分的向量场$g(f(\boldsymbol{x})) -\boldsymbol{x}$，这是DAE的一个重要特性。如下图所示</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/33c3276895f4e972d.png" alt="33c3276895f4e972d.png"></p>
 <p>对一类采用高斯噪声和均方误差作为重构误差的特定去噪自编码器（具有sigmoid 隐藏单元和线性重构单元）的去噪训练过程，与训练一类特定的被称为RBM的无向概率模型是等价的。</p>
 <p>对于现在的讨论，我们只需要知道这个模型能显示的给出$p_{model}(\boldsymbol{x};\boldsymbol{\theta})$。当RBM使用<strong>去噪得分匹配</strong>算法训练时，它的学习算法与训练对应的去噪自编码器是等价的。在一个确定的噪声水平下，正则化的得分匹配不是一致估计量；相反它会恢复分布的一个模糊版本。然而，当噪声水平趋向于0且训练样本数趋向于无穷时，一致性就会恢复。</p>
 <p>自编码器和RBM还存在其他联系。在RBM上应用得分匹配后，其代价函数将等价于重构误差结合类似CAE惩罚的正则项。自编码器的梯度是对RBM对比散度训练的近似。</p>
@@ -384,15 +395,15 @@
 <p>和噪声方差为$\sigma^2$的损坏</p>
 <p>$$<br>C(\tilde{\boldsymbol{x}} | \boldsymbol{x}) = N(\tilde{\boldsymbol{x}};\mu=\boldsymbol{x},\sum=\sigma^2 I)<br>$$</p>
 <p>的通用编码器-解码器架构可以用来训练估计得分。下图展示其中的工作原理</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/4f257f4afc83f01c5.png" alt="4f257f4afc83f01c5.png"></p>
 <p>一般情况下，不能保证重构函数$g(f(\boldsymbol{x}))$减去输入$\boldsymbol{x}$后对应于某个函数的梯度，更不用说得分。</p>
 <p>目前为止我们所讨论的仅限于去噪自编码器如何学习表示一个概率分布。更一般的，我们可能希望使用自编码器作为生成模型，并从其分布中进行采样。</p>
 <p>“去噪自编码器”的命名指的不仅仅是学习去噪，而且可以学到一个好的内部表示（作为学习去噪的副效用）。这个想法提出较晚。学习到的表示可以被用来预训练更深的无监督网络或监督网络。与稀疏自编码器、稀疏编码、收缩自编码器等正则化的自编码器类似，DAE的动机是允许学习容量很高的编码器，同时防止在编码器和解码器学习一个无用的恒等函数。</p>
 <h2 id="6-使用自编码器学习流形"><a href="#6-使用自编码器学习流形" class="headerlink" title="6. 使用自编码器学习流形"></a>6. 使用自编码器学习流形</h2><p>自编码器跟其他很多机器学习算法一样，也利用了数据集中在一个低维流形或者一小组这样的流形的思想。其中一些机器学习算法仅能学习到在流形上表现良好但给定不在流形上的输入会导致异常的函数。自编码器进一步借此想法，旨在学习流形的结构。</p>
 <p>流形的一个重要特征是切平面（tangent plane）的集合。$d$维流形上的一点$\boldsymbol{x}$，切平面由能张成流形上允许变动的局部方向的$d$维基向量给出。如下图所示，这些局部方向决定了我们能如何微小地变动$\boldsymbol{x}$ 而保持于流形上。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/5b4681512ea9d03b1.png" alt="5b4681512ea9d03b1.png"></p>
 <p>所有自编码器的训练过程涉及两种推动力的折衷：</p>
 <ol>
 <li>学习训练样本$\boldsymbol{x}$的表示$\boldsymbol{h}$使得$\boldsymbol{x}$能通过解码器近似地从$\boldsymbol{h}$中恢复。$\boldsymbol{x}$是从训练数据挑出的这一事实很关键，因为这意味着自编码器不需要成功重构不属于数据生成分布下的输入。</li>
@@ -400,15 +411,15 @@
 </ol>
 <p>重要的原则是，自编码器必须有能力表示重构训练实例所需的变化。如果该数据生成分布集中靠近一个低维流形，自编码器能隐式产生捕捉这个流形局部坐标系的表示：仅在$\boldsymbol{x}$周围关于流形的相切变化需要对应于$\boldsymbol{h} = f(\boldsymbol{x})$中的变化。因此，编码器学习从输入空间$\boldsymbol{x}$到表示空间的映射，映射仅对沿着流形方向的变化敏感，并且对流形正交方向的变化不敏感。</p>
 <p>下图的例子说明，我们可以通过构建对数据点周围的输入扰动不敏感的重构函数，使得自编码器恢复流形结构。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/6cf295ede7a3d6491.png" alt="6cf295ede7a3d6491.png"></p>
 <p>为了理解自编码器可用于流形学习的原因，我们可以将自编码器和其他方法进行对比。学习表征流形最常见的是流形上（或附近）数据点的表示（representation）。对于特定的实例，这样的表示也被称为嵌入。它通常由一个低维向量给出，具有比这个流形的“外围”空间更少的维数。有些算法（下面讨论的非参数流形学习算法）直接学习每个训练样例的嵌入，而其他算法学习更一般的映射（有时被称为编码器或表示函数），将周围空间（输入空间）的任意点映射到它的嵌入。</p>
 <p>流形学习大多专注于试图捕捉到这些流形的无监督学习过程。最初始的学习非线性流形的机器学习研究专注基于<strong>最近邻图</strong>（nearest neighbor graph）的<strong>非参数</strong>（non-parametric）方法。该图中每个训练样例对应一个节点，它的边连接近邻点对。这些方法将每个节点与张成实例和近邻之间的差向量变化方向的切平面相关联。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/766bed1cf93e86bdc.png" alt="766bed1cf93e86bdc.png"></p>
 <p>全局坐标系则可以通过优化或求解线性系统获得。下图展示了如何通过大量局部线性的类高斯样平铺（或“薄煎饼”，因为高斯块在切平面方向是扁平的）得到一个流形。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/8c8df4d30677de582.png" alt="8c8df4d30677de582.png"></p>
 <p>然而，Bengio and Monperrus (2005) 指出了这些局部非参数方法应用于流形学习的根本困难：如果流形不是很光滑（它们有许多波峰、波谷和曲折），为覆盖其中的每一个变化，我们可能需要非常多的训练样本，导致没有能力泛化到没见过的变化。实际上，这些方法只能通过内插，概括相邻实例之间流形的形状。不幸的是，AI 问题中涉及的流形可能具有非常复杂的结构，难以仅从局部插值捕获特征。考虑图14.6 转换所得的流形样例。如果我们只观察输入向量内的一个坐标$x_i$，当平移图像，我们可以观察到当这个坐标遇到波峰或波谷时，图像的亮度也会经历一个波峰或波谷。换句话说，底层图像模板亮度的模式复杂性决定执行简单的图像变换所产生的流形的复杂性。这是采用分布式表示和深度学习捕获流形结构的动机。</p>
 <h2 id="7-收缩自编码器"><a href="#7-收缩自编码器" class="headerlink" title="7. 收缩自编码器"></a>7. 收缩自编码器</h2><p>收缩自编码器CAE再编码$\boldsymbol{h} = f(\boldsymbol{x})$的基础上添加了显示的正则项，鼓励$f$的导数尽可能小：</p>
 <p>$$<br>\Omega(\boldsymbol{h}) = \lambda ||\frac{\partial f(\boldsymbol{x})}{\partial \boldsymbol{x}}||^2_F<br>$$</p>
@@ -419,8 +430,8 @@
 <p>我们可以认为点$\boldsymbol{x}$处的Jacobian 矩阵$\boldsymbol{J}$能将非线性编码器近似为线性算子。这允许我们更形式地使用“收缩”这个词。在线性理论中，当$\boldsymbol{Jx}$的范数对于所有单位$\boldsymbol{x}$都小于等于1 时，J 被称为收缩的。换句话说，如果J 收缩了单位球，他就是收缩的。我们可以认为CAE 为鼓励每个局部线性算子具有收缩性，而在每个训练数据点处将Frobenius 范数作为$f(\boldsymbol{x})$的局部线性近似的惩罚。</p>
 <p>正则自编码器基于两种相反的推动力学习流形。在CAE 的情况下，这两种推动力是重构误差和收缩惩罚$\Omega(\boldsymbol{h})$。单独的重构误差鼓励CAE 学习一个恒等函数。单独的收缩惩罚将鼓励CAE 学习关于$\boldsymbol{x}$是恒定的特征。这两种推动力的折衷产生导数$\frac{\partial f(\boldsymbol{x})}{\partial \boldsymbol{x}}$大多是微小的自编码器。只有少数隐藏单元，对应于一小部分输入数据的方向，可能有显著的导数。</p>
 <p>CAE 的目标是学习数据的流形结构。使$\boldsymbol{Jx}$很大的方向$\boldsymbol{x}$，会快速改变$\boldsymbol{h}$，因此很可能是近似流形切平面的方向。Rifai et al. (2011a,b) 的实验显示训练CAE 会导致$\boldsymbol{J}$中大部分奇异值（幅值）比1 小，因此是收缩的。然而，有些奇异值仍然比1 大，因为重构误差的惩罚鼓励CAE 对最大局部变化的方向进行编码。对应于最大奇异值的方向被解释为收缩自编码器学到的切方向。理想情况下，这些切方向应对应于数据的真实变化。比如，一个应用于图像的CAE 应该能学到显示图像改变的切向量，如图14.6 图中物体渐渐改变状态。如下图所示，实验获得的奇异向量的可视化似乎真的对应于输入图象有意义的变换。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/949b9f25e12366078.png" alt="949b9f25e12366078.png"></p>
 <p>收缩自编码器正则化准则的一个实际问题是，尽管它在单一隐藏层的自编码器情况下是容易计算的，但在更深的自编码器情况下会变的难以计算。根据Rifaiet al. (2011a) 的策略，分别训练一系列单层的自编码器，并且每个被训练为重构前一个自编码器的隐藏层。这些自编码器的组合就组成了一个深度自编码器。因为每个层分别训练成局部收缩，深度自编码器自然也是收缩的。这个结果与联合训练深度模型完整架构（带有关于Jacobian的惩罚项）获得的结果是不同的，但它抓住了许多理想的定性特征。</p>
 <p>另一个实际问题是，如果我们不对解码器强加一些约束，收缩惩罚可能导致无用的结果。例如，编码器将输入乘一个小常数$\epsilon$，解码器将编码除以一个小常数$\epsilon$。随着$\epsilon$趋向于0，编码器会使收缩惩罚项$\Omega(\boldsymbol{h})$趋向于0 而学不到任何关于分布的信息。同时，解码器保持完美的重构。Rifai et al. (2011a) 通过绑定$f$ 和$g$ 的权重来防止这种情况。$f$ 和$g$ 都是由线性仿射变换后进行逐元素非线性变换的标准神经网络层组成，因此将$g$ 的权重矩阵设成$f$ 权重矩阵的转置是很直观的。</p>
 <h2 id="8-预测稀疏分解"><a href="#8-预测稀疏分解" class="headerlink" title="8. 预测稀疏分解"></a>8. 预测稀疏分解</h2><p>预测稀疏分解（predictive sparse decomposition, PSD）是稀疏编码和参数化自编码器(Kavukcuoglu et al., 2008) 的混合模型。参数化编码器被训练为能预测迭代推断的输出。PSD 被应用于图片和视频中对象识别的无监督特征学习(Kavukcuogluet al., 2009, 2010; Jarrett et al., 2009b; Farabet et al., 2011)，在音频中也有所应用(Henaff et al., 2011)。这个模型由一个编码器$f(\boldsymbol{x})$和一个解码器$g(\boldsymbol{h})$组成，并且都是参数化的。在训练过程中，$\boldsymbol{h}$由优化算法控制。优化过程是最小化</p>

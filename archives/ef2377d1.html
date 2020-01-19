@@ -53,12 +53,19 @@
 <meta property="og:site_name" content="Tao">
 <meta property="og:description" content="参考：  Unsupervised Representation Learning with Deep Convolutional Generative Adversarial NetworksA guide to convolution arithmetic for deep learningDCGAN-tensorflow  DCGAN，全称 Deep Convolutional Genera">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/DCGAN.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/conv.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/c.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/deconv.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/deconv1.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/dilaconv.png">
 <meta property="article:published_time" content="2019-02-19T12:28:50.000Z">
-<meta property="article:modified_time" content="2020-01-17T15:07:46.295Z">
+<meta property="article:modified_time" content="2020-01-19T03:44:02.852Z">
 <meta property="article:author" content="Tao Zhou">
 <meta property="article:tag" content="Theory">
 <meta property="article:tag" content="DCGAN">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://114.116.9.65:7777/images/2020/01/19/DCGAN.png">
 
 <link rel="canonical" href="http://zhoutao822.coding.me/archives/ef2377d1.html">
 
@@ -238,7 +245,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-17 23:07:46" itemprop="dateModified" datetime="2020-01-17T23:07:46+08:00">2020-01-17</time>
+                <time title="修改时间：2020-01-19 11:44:02" itemprop="dateModified" datetime="2020-01-19T11:44:02+08:00">2020-01-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -307,8 +314,8 @@
 
 <h2 id="1-DCGAN作者说"><a href="#1-DCGAN作者说" class="headerlink" title="1. DCGAN作者说"></a>1. DCGAN作者说</h2><p>首先作者肯定了GAN的功能：生成多样性样本，生成样本可以用于其他监督学习任务，判别器网络可以被用于一些分类任务（这里我觉得应该只能分真假，而不是分种类）。然后针对GAN训练过程中的常见问题：训练不稳定，提出了深层卷积的结构，最后对卷积核进行了可视化的研究，意图理解卷积核是如何学习到数据特征。</p>
 <p>DCGAN的生成器网络结构如下所示，输入是长度为100的随机噪声，输出的是$64 \times 64$大小的图像。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/DCGAN.png" alt="DCGAN.png"></p>
 <p>DCGAN结构设计：</p>
 <ul>
 <li>所有的池化层（pooling）都用卷积层替换，原因：池化在分类任务中的作用是提高卷积核的学习能力，使图像在短距离平移后依然保持原有特征结构，但是在生成器网络中，我们的目的是尽可能地学习原有数据的细节而不需要这种冗余，因此卷积层有利于在上采样过程中学习到数据特征，而对于判别器来说，与分类任务不同的地方在于判别器网络会影响生成器的训练效果，因此判别器也需要使用卷积层替换池化层；</li>
@@ -332,11 +339,11 @@
 <p>\left[<br>\begin{matrix}<br>y_{00} &amp; y_{01} \<br>y_{10} &amp; y_{11}<br>\end{matrix}<br>\right]<br>$$</p>
 <p>$$<br>\mathbb{W} = </p>
 <p>\left[<br>\begin{matrix}<br>w_{00} &amp; w_{01} &amp; w_{02}\<br>w_{10} &amp; w_{11} &amp; w_{12}\<br>w_{20} &amp; w_{21} &amp; w_{22}<br>\end{matrix}<br>\right]<br>$$</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/conv.png" alt="conv.png"></p>
 <p>假定我们的输入矩阵为$\mathbb{X}, 4 \times 4$，输出矩阵为$\mathbb{Y}, 2 \times 2$，卷积核为$\mathbb{W}, 3 \times 3$，则我们的卷积变换可以理解为矩阵相乘得到的，我们定义的乘积矩阵$\mathbb{C}$为：</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/c.png" alt="c.png"></p>
 <p>并且将矩阵$\mathbb{X}$和矩阵$\mathbb{Y}$整理为一列，即</p>
 <p>$$<br>\mathbb{X} = [x_{00} , x_{01} , x_{02} , x_{03} ,<br>x_{10} , x_{11} , x_{12} , x_{13} ,<br>x_{20} , x_{21} , x_{22} , x_{23} ,<br>x_{30} , x_{31} , x_{32} , x_{33}]^T \</p>
 <p>\mathbb{Y} = [y_{00} , y_{01} , y_{10} , y_{11} ]^T<br>$$</p>
@@ -347,16 +354,14 @@
 <p>需要注意的是这里的还原并不是逆矩阵还原数值，而是通过转置矩阵$\mathbb{C}^T$进行结构还原，在实际使用中我们并不需要直到原始矩阵$\mathbb{C}$的参数。</p>
 <h3 id="2-2-反卷积"><a href="#2-2-反卷积" class="headerlink" title="2.2 反卷积"></a>2.2 反卷积</h3><p>反卷积（Transposed convolution或者deconvolution），transposed本意是转置的意思，常见于转置矩阵，但是这里还是用反卷积来翻译。反卷积与卷积操作实际上都是进行卷积操作，只是中间的卷积策略稍有不同，并不是说反卷积一定是某个卷积操作的逆过程。常见的卷积操作可以使图片被压缩为一串特征向量（feature map），那么反卷积就是将特征向量还原为图片，这里的还原不是图像数据的还原，而是图像结构的还原，即维度、长度、宽度的近似还原。</p>
 <p>如果按照卷积操作的方式来进行反卷积，必然存在需要填充0的情况，如下图所示，但是这种$s = 1$的条件下，左上、左下、右上、右下的点仅受到单个原始数据的影响</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/deconv.png" alt="deconv.png"></p>
 <p>如果在$s = 2$的条件下，原始数据之间被填充了0，此时如果卷积核足够大，四角的数据是会受到多个原始数据的影响，因此一般来说都会使用stride控制0填充</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/deconv1.png" alt="deconv1.png"></p>
 <h3 id="2-3-扩张卷积"><a href="#2-3-扩张卷积" class="headerlink" title="2.3 扩张卷积"></a>2.3 扩张卷积</h3><p>扩张卷积（dilated convolutions或者atrous convolutions），也属于卷积的一种形式，它在原始卷积的基础上加入了一个dilation参数，用于控制在原始数据中进行计算的间隔，作用是增加感受野。在WaveNet有应用，用于</p>
-
-
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/dilaconv.png" alt="dilaconv.png"></p>
 
     </div>
 

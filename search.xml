@@ -912,8 +912,8 @@
 <p><a href="https://material.io/collections/developer-tutorials/" target="_blank" rel="noopener">MATERIAL DESIGN</a></p>
 </blockquote>
 <p>Snackbar是类似与Toast的一种信息提示控件，但是与Toast不同的是Snackbar是从界面底部弹出的且支持一个点击事件，默认情况下Snackbar内部有两个子控件分别是TextView和Button，两者水平排列，TextView用于显示信息，Button用于实现点击事件。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/snackbar1.gif" alt="snackbar1.gif"></p>
 <h2 id="1-Snackbar使用"><a href="#1-Snackbar使用" class="headerlink" title="1. Snackbar使用"></a>1. Snackbar使用</h2><p>Snackbar属于Material组件中的一种，如果你的应用使用了Material Theme以及AppCompatActivity，则Snackbar会获得圆角、四周有margin空隙的效果。</p>
 <p>默认情况下使用Snackbar，调用的方式也非常类似Toast</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// view是当前页面内的某个view，根据源码可知，make方法会找view的父view，</span></span><br><span class="line"><span class="comment">// 直到父view是FrameLayout或者CoordinateLayout，然后将其作为root给inflate方法调用</span></span><br><span class="line"><span class="comment">// inflate会加载默认的布局文件，这里根据是否使用Material Theme会加载不同的布局文件，</span></span><br><span class="line"><span class="comment">// 即上文我提到的效果，与此同时会将text的内容赋给布局文件中的TextView，</span></span><br><span class="line"><span class="comment">// 如果父view是CoordinateLayout，则Snackbar还支持右滑取消的功能，</span></span><br><span class="line"><span class="comment">// Snackbar.LENGTH_SHORT就类似于Toast.LENGTH_SHORT用于控制Snackbar的持续时间</span></span><br><span class="line">Snackbar snackbar = Snackbar.make(view, text, Snackbar.LENGTH_SHORT);</span><br><span class="line">snackbar.show();</span><br></pre></td></tr></table></figure>
@@ -924,12 +924,8 @@
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SnackbarUtil</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> duration;</span><br><span class="line">    <span class="keyword">private</span> View anchor;</span><br><span class="line">    <span class="keyword">private</span> ViewGroup customView;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> sideMargin;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> bottomMargin;</span><br><span class="line">    <span class="keyword">private</span> Snackbar delegete;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * SnackbarUtil is used to create Snackbar, if you setEnableCustom(false) or in default</span></span><br><span class="line"><span class="comment">     * you will get the origin Snackbar from Snackbar.make(anchor, text, duration); if you</span></span><br><span class="line"><span class="comment">     * setEnableCustom(true) in Builder, you must add your defined customView and you can</span></span><br><span class="line"><span class="comment">     * modify the margin of the customView in Snackbar.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * Your customView's layout should container 2 layer of Layout, because there is some</span></span><br><span class="line"><span class="comment">     * UI bug if you just only use 1 layer</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * &lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="comment">     * &lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"</span></span><br><span class="line"><span class="comment">     * android:layout_width="match_parent"</span></span><br><span class="line"><span class="comment">     * android:layout_height="match_parent"&gt;</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     *      &lt;LinearLayout</span></span><br><span class="line"><span class="comment">     *      android:layout_width="match_parent"</span></span><br><span class="line"><span class="comment">     *      android:layout_height="wrap_content"</span></span><br><span class="line"><span class="comment">     *      android:background="<span class="doctag">@drawable</span>/radius_background"</span></span><br><span class="line"><span class="comment">     *      android:orientation="vertical"&gt;</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     *          &lt;TextView</span></span><br><span class="line"><span class="comment">     *          android:layout_width="wrap_content"</span></span><br><span class="line"><span class="comment">     *          android:layout_height="wrap_content"</span></span><br><span class="line"><span class="comment">     *          android:layout_gravity="center"</span></span><br><span class="line"><span class="comment">     *          android:padding="8dp"</span></span><br><span class="line"><span class="comment">     *          android:id="@+id/textView"</span></span><br><span class="line"><span class="comment">     *          android:text="hahahahh"</span></span><br><span class="line"><span class="comment">     *          android:textColor="<span class="doctag">@color</span>/colorPrimaryDark"</span></span><br><span class="line"><span class="comment">     *          android:textSize="24sp" /&gt;</span></span><br><span class="line"><span class="comment">     *      &lt;/LinearLayout&gt;</span></span><br><span class="line"><span class="comment">     * &lt;/LinearLayout&gt;</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * Usage:</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * snackView is your customView, layout_snackbar is the layout above.</span></span><br><span class="line"><span class="comment">     * button is the anchor view, if your button is in CoordinatorLayout</span></span><br><span class="line"><span class="comment">     * the snackbar can be dismissed with swipe action.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * ViewGroup snackView = (ViewGroup) LayoutInflater.from(MainActivity.this).inflate(</span></span><br><span class="line"><span class="comment">     *                                      R.layout.layout_snackbar,</span></span><br><span class="line"><span class="comment">     *                                      new LinearLayout(MainActivity.this),</span></span><br><span class="line"><span class="comment">     *                                      false);</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * TextView textView = snackView.findViewById(R.id.textView);</span></span><br><span class="line"><span class="comment">     * textView.setOnClickListener(new View.OnClickListener() &#123;</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> duration     Snackbar duration, default Snackbar.LENGTH_SHORT;</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> anchor       must need, with anchor the Snackbar will find its root;</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> customView   must need if setEnableCustom(true) in Builder;</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> sideMargin   customView left and right margin in Snackbar;</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> bottomMargin customView bottom margin in Snackbar;</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Override</span> public void onClick(View v) &#123;</span></span><br><span class="line"><span class="comment">     * Toast.makeText(MainActivity.this, "12121", Toast.LENGTH_LONG).show();</span></span><br><span class="line"><span class="comment">     * &#125;</span></span><br><span class="line"><span class="comment">     * &#125;);</span></span><br><span class="line"><span class="comment">     * Snackbar snackbar = new SnackbarUtil.Builder()</span></span><br><span class="line"><span class="comment">     *                  .setAnchor(button)</span></span><br><span class="line"><span class="comment">     *                  .setBottomMargin(80)</span></span><br><span class="line"><span class="comment">     *                  .setDuration(Snackbar.LENGTH_SHORT)</span></span><br><span class="line"><span class="comment">     *                  .setText("32323")</span></span><br><span class="line"><span class="comment">     *                  .setCustomView(snackView)</span></span><br><span class="line"><span class="comment">     *                  .setSideMargin(20)</span></span><br><span class="line"><span class="comment">     *                  .build();</span></span><br><span class="line"><span class="comment">     * snackbar.show();</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    SnackbarUtil(<span class="keyword">int</span> duration, View anchor, ViewGroup customView, <span class="keyword">int</span> sideMargin, <span class="keyword">int</span> bottomMargin) &#123;</span><br><span class="line">        <span class="keyword">this</span>.duration = duration;</span><br><span class="line">        <span class="keyword">this</span>.anchor = anchor;</span><br><span class="line">        <span class="keyword">this</span>.customView = customView;</span><br><span class="line">        <span class="keyword">this</span>.sideMargin = sideMargin;</span><br><span class="line">        <span class="keyword">this</span>.bottomMargin = bottomMargin;</span><br><span class="line">        <span class="keyword">this</span>.delegete = Snackbar.make(anchor, <span class="string">""</span>, duration);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> Snackbar <span class="title">create</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 通过getView获取Snackbar的layout</span></span><br><span class="line">        Snackbar.SnackbarLayout layout = (Snackbar.SnackbarLayout) delegete.getView();</span><br><span class="line">        <span class="comment">// 为了自定义margin，这里需要将Snackbar的背景设置为透明，textView可以设置为INVISIBLE也可以不设置</span></span><br><span class="line">        <span class="comment">// 只要没有在make加入text即可</span></span><br><span class="line">        layout.setBackgroundColor(Color.TRANSPARENT);</span><br><span class="line">        TextView textView = layout.findViewById(com.google.android.material.R.id.snackbar_text);</span><br><span class="line">        textView.setVisibility(View.INVISIBLE);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// customView为我们传入的自定义view，自定义view是如何调用inflate可以参考注释，</span></span><br><span class="line">        <span class="comment">// 但是customView必须包含两层layout这是因为UI上有bug，具体可以自行测试，</span></span><br><span class="line">        <span class="comment">// 所以我们实际设置的margin是第2层layout的margin，第2层layout有背景色，</span></span><br><span class="line">        <span class="comment">// 所以最终呈现出Snackbar有margin的效果，但是要知道实际上Snackbar的布局</span></span><br><span class="line">        <span class="comment">// 还是占据了整个底部空间</span></span><br><span class="line">        View childLayout = customView.getChildAt(<span class="number">0</span>);</span><br><span class="line">        <span class="keyword">final</span> ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) childLayout.getLayoutParams();</span><br><span class="line">        <span class="comment">// MarginLayoutParams设置margin</span></span><br><span class="line">        params.setMargins(params.leftMargin + sideMargin,</span><br><span class="line">                params.topMargin,</span><br><span class="line">                params.rightMargin + sideMargin,</span><br><span class="line">                params.bottomMargin + bottomMargin);</span><br><span class="line">        childLayout.setLayoutParams(params);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Add the view to the Snackbar's layout</span></span><br><span class="line">        layout.addView(customView, <span class="number">0</span>);</span><br><span class="line">        <span class="comment">// Show the Snackbar</span></span><br><span class="line">        <span class="keyword">return</span> delegete;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 由于参数较多，所以采用建造者模式</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Builder</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">boolean</span> enableCustom;</span><br><span class="line">        <span class="keyword">private</span> String text;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">int</span> duration;</span><br><span class="line">        <span class="keyword">private</span> View anchor;</span><br><span class="line">        <span class="keyword">private</span> ViewGroup customView;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">int</span> sideMargin;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">int</span> bottomMargin;</span><br><span class="line"></span><br><span class="line">        Builder(<span class="keyword">boolean</span> enableCustom) &#123;</span><br><span class="line">            <span class="keyword">this</span>.enableCustom = enableCustom;</span><br><span class="line">            <span class="keyword">this</span>.duration = Snackbar.LENGTH_SHORT;</span><br><span class="line">            <span class="keyword">this</span>.text = <span class="string">""</span>;</span><br><span class="line">            <span class="keyword">this</span>.sideMargin = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">this</span>.bottomMargin = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Builder</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>(<span class="keyword">false</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Builder <span class="title">setEnableCustom</span><span class="params">(<span class="keyword">boolean</span> enableCustom)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.enableCustom = enableCustom;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Builder <span class="title">setText</span><span class="params">(String text)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.text = text;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Builder <span class="title">setDuration</span><span class="params">(<span class="keyword">int</span> duration)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.duration = duration;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Builder <span class="title">setAnchor</span><span class="params">(View anchor)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.anchor = anchor;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Builder <span class="title">setCustomView</span><span class="params">(ViewGroup customView)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.customView = customView;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Builder <span class="title">setSideMargin</span><span class="params">(<span class="keyword">int</span> sideMargin)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.sideMargin = sideMargin;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Builder <span class="title">setBottomMargin</span><span class="params">(<span class="keyword">int</span> bottomMargin)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.bottomMargin = bottomMargin;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Snackbar <span class="title">build</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="comment">// 通过enableCustom控制是否使用自定义Content，自定义Content的点击事件需要</span></span><br><span class="line">            <span class="comment">// 在Snackbar的外面处理</span></span><br><span class="line">            <span class="keyword">if</span> (!enableCustom) &#123;</span><br><span class="line">                <span class="keyword">return</span> Snackbar.make(anchor, text, duration);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (anchor == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(</span><br><span class="line">                        <span class="string">"No suitable parent found from the given view. Please provide a valid view."</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (customView == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(</span><br><span class="line">                        <span class="string">"No custom view found. Please provide a valid view or setEnableCustom(false)."</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> SnackbarUtil(duration, anchor, customView, sideMargin, bottomMargin).create();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>最终效果</p>
-
-
-
-
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/18/snackbar0.gif" alt="snackbar0.gif"></p>
 ]]></content>
       <categories>
         <category>Android</category>
@@ -1767,8 +1763,8 @@
 <li>上下文菜单ContextMenu，与某一个控件关联，可以实现在点击（长按）的位置出现菜单选项的效果；</li>
 <li>弹出菜单PopupMenu，动态生成，作为一个点击事件触发，出现的位置与被点击的控件位置绑定（上方或下方），与上下文菜单不同。</li>
 </ol>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/1.jpg" alt="1.jpg"></p>
 <a id="more"></a>
 
 <h2 id="1-菜单选项数据来源"><a href="#1-菜单选项数据来源" class="headerlink" title="1. 菜单选项数据来源"></a>1. 菜单选项数据来源</h2><p>如上图所示，展开的就是菜单Menu，菜单中包含一个一个的MenuItem，前面已经说了Menu不同于Button之类的控件，它的使用也是非常不同，最重要的部分其实是如何定义这些MenuItem，推荐的做法是使用<code>xml</code>资源文件定义MenuItem的文字内容以及Icon等等，然后在activity或fragment中处理点击事件；当然还有动态添加的方式可以使用。</p>
@@ -1776,8 +1772,8 @@
 <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- menu_main.xml --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">menu</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:app</span>=<span class="string">"http://schemas.android.com/apk/res-auto"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">"@+id/action_add_a_contact"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:icon</span>=<span class="string">"@drawable/ic_add_black_24dp"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:title</span>=<span class="string">"Add a Contact"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">app:showAsAction</span>=<span class="string">"always"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">"@+id/action_create_a_contact_group"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:icon</span>=<span class="string">"@drawable/ic_create_black_24dp"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:title</span>=<span class="string">"Create a Contact Group"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">app:showAsAction</span>=<span class="string">"never"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">"@+id/action_add_a_app"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:title</span>=<span class="string">"Add a App"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">app:showAsAction</span>=<span class="string">"always"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">"@+id/submenu"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:title</span>=<span class="string">"Submenu"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">menu</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">item</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:id</span>=<span class="string">"@+id/action_create_a_channel"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:icon</span>=<span class="string">"@drawable/ic_create_new_folder_black_24dp"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:title</span>=<span class="string">"Create a Channel"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">app:showAsAction</span>=<span class="string">"never"</span> /&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">item</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:id</span>=<span class="string">"@+id/action_join_a_channel"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:icon</span>=<span class="string">"@drawable/ic_adjust_black_24dp"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:title</span>=<span class="string">"Join a Channel"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">app:showAsAction</span>=<span class="string">"never"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">menu</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">menu</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>上面的布局文件产生的效果如下图所示</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/2.jpg" alt="2.jpg"></p>
 <p>有几个特点：</p>
 <ol>
 <li>如果Item设置了Icon，那么如果出现在ToolBar上就是Icon，如果没有设置Icon，则显示大写文字；</li>
@@ -1806,8 +1802,8 @@
 
 <h2 id="2-上下文菜单"><a href="#2-上下文菜单" class="headerlink" title="2. 上下文菜单"></a>2. 上下文菜单</h2><p>ContextMenu可以用在非常多的控件上，这里仅简单使用Button和RecyclerView，通常来说，触发ContextMenu的方式是长按，因此与该控件的OnLongClick事件冲突，<br>如果在onLongClick()方法中返回<strong>true</strong>，则代表点击事件被消耗，不再继续传递，那么ContextMenu不会触发；反之返回<strong>false</strong>，则ContextMenu被触发。由此可知，onLongClick()的优先级在ContextMenu之上，具体会在<strong>Android事件传递中分析</strong>。</p>
 <p>ContextMenu可以在一个Activity中有多个，甚至可以在RecyclerView中使用，但是仅需要重写两个方法即可判断ContextMenu的来源。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/3.jpg" alt="3.jpg"></p>
 <p>如上图所示，<code>Upload</code>后面跟的是该控件的<code>ItemId</code>，三个Menu各不相同，所以显然我们可以根据控件的不同生成不同的ContextMenu，点击事件同理。</p>
 <p>使用ContextMenu的三个步骤：</p>
 <blockquote>
@@ -1933,8 +1929,8 @@
 <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">LinearLayout</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:orientation</span>=<span class="string">"vertical"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">us.zoom.videomeetings.viewpagerdemo.custom.CustomHorizontalScrollView</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">us.zoom.videomeetings.viewpagerdemo.custom.CustomLinearLayout</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:orientation</span>=<span class="string">"horizontal"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">us.zoom.videomeetings.viewpagerdemo.custom.CustomTextView</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:id</span>=<span class="string">"@+id/custom_tv"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:layout_gravity</span>=<span class="string">"center"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:layout_margin</span>=<span class="string">"40dp"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:background</span>=<span class="string">"@color/colorPrimary"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:padding</span>=<span class="string">"40dp"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:text</span>=<span class="string">"Fragment"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:textSize</span>=<span class="string">"30sp"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">us.zoom.videomeetings.viewpagerdemo.custom.CustomTextView</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:id</span>=<span class="string">"@+id/custom_tv2"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:layout_gravity</span>=<span class="string">"center"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:layout_margin</span>=<span class="string">"40dp"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:background</span>=<span class="string">"@color/colorPrimary"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:padding</span>=<span class="string">"40dp"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:text</span>=<span class="string">"Fragment"</span></span></span><br><span class="line"><span class="tag">                <span class="attr">android:textSize</span>=<span class="string">"30sp"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;/<span class="name">us.zoom.videomeetings.viewpagerdemo.custom.CustomLinearLayout</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;/<span class="name">us.zoom.videomeetings.viewpagerdemo.custom.CustomHorizontalScrollView</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>CustomHorizontalScrollView和CustomLinearLayout都是直接继承，仅重写dispatchTouchEvent、onTouchEvent、onInterceptTouchEvent方法，加上log，这里就不加代码了，基本同上。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/viewpager.gif" alt="viewpager.gif"></p>
 <p>在上述的演示效果中可以发现，如果滑动的位置是TextView，则ViewPager的左右滑动似乎被卡住了，但是偶尔可以切换，而且就算滑动到第二个TextView的边缘也不能切换fragment；如果滑动的位置是下方空白区域则ViewPager可以正常滑动。</p>
 <p>根据log以及上文的分析可知，ViewPager左右滑动被卡住的原因是：</p>
 <ol>
@@ -1973,11 +1969,11 @@
       <tags>
         <tag>Android</tag>
         <tag>Material</tag>
-        <tag>ViewPager</tag>
-        <tag>RecyclerView</tag>
         <tag>ToolBar</tag>
         <tag>ContextMenu</tag>
         <tag>PopupMenu</tag>
+        <tag>RecyclerView</tag>
+        <tag>ViewPager</tag>
         <tag>onClick</tag>
         <tag>onLongClick</tag>
         <tag>onTouchEvent</tag>
@@ -2291,8 +2287,8 @@
 <p><a href="https://github.com/material-components/material-components-android/blob/master/docs/getting-started.md" target="_blank" rel="noopener">Getting started with Material Components for Android</a></p>
 </blockquote>
 <p>BottomSheetDialog，顾名思义就是从界面底部往上出现的Dialog，它是Material Design的控件之一，目前在<a href="https://github.com/material-components/material-components-android" target="_blank" rel="noopener">Material Components</a>库中。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/bottomsheet-1.gif" alt="bottomsheet-1.gif"></p>
 <a id="more"></a>
 
 <h2 id="1-准备工作"><a href="#1-准备工作" class="headerlink" title="1. 准备工作"></a>1. 准备工作</h2><p>Google推出的<a href="https://github.com/material-components/material-components-android" target="_blank" rel="noopener">Material Components</a>库包括了很多常用的控件，我们只需要直接用这些控件就可以实现很多复杂的功能或界面，但是在使用之前还需要一些准备工作，大致在<a href="https://github.com/material-components/material-components-android/blob/master/docs/getting-started.md" target="_blank" rel="noopener">Getting started with Material Components for Android</a>也给出了，我这里简要描述一下：</p>
@@ -2338,8 +2334,8 @@
 <li>重写<strong>onCreateView</strong>方法，加入你自定义的布局；</li>
 <li>调用<strong>show</strong>方法，这里需要<strong>Activity.getSupportFragmentManager()</strong>。</li>
 </ol>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/design1.png" alt="design1.png"></p>
 <p>我这里实现一个相对复杂的布局，如上图所示，具体包括两部分，一个是header，header可以是一个自定义view，也可以将header隐藏，header与下面的Menu之间是透明的，下面的Menu通过RecyclerView控制选项数量，点击单个选项有水波纹效果，代码如下：</p>
 <ul>
 <li>首先是Dialog的布局文件<code>dialog_option.xml</code>，根据上面的描述就知道是一个RecyclerView</li>
@@ -2384,12 +2380,12 @@
 </ul>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThirdActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> <span class="keyword">implements</span> <span class="title">MenuListAdapter</span>.<span class="title">OnMenuItemClickListener</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_third);</span><br><span class="line"></span><br><span class="line">        ArrayList&lt;OptionMenuItem&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        list.add(<span class="keyword">new</span> OptionMenuItem(<span class="string">"Forward"</span>, <span class="number">98</span>));</span><br><span class="line">        list.add(<span class="keyword">new</span> OptionMenuItem(<span class="string">"Copy"</span>, <span class="number">2121</span>));</span><br><span class="line">        list.add(<span class="keyword">new</span> OptionMenuItem(<span class="string">"Mark as unread"</span>, <span class="number">111</span>));</span><br><span class="line">        list.add(<span class="keyword">new</span> OptionMenuItem(<span class="string">"Star message"</span>, <span class="number">66</span>));</span><br><span class="line">        list.add(<span class="keyword">new</span> OptionMenuItem(<span class="string">"Cancel"</span>, <span class="number">2</span>));</span><br><span class="line"></span><br><span class="line">        MenuListAdapter menuListAdapter = <span class="keyword">new</span> MenuListAdapter();</span><br><span class="line">        menuListAdapter.addAll(list);</span><br><span class="line">        menuListAdapter.setHasHeader(<span class="keyword">true</span>);</span><br><span class="line">        menuListAdapter.setOnMenuItemClickListener(<span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line">        findViewById(R.id.button2).setOnClickListener(v -&gt; &#123;</span><br><span class="line">            <span class="comment">// 两种方式等效</span></span><br><span class="line">            <span class="comment">// MenuBottomSheetDialog.builder(ThirdActivity.this)</span></span><br><span class="line">            <span class="comment">//         .setAdapter(menuListAdapter)</span></span><br><span class="line">            <span class="comment">//         .setHasItemDecoration(true)</span></span><br><span class="line">            <span class="comment">//         .show(getSupportFragmentManager());</span></span><br><span class="line"></span><br><span class="line">            MenuBottomSheetDialog dialog = MenuBottomSheetDialog.builder(ThirdActivity.<span class="keyword">this</span>)</span><br><span class="line">                    .setAdapter(menuListAdapter)</span><br><span class="line">                    .setHasItemDecoration(<span class="keyword">true</span>)</span><br><span class="line">                    .build();</span><br><span class="line">            dialog.show(getSupportFragmentManager());</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onMenuClick</span><span class="params">(View view, <span class="keyword">int</span> action)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 点击事件的回调</span></span><br><span class="line">        Toast.makeText(<span class="keyword">this</span>, <span class="string">"action "</span> + action, Toast.LENGTH_SHORT).show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="3-BottomSheetDialog进阶与Bug"><a href="#3-BottomSheetDialog进阶与Bug" class="headerlink" title="3. BottomSheetDialog进阶与Bug"></a>3. BottomSheetDialog进阶与Bug</h2>
-
+<h2 id="3-BottomSheetDialog进阶与Bug"><a href="#3-BottomSheetDialog进阶与Bug" class="headerlink" title="3. BottomSheetDialog进阶与Bug"></a>3. BottomSheetDialog进阶与Bug</h2><!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/design2.gif" alt="design2.gif"></p>
 <p>上图即BottomSheetDialog与ViewPager以及RecyclerView之间的Bug，简而言之就是ViewPager下除了第一个页面可以滑动之外，其他页面均不可滑动，具体的<a href="https://stackoverflow.com/questions/39326321/scroll-not-working-for-multiple-recyclerview-in-bottomsheet?noredirect=1&lq=1" target="_blank" rel="noopener">Error link</a>以及我在Github上提的<a href="https://github.com/material-components/material-components-android/issues/373" target="_blank" rel="noopener">issue</a>，这个问题已经有大神给出了解决方法，但是官方目前还是没有引入。</p>
 <p>下面我们就来复现这种状况，不过我的设计效果与上图略有不同，增加了一些内容，首先是TabLayout的title，它是由两部分组成，前面是一个Unicode表情，后面是数字，数值表示在这个表情下的list的大小；TabLayout下面对应不同的Fragment，Fragment中显示当前的list，我这里生成的Item都是简单写一下，没有具体意义；整个设计思路是，自定义一个<code>ListBottomSheetDialog</code>，这个dialog由ViewPager + TabLayout + Fragment + RecyclerView组成，先从Fragment开始实现步骤</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/design3.png" alt="design3.png"></p>
 <ul>
 <li><code>ListObjectFragment</code>布局文件<code>fragment_list.xml</code>与Item布局文件<code>item_list.xml</code></li>
 </ul>
@@ -2439,8 +2435,8 @@
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FourthActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_fourth);</span><br><span class="line">        List&lt;EmojiItem&gt; data = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        String[] arr = <span class="keyword">new</span> String[]&#123;</span><br><span class="line">                <span class="string">"\uD83D\uDC4D"</span>, <span class="string">"❤️"</span>, <span class="string">"\uD83C\uDF89"</span>, <span class="string">"\uD83D\uDE02"</span>, <span class="string">"\uD83D\uDC4F"</span>, <span class="string">"\uD83D\uDE0E"</span></span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">            data.add(<span class="keyword">new</span> EmojiItem(arr[i], i + <span class="number">10</span>, <span class="keyword">null</span>));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        findViewById(R.id.button4).setOnClickListener(v -&gt;</span><br><span class="line">                ListBottomSheetDialog.builder(FourthActivity.<span class="keyword">this</span>)</span><br><span class="line">                .setEmojiItemList(data)</span><br><span class="line">                .setOffscreenPageLimit(<span class="number">5</span>)</span><br><span class="line">                .setEnableScroll(<span class="keyword">true</span>)</span><br><span class="line">                .show(getSupportFragmentManager()));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><strong>运行结果</strong></p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/design4.gif" alt="design4.gif"></p>
 <p>很明显有几个问题：</p>
 <ol>
 <li>list上面有一段空白；</li>
@@ -2489,10 +2485,8 @@
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FourthActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_fourth);</span><br><span class="line">        List&lt;EmojiItem&gt; data = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        String[] arr = <span class="keyword">new</span> String[]&#123;</span><br><span class="line">                <span class="string">"\uD83D\uDC4D"</span>, <span class="string">"❤️"</span>, <span class="string">"\uD83C\uDF89"</span>, <span class="string">"\uD83D\uDE02"</span>, <span class="string">"\uD83D\uDC4F"</span>, <span class="string">"\uD83D\uDE0E"</span></span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">            data.add(<span class="keyword">new</span> EmojiItem(arr[i], i + <span class="number">10</span>, <span class="keyword">null</span>));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 多了setMaxHeight(1600)和setPeekHeight(1000)</span></span><br><span class="line">        findViewById(R.id.button4).setOnClickListener(v -&gt;</span><br><span class="line">                ListBottomSheetDialog.builder(FourthActivity.<span class="keyword">this</span>)</span><br><span class="line">                        .setEmojiItemList(data)</span><br><span class="line">                        .setMaxHeight(<span class="number">1600</span>)</span><br><span class="line">                        .setPeekHeight(<span class="number">1000</span>)</span><br><span class="line">                        .setOffscreenPageLimit(<span class="number">5</span>)</span><br><span class="line">                        .setEnableScroll(<span class="keyword">true</span>)</span><br><span class="line">                        .show(getSupportFragmentManager()));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>结果如下，但是如果BottomSheetDialog官方将这个bug修复了，那么就不需要修改这么多的文件，而且自定义的ViewPagerBottomSheetBehavior只是复制了BottomSheetBehavior中的部分代码，可能存在其他问题尚未发现。</p>
-
-
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/design5.gif" alt="design5.gif"></p>
 ]]></content>
       <categories>
         <category>Android</category>
@@ -2500,9 +2494,9 @@
       <tags>
         <tag>Android</tag>
         <tag>Material</tag>
-        <tag>BottomSheetDialog</tag>
-        <tag>ViewPager</tag>
         <tag>RecyclerView</tag>
+        <tag>ViewPager</tag>
+        <tag>BottomSheetDialog</tag>
       </tags>
   </entry>
   <entry>
@@ -2629,8 +2623,8 @@
 <a id="more"></a>
 
 <h3 id="2-VSCode安装与参数设置"><a href="#2-VSCode安装与参数设置" class="headerlink" title="2. VSCode安装与参数设置"></a>2. VSCode安装与参数设置</h3><p>VSCode的安装没什么可说的，完成后需要在<strong>扩展</strong>中搜索<code>latex</code>，就可以找到需要的插件<code>LaTeX Workshop</code>，安装完成后需要配置一些参数，在设置中搜索<code>latex</code>，打开<code>settings.json</code>，加入以下参数</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/latex-workshop.png" alt="latex-workshop.png"></p>
 <figure class="highlight"><table><tr><td class="code"><pre><span class="line">"latex-workshop.view.pdf.viewer": "tab",</span><br><span class="line">"latex-workshop.latex.recipes": [</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">"name"</span>: <span class="string">"latexmk"</span>,</span><br><span class="line">        <span class="attr">"tools"</span>: [</span><br><span class="line">            <span class="string">"latexmk"</span></span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">"name"</span>: <span class="string">"pdflatex"</span>,</span><br><span class="line">        <span class="attr">"tools"</span>: [</span><br><span class="line">            <span class="string">"pdflatex"</span></span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">"name"</span>: <span class="string">"pdflatex -&gt; bibtex -&gt; pdflatex*2"</span>,</span><br><span class="line">        <span class="attr">"tools"</span>: [</span><br><span class="line">            <span class="string">"pdflatex"</span>,</span><br><span class="line">            <span class="string">"bibtex"</span>,</span><br><span class="line">            <span class="string">"pdflatex"</span>,</span><br><span class="line">            <span class="string">"pdflatex"</span></span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">],</span><br><span class="line">"latex-workshop.latex.tools": [</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">"name"</span>: <span class="string">"xelatex"</span>,</span><br><span class="line">        <span class="attr">"command"</span>: <span class="string">"xelatex"</span>,</span><br><span class="line">        <span class="attr">"args"</span>: [</span><br><span class="line">            <span class="string">"-synctex=1"</span>,</span><br><span class="line">            <span class="string">"-interaction=nonstopmode"</span>,</span><br><span class="line">            <span class="string">"-file-line-error"</span>,</span><br><span class="line">            <span class="string">"%DOC%"</span></span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">"name"</span>: <span class="string">"pdflatex"</span>,</span><br><span class="line">        <span class="attr">"command"</span>: <span class="string">"pdflatex"</span>,</span><br><span class="line">        <span class="attr">"args"</span>: [</span><br><span class="line">            <span class="string">"-synctex=1"</span>,</span><br><span class="line">            <span class="string">"-interaction=nonstopmode"</span>,</span><br><span class="line">            <span class="string">"-file-line-error"</span>,</span><br><span class="line">            <span class="string">"%DOC%"</span></span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">"name"</span>: <span class="string">"latexmk"</span>,</span><br><span class="line">        <span class="attr">"command"</span>: <span class="string">"latexmk"</span>,</span><br><span class="line">        <span class="attr">"args"</span>: [</span><br><span class="line">            <span class="string">"-xelatex"</span></span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">"name"</span>: <span class="string">"bibtex"</span>,</span><br><span class="line">        <span class="attr">"command"</span>: <span class="string">"bibtex"</span>,</span><br><span class="line">        <span class="attr">"args"</span>: [</span><br><span class="line">            <span class="string">"%DOCFILE%"</span></span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">],</span><br><span class="line">"latex-workshop.latex.autoBuild.run": "never",</span><br><span class="line">"latex-workshop.latex.autoClean.run": "never",</span><br><span class="line">"latex-workshop.latex.clean.fileTypes": [</span><br><span class="line">        "*.aux",</span><br><span class="line">        "*.bbl",</span><br><span class="line">        "*.blg",</span><br><span class="line">        "*.idx",</span><br><span class="line">        "*.ind",</span><br><span class="line">        "*.lof",</span><br><span class="line">        "*.lot",</span><br><span class="line">        "*.out",</span><br><span class="line">        "*.toc",</span><br><span class="line">        "*.acn",</span><br><span class="line">        "*.acr",</span><br><span class="line">        "*.alg",</span><br><span class="line">        "*.glg",</span><br><span class="line">        "*.glo",</span><br><span class="line">        "*.gls",</span><br><span class="line">        "*.ist",</span><br><span class="line">        "*.fls",</span><br><span class="line">        "*.log",</span><br><span class="line">        "*.xdv",</span><br><span class="line">        "*.fdb_latexmk",</span><br><span class="line">        <span class="string">"*.synctex.gz"</span></span><br><span class="line">    ]</span><br></pre></td></tr></table></figure>
 
 <p>参数说明：</p>
@@ -2644,17 +2638,17 @@
 </ol>
 <h3 id="3-编译论文模板"><a href="#3-编译论文模板" class="headerlink" title="3. 编译论文模板"></a>3. 编译论文模板</h3><p>在<a href="https://github.com/ustctug/ustcthesis" target="_blank" rel="noopener">中国科学技术大学学位论文 LaTeX 模板</a>下载release文件<a href="https://github.com/ustctug/ustcthesis/releases/download/v3.1.06/ustcthesis-v3.1.06.zip" target="_blank" rel="noopener">ustcthesis-v3.1.06.zip</a>，这里面有模板以及样例文件。</p>
 <p>文件目录大概如下图，里面某些pdf和tex文件可能不同，但不重要</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/ustcthesis.png" alt="ustcthesis.png"></p>
 <p>用VSCode打开模板文件，并打开<code>main.tex</code>文件，这里可以先把<code>main.pdf</code>重命名一下，此时如果之前的步骤都是对的，那么VSCode的左下角会有一个勾的图标，点击后应该如下图</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/recipe.png" alt="recipe.png"></p>
 <p>这里会发现之前设置参数时加入的<code>recipe</code>都显示出来，中国科学技术大学学位论文 LaTeX 模板 需要用<code>latexmk</code>编译，所以直接双击<code>Recipe: latexmk</code>编译<code>main.tex</code>，生成<code>main.pdf</code>文件，在编译过程中会提示你缺少某些package，这些package里面有需要的一些样式文件，类似于CSS，弹出的窗口来自于<code>MikTeX Console</code>，点击确定下载即可，可能会需要点很多次，当所有需要的package下载完成后编译也可以继续下去，最后比对一下生成的<code>main.pdf</code>文件内容与重命名之前的<code>main.pdf</code>，看看有没有缺失或者显示不对的地方，如果有，再查找原因，一般来说问题出在缺少某些package。如果需要清理生成的临时文件只需要双击<code>Clean up</code>即可。</p>
 <p>这是我生成的pdf文件截图，第一张图我修改为<code>硕士</code>，第二张图生成当前时间。</p>
-
-
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/1.png" alt="1.png"></p>
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/2.png" alt="2.png"></p>
 <h2 id="Mac环境"><a href="#Mac环境" class="headerlink" title="Mac环境"></a>Mac环境</h2><h3 id="1-安装LaTeX发行版-1"><a href="#1-安装LaTeX发行版-1" class="headerlink" title="1. 安装LaTeX发行版"></a>1. 安装LaTeX发行版</h3><p>在Mac下选择的安装<a href="https://www.tug.org/mactex/" target="_blank" rel="noopener">MacTeX</a>，而MacTeX有几个不同的安装包，一个是<code>MacTeX.pkg</code>，大概3.9G，还有一个是<code>BasicTeX.pkg</code>，大概76M，区别在于前者包括了GUI，大概有4个工具配合使用，后者没有GUI仅提供命令行工具，这里我选择了后者，前者应该也没有区别。</p>
 <p>命令行工具为<code>tlmgr</code>，我在运行时需要加<code>sudo</code>，应该是安装路径对一般用户不可写。</p>
 <p>然后需要使用<code>tlmgr</code>安装一些package，我们先设置一下镜像源加速下载</p>
@@ -2672,8 +2666,8 @@
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> package_name为包名，比如可能有siunitx...</span></span><br><span class="line">sudo tlmgr install package_name</span><br></pre></td></tr></table></figure>
 
 <p>这些下载的package是可以在<code>/usr/local/texlive/2019basic/texmf-dist/tex/latex</code>下找到的，我的可以正确运行科大LaTeX模板的package截图如下，不想一个一个搜索的可以直接对照下载缺少的package。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/3.png" alt="3.png"></p>
 <p>最后同上测试一下能否正确生成pdf文件。</p>
 ]]></content>
       <categories>
@@ -2733,8 +2727,8 @@
 
 <h2 id="1-DCGAN作者说"><a href="#1-DCGAN作者说" class="headerlink" title="1. DCGAN作者说"></a>1. DCGAN作者说</h2><p>首先作者肯定了GAN的功能：生成多样性样本，生成样本可以用于其他监督学习任务，判别器网络可以被用于一些分类任务（这里我觉得应该只能分真假，而不是分种类）。然后针对GAN训练过程中的常见问题：训练不稳定，提出了深层卷积的结构，最后对卷积核进行了可视化的研究，意图理解卷积核是如何学习到数据特征。</p>
 <p>DCGAN的生成器网络结构如下所示，输入是长度为100的随机噪声，输出的是$64 \times 64$大小的图像。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/DCGAN.png" alt="DCGAN.png"></p>
 <p>DCGAN结构设计：</p>
 <ul>
 <li>所有的池化层（pooling）都用卷积层替换，原因：池化在分类任务中的作用是提高卷积核的学习能力，使图像在短距离平移后依然保持原有特征结构，但是在生成器网络中，我们的目的是尽可能地学习原有数据的细节而不需要这种冗余，因此卷积层有利于在上采样过程中学习到数据特征，而对于判别器来说，与分类任务不同的地方在于判别器网络会影响生成器的训练效果，因此判别器也需要使用卷积层替换池化层；</li>
@@ -2758,11 +2752,11 @@
 <p>\left[<br>\begin{matrix}<br>y_{00} &amp; y_{01} \<br>y_{10} &amp; y_{11}<br>\end{matrix}<br>\right]<br>$$</p>
 <p>$$<br>\mathbb{W} = </p>
 <p>\left[<br>\begin{matrix}<br>w_{00} &amp; w_{01} &amp; w_{02}\<br>w_{10} &amp; w_{11} &amp; w_{12}\<br>w_{20} &amp; w_{21} &amp; w_{22}<br>\end{matrix}<br>\right]<br>$$</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/conv.png" alt="conv.png"></p>
 <p>假定我们的输入矩阵为$\mathbb{X}, 4 \times 4$，输出矩阵为$\mathbb{Y}, 2 \times 2$，卷积核为$\mathbb{W}, 3 \times 3$，则我们的卷积变换可以理解为矩阵相乘得到的，我们定义的乘积矩阵$\mathbb{C}$为：</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/c.png" alt="c.png"></p>
 <p>并且将矩阵$\mathbb{X}$和矩阵$\mathbb{Y}$整理为一列，即</p>
 <p>$$<br>\mathbb{X} = [x_{00} , x_{01} , x_{02} , x_{03} ,<br>x_{10} , x_{11} , x_{12} , x_{13} ,<br>x_{20} , x_{21} , x_{22} , x_{23} ,<br>x_{30} , x_{31} , x_{32} , x_{33}]^T \</p>
 <p>\mathbb{Y} = [y_{00} , y_{01} , y_{10} , y_{11} ]^T<br>$$</p>
@@ -2773,16 +2767,14 @@
 <p>需要注意的是这里的还原并不是逆矩阵还原数值，而是通过转置矩阵$\mathbb{C}^T$进行结构还原，在实际使用中我们并不需要直到原始矩阵$\mathbb{C}$的参数。</p>
 <h3 id="2-2-反卷积"><a href="#2-2-反卷积" class="headerlink" title="2.2 反卷积"></a>2.2 反卷积</h3><p>反卷积（Transposed convolution或者deconvolution），transposed本意是转置的意思，常见于转置矩阵，但是这里还是用反卷积来翻译。反卷积与卷积操作实际上都是进行卷积操作，只是中间的卷积策略稍有不同，并不是说反卷积一定是某个卷积操作的逆过程。常见的卷积操作可以使图片被压缩为一串特征向量（feature map），那么反卷积就是将特征向量还原为图片，这里的还原不是图像数据的还原，而是图像结构的还原，即维度、长度、宽度的近似还原。</p>
 <p>如果按照卷积操作的方式来进行反卷积，必然存在需要填充0的情况，如下图所示，但是这种$s = 1$的条件下，左上、左下、右上、右下的点仅受到单个原始数据的影响</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/deconv.png" alt="deconv.png"></p>
 <p>如果在$s = 2$的条件下，原始数据之间被填充了0，此时如果卷积核足够大，四角的数据是会受到多个原始数据的影响，因此一般来说都会使用stride控制0填充</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/deconv1.png" alt="deconv1.png"></p>
 <h3 id="2-3-扩张卷积"><a href="#2-3-扩张卷积" class="headerlink" title="2.3 扩张卷积"></a>2.3 扩张卷积</h3><p>扩张卷积（dilated convolutions或者atrous convolutions），也属于卷积的一种形式，它在原始卷积的基础上加入了一个dilation参数，用于控制在原始数据中进行计算的间隔，作用是增加感受野。在WaveNet有应用，用于</p>
-
-
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/dilaconv.png" alt="dilaconv.png"></p>
 ]]></content>
       <categories>
         <category>Deep Learning</category>
@@ -2803,8 +2795,8 @@
 <a id="more"></a>
 
 <h2 id="1-贪心逐层无监督预训练"><a href="#1-贪心逐层无监督预训练" class="headerlink" title="1. 贪心逐层无监督预训练"></a>1. 贪心逐层无监督预训练</h2><p>贪心逐层无监督预训练依赖于单层表示学习算法，例如RBM、单层自编码器、稀疏编码模型或其他学习潜在表示的模型。每一层使用无监督学习预训练，将前一层的输出作为输入，输出数据的新的表示。这个新的表示的分布（或者是和其他变量比如要预测类别的关系）有可能是更简单的。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/1de14d55d247de5b3.png" alt="1de14d55d247de5b3.png"></p>
 <p>贪心逐层无监督预训练的几个标志性特点：</p>
 <ul>
 <li>贪心：基于贪心算法，每次仅优化当前的一层网络，对后续的网络情况不需要了解；</li>
@@ -2841,21 +2833,21 @@
 </ol>
 <p>当然上述学习并不是没有约束的，只有在训练时使用了额外的信息，零数据学习和零次学习才是有可能的。在我们的例子中，没有提前看到猫的图像而去识别猫，所以拥有一些未标注文本数据包含句子诸如“猫有四条腿”或“猫有尖耳朵”，对于学习非常有帮助。</p>
 <p>零次学习是迁移学习的一种特殊形式。同样的原理可以解释如何能执行多模态学习，学习两种模态的表示，和一种模态中的观察结果$\boldsymbol{x}$与另一种模态中的观察结果$\boldsymbol{y}$组成的对$(\boldsymbol{x, y})$之间的关系（通常是一个联合分布）。通过学习所有的三组参数（从$\boldsymbol{x}$到它的表示、从$\boldsymbol{y}$到它的表示，以及两个表示之间的关系），一个表示中的概念被锚定在另一个表示中，反之亦然，从而可以有效地推广到新的对组。这个过程可以用下图展示</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/2785d6f8e4c581049.png" alt="2785d6f8e4c581049.png"></p>
 <h2 id="3-半监督解释因果关系"><a href="#3-半监督解释因果关系" class="headerlink" title="3. 半监督解释因果关系"></a>3. 半监督解释因果关系</h2><p><em>什么原因能使一个表示比另一个表示更好？</em></p>
 <p>一种假设是，理想表示中的特征对应到观测数据的潜在成因，特征空间中不同的特征或方向对应着不同的原因，从而表示能够区分这些原因。</p>
 <p>可以参考受限玻尔兹曼机RBM和混合高斯模型GMM，对于输入$\boldsymbol{x}$来说，若它属于某种混合分布，而对应的目标$\boldsymbol{y}$属于其中的混合分量，那么通过无监督学习，我们可以找到一个非常好的表示空间用于描述输入$\boldsymbol{x}$。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/3733d48f1827dfc38.png" alt="3733d48f1827dfc38.png"></p>
 <p>关于上述成立的条件是，大多数观察是由极其大量的潜在成因形成的。半监督学习的一个重要研究前沿是确定每种情况下要编码什么。目前，处理大量潜在原因的两个主要策略是，同时使用无监督学习和监督学习信号，从而使得模型捕获最相关的变动因素，或是使用纯无监督学习学习更大规模的表示。</p>
 <p>无监督学习的另一个思路是选择一个更好的确定哪些潜在因素最为关键的定义。这个问题就很突出了，潜在因素有很多，甚至说我们并不能预先知道潜在因素有哪些或者有多少，但是我们需要确定哪些潜在因素最为关键，而放弃掉那些不重要的因素。</p>
 <p>例如，图像像素的均方误差隐式地指定，一个潜在因素只有在其显著地改变大量像素的亮度时，才是重要影响因素。如果我们希望解决的问题涉及到小对象之间的相互作用，那么这将有可能遇到问题。在机器人任务中，自编码器未能学习到编码小乒乓球。同样是这个机器人，它可以成功地与更大的对象进行交互（例如棒球，均方误差在这种情况下很显著）。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/4.png" alt="4.png"></p>
 <p>这就与生成式对抗网络有很大的联系了，具体参考生成式对抗网络。生成式对抗网络只是确定应该表示哪些因素的一小步。我们期望未来的研究能够发现更好的方式来确定表示哪些因素，并且根据任务来开发表示不同因素的机制。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/5.png" alt="5.png"></p>
 <h2 id="4-分布式表示"><a href="#4-分布式表示" class="headerlink" title="4. 分布式表示"></a>4. 分布式表示</h2><p><strong>分布式表示</strong>，它的含义是由很多元素组合的表示，这些元素之间可以设置成可分离的，简而言之就是对于我们需要考察的任务，我们都以具有$k$个值的$n$个特征去描述，总共我们就可以描述$k^n$个不同的概念。</p>
 <p>分布式表示是表示学习最重要的工具之一。就神经网络而言，隐藏神经元即利用了分布式表示的策略；就概率模型而言，潜变量也是利用了分布式表示的策略。我们之所以使用了这些隐藏神经元或潜变量，是因为如果表示空间足够大，我们必定能够以某种方式找到任务在表示空间中的方向。</p>
 <p>以$n$维二元向量为例，有$2^n$种配置，每一种都对应输入空间中的一个不同区域。这与符号表示类似但是不同，比如说字典中有$n$个符号，以one-hot向量表示，那么每一个字典里的符号都是一个唯一的$n$维二元向量。但是仅需要$n$个不同的区域而不是$2^n$，因此符号表示是非分布式表示类中的一个具体示例，它可以包含很多条目，但是每个条目没有显著意义的单独控制作用。</p>
@@ -2869,11 +2861,11 @@
 <li>基于n-gram的语言或翻译模型：根据后缀的树结构划分上下文集合（符号序列）。</li>
 </ul>
 <p>基于分布式表示的示例：</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/7.png" alt="7.png"></p>
 <p>基于非分布式表示的示例：</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/8.png" alt="8.png"></p>
 <p>将分布式表示和符号表示区分开来的一个重要概念是，<strong>由不同概念之间的共享属性而产生的泛化</strong>。比如对于“猫”和“狗”，如果作为符号表示，那么“猫”、“狗”之间的距离与其他任何符号的距离都是相同的，可以理解为one-hot向量，但是若作为分布式表示，我们将以“具有皮毛”、“腿的数目”等特征作为表示空间，那么“猫”、“狗”之间的距离与其他对象的距离就是不同的，比如“房屋”，因为在某些特征上“猫”、“狗”更加接近，从而导致以分布式表示的效果比符号表示更好。这里就不得不说<strong>词嵌入</strong>，在语言模型上，词嵌入比one-hot表示更加优秀。分布式表示具有丰富的相似性空间，语义上相近的概念（或输入）在距离上接近，这是纯粹的符号表示所缺少的特点。</p>
 <p>在学习算法中使用分布式表示何时以及为什么具有统计优势？当一个明显复杂的结构可以用较少参数紧致地表示时，分布式表示具有统计上的优点。</p>
 <p>对于上图分布式表示的示例，我们可以通过对输入的线性函数进行阈值处理来提取二元特征。那么可以将空间划分的数量为：</p>
@@ -2882,8 +2874,8 @@
 <p>这提供了分布式表示泛化能力的一种几何解释：$O(nd)$个参数能够明确表示输入空间中$O(n^d)$个不同区域。这也就意味着使用更少的参数来表示模型，只需要更少的训练样本就可以获得比非分布式表示更好的泛化。</p>
 <p>另一种解释基于分布式表示的模型泛化能力更好的说法是，尽管能够，明确地编码这么多不同的区域，但它们的容量仍然是有限的。</p>
 <p>在实践中，隐藏单元并不能总是学习出具有简单语言学名称的事物，但有趣的是，这些事物会在那些最好的计算机视觉深度网络的顶层附近出现。这些特征的共同之处在于，我们可以设想学习其中的每个特征不需要知道所有其他特征的所有配置。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/6.png" alt="6.png"></p>
 <h2 id="5-得益于深度的指数增益"><a href="#5-得益于深度的指数增益" class="headerlink" title="5. 得益于深度的指数增益"></a>5. 得益于深度的指数增益</h2><p>多层感知机是万能近似器相比于浅层网络，一些函数能够用指数级小的深度网络表示。缩小模型规模能够提高统计效率。</p>
 <p>在许多不同情景中已经证明，非线性和重用特征层次结构的组合来组织计算，可以使分布式表示获得指数级加速之外，还可以获得统计效率的指数级提升。许多种类的只有一个隐藏层的网络（例如，具有饱和非线性，布尔门，和/积，或RBF 单元的网络）都可以被视为万能近似器。在给定足够多隐藏单元的情况下，这个模型族是一个万能近似器，可以在任意非零允错级别近似一大类函数（包括所有连续函数）。然而，隐藏单元所需的数量可能会非常大。</p>
 <h2 id="6-提供发现潜在原因的线索"><a href="#6-提供发现潜在原因的线索" class="headerlink" title="6. 提供发现潜在原因的线索"></a>6. 提供发现潜在原因的线索</h2><p><strong>什么原因能够使一个表示比另一个表示更好？</strong></p>
@@ -2993,11 +2985,8 @@
 <h3 id="4-1-k-均值算法"><a href="#4-1-k-均值算法" class="headerlink" title="4.1 $k$均值算法"></a>4.1 $k$均值算法</h3><p>$k$均值算法最小化平方误差</p>
 <p>$$<br>E = \sum^k_{i=1}\sum_{\boldsymbol{x} \in C_i}||\boldsymbol{x} - \boldsymbol{\mu}_i||^2_2<br>$$</p>
 <p>其中$\boldsymbol{\mu}<em>i = \frac{1}{|C_i|}\sum</em>{\boldsymbol{x}\in C_i}\boldsymbol{x}$是簇$C_i$的均值向量。显然，E越小则簇内样本相似度越高。</p>
-
-
-
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/17b3444a9855b4b8d.jpg" alt="17b3444a9855b4b8d.jpg"></p>
 <h3 id="4-2-学习向量量化"><a href="#4-2-学习向量量化" class="headerlink" title="4.2 学习向量量化"></a>4.2 学习向量量化</h3><h3 id="4-3-高斯混合聚类"><a href="#4-3-高斯混合聚类" class="headerlink" title="4.3 高斯混合聚类"></a>4.3 高斯混合聚类</h3><h2 id="5-密度聚类"><a href="#5-密度聚类" class="headerlink" title="5. 密度聚类"></a>5. 密度聚类</h2><h2 id="6-层次聚类"><a href="#6-层次聚类" class="headerlink" title="6. 层次聚类"></a>6. 层次聚类</h2>]]></content>
       <categories>
         <category>Machine Learning</category>
@@ -3018,11 +3007,11 @@
 <a id="more"></a>
 
 <h2 id="1-回顾"><a href="#1-回顾" class="headerlink" title="1. 回顾"></a>1. 回顾</h2><h3 id="1-1-Boosting"><a href="#1-1-Boosting" class="headerlink" title="1.1 Boosting"></a>1.1 Boosting</h3><p>参考<code>决策树</code></p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/0.png" alt="0.png"></p>
 <h3 id="1-2-Gradient-Boosting"><a href="#1-2-Gradient-Boosting" class="headerlink" title="1.2 Gradient Boosting"></a>1.2 Gradient Boosting</h3><p>参考<code>GBDT</code></p>
-<h2 id="2-Leaf-wise"><a href="#2-Leaf-wise" class="headerlink" title="2. Leaf-wise"></a>2. Leaf-wise</h2>
-
+<h2 id="2-Leaf-wise"><a href="#2-Leaf-wise" class="headerlink" title="2. Leaf-wise"></a>2. Leaf-wise</h2><!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/1ef4e0ddfa431fa54.png" alt="1ef4e0ddfa431fa54.png"></p>
 <h3 id="2-1-Level-wise算法"><a href="#2-1-Level-wise算法" class="headerlink" title="2.1 Level-wise算法"></a>2.1 Level-wise算法</h3><p>传统决策树算法采用的就是Level-wise算法，每次划分（连续值）都在减少当前结点的损失，在不考虑预剪枝的情况下，这种做法缺点是贪心，优点是可以利用多线程。</p>
 <h3 id="2-2-Leaf-wise算法"><a href="#2-2-Leaf-wise算法" class="headerlink" title="2.2 Leaf-wise算法"></a>2.2 Leaf-wise算法</h3><p>Leaf-wise算法主要用于LightGBM，它的核心思想是：在将结点一分为二后，考虑在损失最大的那个子结点上继续进行划分（这里比较的是全部数据集的损失，也就是说如果某次迭代中子树的损失小于其某个祖先的兄弟时，可以从祖先的兄弟继续划分子树）。这样可以很容易实现整体的最小损失，但是容易过拟合，我们可以通过控制树的深度避免过拟合。</p>
 <p>上图中的$p,f,v$应该代表划分的样本子集，最佳特征，最佳特征对应的最佳阈值。</p>
@@ -3063,13 +3052,13 @@
 <li>支持large-scale data</li>
 <li>支持直接使用category特征</li>
 </ul>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/298e4c387d3161ef1.png" alt="298e4c387d3161ef1.png"></p>
 <p>表格中提到的Histogram algorithm稍后介绍，XGBoost与LightGBM的对比，看表格应该是LightGBM全面碾压XGBoost</p>
-
-
-<h2 id="4-Histogram-algorithm"><a href="#4-Histogram-algorithm" class="headerlink" title="4. Histogram algorithm"></a>4. Histogram algorithm</h2>
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/3846bfb9b8435c5ad.png" alt="3846bfb9b8435c5ad.png"></p>
+<h2 id="4-Histogram-algorithm"><a href="#4-Histogram-algorithm" class="headerlink" title="4. Histogram algorithm"></a>4. Histogram algorithm</h2><!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/42e349c4307079b3d.png" alt="42e349c4307079b3d.png"></p>
 <p>Histogram algorithm应该翻译为直方图算法，直方图算法的思想也很简单，首先将连续的浮点数据转换为bin数据，具体过程是首先确定对于每一个特征需要多少的桶bin，然后均分，将属于该桶的样本数据更新为bin的值，最后用直方图表示。（看起来很高大上，其实就是直方图统计，最后我们将大规模的数据放在了直方图中）</p>
 <p>直方图算法有几个需要注意的地方：</p>
 <ul>
@@ -3078,8 +3067,8 @@
 <li>bin数量选择决定了正则化的程度，bin越少惩罚越严重，欠拟合风险越高。</li>
 </ul>
 <p>直方图算法：</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/5053d6bef5a71571c.png" alt="5053d6bef5a71571c.png"></p>
 <p>直方图算法需要注意的地方：</p>
 <ul>
 <li>构建直方图时不需要对数据进行排序（比XGBoost快），因为预先设定了bin的范围；</li>
@@ -3087,20 +3076,20 @@
 <li>阈值的选取是按照直方图从小到大遍历，使用了上面的一阶梯度和，目的是得到划分之后使$\bigtriangleup loss$最大的特征及阈值。</li>
 </ul>
 <h2 id="5-优势解读"><a href="#5-优势解读" class="headerlink" title="5. 优势解读"></a>5. 优势解读</h2><h3 id="5-1-内存优化"><a href="#5-1-内存优化" class="headerlink" title="5.1 内存优化"></a>5.1 内存优化</h3><p>图中表示原始数据的inices和values都用4bytes存储，使用直方图算法不需要存储indices，values转为bin的值最少仅需要1byte（uint8），所以有了8倍内存减小的优势。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/6da3870ca21ae08c4.png" alt="6da3870ca21ae08c4.png"></p>
 <ol>
 <li>由于使用原始数据到bin的映射，那么存储时只需要存储bin的值；</li>
 <li>对于某些特征的数据，它们映射到的bin的数量较少，那么可以用uint8表示bin的值。</li>
 </ol>
-<h3 id="5-2-带最大深度限制的Leaf-wise"><a href="#5-2-带最大深度限制的Leaf-wise" class="headerlink" title="5.2 带最大深度限制的Leaf-wise"></a>5.2 带最大深度限制的Leaf-wise</h3>
-
+<h3 id="5-2-带最大深度限制的Leaf-wise"><a href="#5-2-带最大深度限制的Leaf-wise" class="headerlink" title="5.2 带最大深度限制的Leaf-wise"></a>5.2 带最大深度限制的Leaf-wise</h3><!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/72d0cdd8ad2830ae5.png" alt="72d0cdd8ad2830ae5.png"></p>
 <ol>
 <li>根据之前介绍的Leaf-wise算法，可以知道Leaf-wise比Level-wise能减少更多的损失，性能更强；</li>
 <li>通过设置最大深度约束Leaf-wise的生长有利于减小过拟合风险。</li>
 </ol>
-<h3 id="5-3-直方图减法"><a href="#5-3-直方图减法" class="headerlink" title="5.3 直方图减法"></a>5.3 直方图减法</h3>
-
+<h3 id="5-3-直方图减法"><a href="#5-3-直方图减法" class="headerlink" title="5.3 直方图减法"></a>5.3 直方图减法</h3><!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/8e9467b0119862351.png" alt="8e9467b0119862351.png"></p>
 <ol>
 <li>根据上面直方图算法介绍，我们知道构建bin的时候保存了当前bin内所有样本的一阶梯度和，那么后面划分结点时按照bin的顺序遍历左边加起来，然后用总和减去左边的和，剩下就是右子树的一阶梯度和；</li>
 <li>计算复杂度仅与bin的数量有关，为$O(n_{bin})$；</li>
@@ -3108,15 +3097,15 @@
 </ol>
 <h3 id="5-4-增加缓存命中率"><a href="#5-4-增加缓存命中率" class="headerlink" title="5.4 增加缓存命中率"></a>5.4 增加缓存命中率</h3><p>cache miss一般发生在访问的数据随机性很大的任务中，这是由于内存的管理机制决定的，因此如果访问的数据是相邻的或有序的，那么缓存命中率就会提升，缓存命中率提升会增加访问速度，从另一个角度增加计算速度。</p>
 <p>在XGBoost中我们计算某个叶结点权重的最优值需要用到落入此结点的所有样本的一阶梯度以及二阶梯度，与此同时，划分依据的特征也是需要遍历的，也就是说，在划分并确定最佳权重的阶段，计算复杂度为$O(n_{data} \times n_{feature})$，而且数据之间没有规律可循，因此缓存命中率低。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/9.png" alt="9.png"></p>
 <p>在LightGBM使用基于直方图算法，它是如何增加缓存命中率的？</p>
 <p>首先不需要考虑样本的indices了，不需要考虑样本的顺序，仅需要直方图中的数据；其次由于直方图中已经计算了一阶梯度和，而且由于采用了直方图减法，因此需要读取的数据量小而且有序，所以缓存命中率提升。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/10.png" alt="10.png"></p>
 <h3 id="5-5-支持Category特征"><a href="#5-5-支持Category特征" class="headerlink" title="5.5 支持Category特征"></a>5.5 支持Category特征</h3><p>一般来说，可以将Category特征转换为onehot变量作为输入，LightGBM的决策树直接将Category特征加入到判定方法中，减少了计算时间以及存储占用。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/11.png" alt="11.png"></p>
 <h3 id="5-6-支持分布式并行计算"><a href="#5-6-支持分布式并行计算" class="headerlink" title="5.6 支持分布式并行计算"></a>5.6 支持分布式并行计算</h3><p>从三个方面分析并行计算的优势：</p>
 <ul>
 <li>特征并行Feature Parallelizztion<ul>
@@ -3133,29 +3122,26 @@
 </li>
 </ul>
 <h4 id="5-6-1-Feature-Parallelizztion"><a href="#5-6-1-Feature-Parallelizztion" class="headerlink" title="5.6.1 Feature Parallelizztion"></a>5.6.1 Feature Parallelizztion</h4><p>很简单，就是将不同的特征给不同的worker。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/12.png" alt="12.png"></p>
 <h4 id="5-6-2-Data-Parallelizztion"><a href="#5-6-2-Data-Parallelizztion" class="headerlink" title="5.6.2 Data Parallelizztion"></a>5.6.2 Data Parallelizztion</h4><p>不同的worker分配不同的数据，生成<strong>所有特征</strong>的本地直方图</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/13.png" alt="13.png"></p>
 <h4 id="5-6-3-Voting-Parallelizztion"><a href="#5-6-3-Voting-Parallelizztion" class="headerlink" title="5.6.3 Voting Parallelizztion"></a>5.6.3 Voting Parallelizztion</h4><p>不同的worker分配不同的数据，增加了Voting阶段，应该是每个worker先选出最佳的几个划分特征，然后集体再voting，再选出集体的最佳的几个特征，最后再集成直方图数据，进行全局划分</p>
-
-
-<h3 id="5-7-其他优点"><a href="#5-7-其他优点" class="headerlink" title="5.7 其他优点"></a>5.7 其他优点</h3>
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/14.png" alt="14.png"></p>
+<h3 id="5-7-其他优点"><a href="#5-7-其他优点" class="headerlink" title="5.7 其他优点"></a>5.7 其他优点</h3><!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/15.png" alt="15.png"></p>
 <p>在LightGBM库中使用num_leaves替换最大深度，对应的替换公式如下</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/16.png" alt="16.png"></p>
 <p>其他优势的说明如下：</p>
-
-
-
-
-
-
-
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/17.png" alt="17.png"></p>
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/18.png" alt="18.png"></p>
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/19.png" alt="19.png"></p>
 ]]></content>
       <categories>
         <category>Machine Learning</category>
@@ -3175,8 +3161,8 @@
 <h2 id="1-正则化学习目标"><a href="#1-正则化学习目标" class="headerlink" title="1. 正则化学习目标"></a>1. 正则化学习目标</h2><p>假定数据集有$n$个样本，每个样本有$m$个特征，$\mathcal{D} = { (\boldsymbol{x}_i, y_i) } (|\mathcal{D}| = n, \boldsymbol{x}_i \in \mathbb{R}^m, y_i \in \mathbb{R})$，并且该数据集属于回归任务，特征值和预测目标都是任意常数。假定用$K$个树构建模型，并且预测结果为所有树的预测结果的和</p>
 <p>$$<br>\hat{y}<em>i = \phi(\boldsymbol{x}_i) = \sum^K</em>{k=1}f_k(\boldsymbol{x}_i), \quad f_k \in \mathcal{F}<br>$$</p>
 <p>其中$\mathcal{F} = { f(\boldsymbol{x}) = w_{q(\boldsymbol{x})} }(q:\mathbb{R}^m \rightarrow T, w \in \mathbb{R}^T)$，$T$是当前树的叶结点数（我们将叶结点编号），$q$是从样本$\boldsymbol{x}$到叶结点index的映射，即样本$\boldsymbol{x}$落在树的index叶结点上，$w_{q(\boldsymbol{x})}$表示该样本属于的叶结点的权值，我们可以将$f$看作是一棵树的表示函数，其包括两个部分：树的结构函数$q$和树的叶结点权重$w$。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/017978af7cab33961.png" alt="017978af7cab33961.png"></p>
 <a id="more"></a>
 
 <p>XGBoost是由多个决策树相加形成的，考虑增加正则项$\Omega$，则整个模型的优化目标为</p>
@@ -3192,8 +3178,8 @@
 <p>$$<br>\tilde{\mathcal{L}}^{(t)} = \sum^n_{i=1}[g_if_t(\boldsymbol{x}_i) + \frac{1}{2}h_if_t^2(\boldsymbol{x}_i)] + \Omega(f_t)<br>$$</p>
 <p>定义$I_j = { i|q(\boldsymbol{x}_i) = j }$为划分到index为$j$的叶结点的样本的index集合（简单来说就是统计落入$j$叶结点的所有样本），那么重写上式为</p>
 <p>$$<br>\tilde{\mathcal{L}}^{(t)} = \sum^n_{i=1}[g_if_t(\boldsymbol{x}<em>i) + \frac{1}{2}h_if_t^2(\boldsymbol{x}_i)] + \gamma T + \frac{1}{2}\lambda \sum^T</em>{j=1}w_j^2<br>\<br>= \sum^T_{j=1}[(\sum_{i \in I_j}g_i)w_j + \frac{1}{2}(\sum_{i \in I_j}h_i + \lambda)w_j^2] + \gamma T<br>$$</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/13eac003017b1ae0e.png" alt="13eac003017b1ae0e.png"></p>
 <p>上式的两种变形考虑的对象不同，第一个式子考虑每个样本，第二个式子考虑的是当前树的每个叶结点（由于每个样本必定落入某个叶结点，因此考虑叶结点简化了计算过程），通过对$w_j$求偏导数使损失最小</p>
 <p>$$<br>w^*<em>j = - \frac{\sum</em>{i \in I_j} g_i}{\sum_{i \in I_j}h_i + \lambda}<br>$$</p>
 <p>一般令$G_j = \sum_{i \in I_j} g_i, H_j = \sum_{i \in I_j}h_i$，所以上式为</p>
@@ -3210,15 +3196,15 @@
 <li>Column Subsampling在随机森林中也使用过，先从当前结点的属性集合中随机选择一个包含k个属性的子集，然后再从这个子集中选择最优属性用于划分。</li>
 </ul>
 <h2 id="4-分支划分算法"><a href="#4-分支划分算法" class="headerlink" title="4. 分支划分算法"></a>4. 分支划分算法</h2><h3 id="4-1-精确贪心算法"><a href="#4-1-精确贪心算法" class="headerlink" title="4.1 精确贪心算法"></a>4.1 精确贪心算法</h3><p>原文是Exact Greedy Algorithm，这个算法在<code>决策树</code>连续值处理里面介绍过，通过遍历每个特征，寻找各个特征的最佳划分阈值，最后取能使$\mathcal{L}_{split}$分数最大的特征及阈值。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/2035ad92df7be84bf.png" alt="2035ad92df7be84bf.png"></p>
 <ul>
 <li>在XGBoost上面的介绍中已经说明采用了Column Subsampling策略，因此在确定某一棵树的结构时并不会遍历整个特征集，而在从特征集中采样出一个子集，这里子集的大小为$m$；</li>
 <li>需要将第$k$个特征的所有样本按照大小排序后再计算阈值（如果是连续值，排序后取相邻样本的均值作为待定阈值；如果是离散值，那么每次选择其中一个）。</li>
 </ul>
 <h3 id="4-2-近似算法"><a href="#4-2-近似算法" class="headerlink" title="4.2 近似算法"></a>4.2 近似算法</h3><p>Exact Greedy Algorithm存在两个问题：一是遍历大数据集是非常不可取的，二是不可能应用于分布式环境中，因此提出Approximate Algorithm用于解决上述两个问题。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/35a2426a8bef4c332.png" alt="35a2426a8bef4c332.png"></p>
 <p>相较于Exact Greedy Algorithm遍历所有可能的阈值，在Approximate Algorithm中直接将第$k$个特征的阈值集合$S_k$按百分比分类列出来，形成候选集合，然后类似Exact Greedy Algorithm中找到分数最大值对应的划分方式，按照近似算法得到的结果往往与精确贪心算法相差不大。</p>
 <h3 id="4-3-加权分位数草图"><a href="#4-3-加权分位数草图" class="headerlink" title="4.3 加权分位数草图"></a>4.3 加权分位数草图</h3><p>原文是Weighted Quantile Sketch，在近似算法中需要选出候选子集，那么如何以一个相对合理的方式划分出候选子集？定义数据集$\mathcal{D}<em>k = { (x</em>{1k}, h_1), (x_{2k}, h_2),…, (x_{nk}, h_n) }$包括第$k$个特征的值$x_k$以及二阶梯度$h$，且按照顺序排列好，则定义排序函数$r_k: \mathbb{R} \rightarrow [0, +\infty)$</p>
 <p>$$<br>r_k(z) = \frac{1}{\sum_{(x, h) \in \mathcal{D}<em>k}h} \sum</em>{(x, h) \in \mathcal{D}_k, x&lt;z} h<br>$$</p>
@@ -3233,15 +3219,8 @@
 <li>从数据中学到划分方向，这里参照下图，在计算左子树分支损失时将缺失值的样本作为右子树的集合，在计算右子树分支损失时将缺失值的样本作为左子树的集合；</li>
 <li>人为指定方向（或者不采用带有缺失值的数据）。</li>
 </ul>
-
-
-
-
-
-
-
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/468bda16a099fc1ae.png" alt="468bda16a099fc1ae.png"></p>
 ]]></content>
       <categories>
         <category>Machine Learning</category>
@@ -3260,17 +3239,17 @@
 </blockquote>
 <h2 id="1-Regression-Decision-Tree-回归树"><a href="#1-Regression-Decision-Tree-回归树" class="headerlink" title="1. Regression Decision Tree 回归树"></a>1. Regression Decision Tree 回归树</h2><p>参考<code>决策树</code></p>
 <h2 id="2-Boosting-Decision-Tree-提升树"><a href="#2-Boosting-Decision-Tree-提升树" class="headerlink" title="2. Boosting Decision Tree 提升树"></a>2. Boosting Decision Tree 提升树</h2><p>BDT由多棵回归树来集成，属于Boosting算法一种，因此它的算法思想为：首先训练一个初始的回归决策树，决策树的深度、叶结点数、最小分类数等等是预先设定好的，也就意味着单个决策树的性能不一定是非常好的（对比单一决策树），然后我们根据这棵决策树预测各个样本的预测值，然后与样本的真实值计算残差（真实值-预测值），然后再将所有样本的残差作为下一个决策树预测的目标，继续生成决策树。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/2142d058159520761.png" alt="2142d058159520761.png"></p>
 <a id="more"></a>
 
 <h2 id="3-Gradient-Boosting-Decision-Tree-梯度提升决策树"><a href="#3-Gradient-Boosting-Decision-Tree-梯度提升决策树" class="headerlink" title="3. Gradient Boosting Decision Tree 梯度提升决策树"></a>3. Gradient Boosting Decision Tree 梯度提升决策树</h2><p>GBDT又叫MART（Multiple Additive Regression Tree），GBDT通常用来做回归预测，调整后也可以用于分类。</p>
 <p>首先是损失函数对应的梯度计算结果</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/18772c30181281c41.png" alt="18772c30181281c41.png"></p>
 <p>但是上图中绝对值损失和Huber损失的优化方式比较复杂，因此GBDT采取的措施是：利用损失函数的负梯度在当前模型的值，作为回归问题中提升树算法的残差的近似值，拟合一个回归树。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/0052ac28870fd7202.png" alt="0052ac28870fd7202.png"></p>
 <ol>
 <li>首先初始化一个决策树，仅有一个根节点，估计使损失函数极小化的常数值$\gamma$；</li>
 <li>计算损失函数的负梯度在当前模型的值，将它作为残差的估计；</li>
@@ -3299,8 +3278,8 @@
 <p>西瓜书第8章 集成学习</p>
 </blockquote>
 <h2 id="1-个体与集成"><a href="#1-个体与集成" class="headerlink" title="1. 个体与集成"></a>1. 个体与集成</h2><p>集成学习，顾名思义就是多个学习器联合起来完成学习任务，那么问题来了，单个学习器是怎样形成的？这些学习器怎样联合起来？</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/16f0808fe360ad913.jpg" alt="16f0808fe360ad913.jpg"></p>
 <p>如图所示，个体学习器通常由一个现有的学习算法从训练数据中产生，例如C4.5决策树、BP神经网络等，那么有一些定义产生了（虽然没什么用）。</p>
 <p>比如，若集成中只包含同种类型的个体学习器，则这样的集成是”同质”的（比如全是决策树或者全是神经网络）。同质集成中的个体学习器称为<strong>基学习器</strong>，相应的算法称为<strong>基学习算法</strong>。</p>
 <p>当然集成中也可以包含不同类型的个体学习器，同理叫做”异质”的。异质集成中没有基学习器和基学习算法的概念。</p>
@@ -3331,8 +3310,8 @@
 <li>判断基学习器数目是否达到指定的值$T$，未达到则返回第2步，否则将这$T$个基学习器进行加权结合</li>
 </ol>
 <p>Boosting族算法中最著名的是AdaBoost，其中$y_i \in { -1, +1 }$，$f$是真实函数。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/288ec896965340bb4.png" alt="288ec896965340bb4.png"></p>
 <p>AdaBoost算法有多种推导方式，比较容易理解的是基于“加性模型”</p>
 <p>$$<br>H(\boldsymbol{x}) = \sum^T_{t=1}\alpha_th_t(\boldsymbol{x})<br>$$</p>
 <p>来最小化指数损失函数</p>
@@ -3392,8 +3371,8 @@
 <p>$$<br>\underset{m \rightarrow \infty}{\lim} (1 - \frac{1}{m})^m = \frac{1}{e} \approx 0.368<br>$$</p>
 <p>也就是说，初始训练集中约有63.2%的样本出现在采样集中。</p>
 <p>那么采样出$T$个含有$m$个样本的采样集，基于每个采样集训练出一个基学习器，再将这些基学习器集成，这就是Bagging算法的基本流程。Bagging集成策略对于分类任务通常是简单投票法，对于回归任务通常是简单平均法。若票数相同，最简单的是随机选择一个，也可以进一步考察学习器投票的置信度来确定。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/3120bafa5f0a20828.png" alt="3120bafa5f0a20828.png"></p>
 <p>Bagging的计算复杂度与训练一个学习器的复杂度同阶，而且由于可以并行训练，所以Bagging是一个很高效的集成学习算法。与标准AdaBoost算法只适用于二分类任务不同（AdaBoost变体可以处理多分类或者回归任务），Bagging能不经修改地用于多分类、回归等任务。</p>
 <p>值得一提的是，自助采样法还给Bagging带来了另一个优点：剩下36.8%地样本可用作验证集来对泛化性能进行“包外估计”。令$D_t$表示$h_t$实际使用地训练样本集，令$H^{oob}(\boldsymbol{x})$表示对样本$\boldsymbol{x}$地包外预测，有</p>
 <p>$$<br>H^{oob}(\boldsymbol{x}) = \underset{y \in \mathcal{Y}}{\arg \max} \sum^T_{t=1}\mathbb{I}(h_t(\boldsymbol{x})=y) \cdot \mathbb{I}(\boldsymbol{x} \notin D_t)<br>$$</p>
@@ -3413,8 +3392,8 @@
 <li>对基决策树的每个结点，先从该结点的属性集合中随机选择一个包含k个属性的子集，然后再从这个子集中选择最优属性用于划分。</li>
 </ol>
 <p>若令$k=d$，则基决策树的构建与传统决策树相同；若令$k=1$，则是随机选择一个属性用于划分；一般情况，推荐值$k = \log_2d$</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/41eb2b5527afb07e0.png" alt="41eb2b5527afb07e0.png"></p>
 <p>随机森林的训练效率常优于Bagging，显然是因为Bagging选择最优属性考虑的是所有属性而随机森林考虑某一个随机属性集。</p>
 <h2 id="4-结合策略"><a href="#4-结合策略" class="headerlink" title="4. 结合策略"></a>4. 结合策略</h2><p>学习器结合的三个好处：</p>
 <ol>
@@ -3422,8 +3401,8 @@
 <li>避免局部极小点；</li>
 <li>扩大假设空间。</li>
 </ol>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/5ba1d67313047c5a2.png" alt="5ba1d67313047c5a2.png"></p>
 <p>假定集成包含$T$个基学习器${ h_1, h_2,…,h_T }$，其中$h_i$在示例$\boldsymbol{x}$上的输出为$h_i(\boldsymbol{x})$</p>
 <h3 id="4-1-平均法"><a href="#4-1-平均法" class="headerlink" title="4.1 平均法"></a>4.1 平均法</h3><p>对数值型输出$h_i(\boldsymbol{x}) \in \mathbb{R}$</p>
 <ul>
@@ -3456,8 +3435,8 @@
 <p>不同类型的输出不可混用，若使用类概率需要规范化，使用类概率往往性能优于类标记；不同类型的基学习器输出的概率不能直接进行比较，需要转换为类标记然后再投票。</p>
 <h3 id="4-3-学习法"><a href="#4-3-学习法" class="headerlink" title="4.3 学习法"></a>4.3 学习法</h3><p>Stacking是学习法的典型代表。这里个体学习器被称为初级学习器，用于结合的学习器称为次级学习器或元学习器。</p>
 <p>Stacking先从初始数据集训练出初级学习器，然后“生成”一个新的数据集用于训练次级学习器。新的数据集中，初级学习器的输出被当作样例输入特征，而初始样本的标记仍被当作样例标记。初级学习器可以是同质也可以是异质的。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/69b39458dd617b376.png" alt="69b39458dd617b376.png"></p>
 <p>注意</p>
 <ul>
 <li>训练阶段，次级训练集是利用初级学习器产生的，若直接用初级学习器的训练集来产生次级训练集，则过拟合风险较大（在相对正确的基础上更加正确）；</li>
@@ -3536,8 +3515,8 @@
 <li>输入属性扰动</li>
 </ul>
 <p>&emsp;随机森林中使用随机属性子集（随机子空间算法），适用于包含大量冗余属性的数据。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/725e25bfc29a550dd.png" alt="725e25bfc29a550dd.png"></p>
 <ul>
 <li>输出表示扰动</li>
 </ul>
@@ -3571,8 +3550,8 @@
 <p>GAN 主要就是两个网络组成，生成器网络(Generator)和判别器网络(Discriminator)，通过这两个网络的互相博弈，让生成器网络最终能够学习到输入数据的分布，这也就是 GAN 想达到的目的：学习输入数据的分布。</p>
 <a id="more"></a>
 
-<h2 id="1-基本原理"><a href="#1-基本原理" class="headerlink" title="1. 基本原理"></a>1. 基本原理</h2>
-
+<h2 id="1-基本原理"><a href="#1-基本原理" class="headerlink" title="1. 基本原理"></a>1. 基本原理</h2><!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/1f0b378fcabfd36c7.png" alt="1f0b378fcabfd36c7.png"></p>
 <ul>
 <li>D 是判别器，负责对输入的真实数据和由 G 生成的假数据进行判断，其输出是 0 和 1，即它本质上是一个二值分类器，目标就是对输入为真实数据输出是 1，对假数据的输入，输出是 0；</li>
 <li>G 是生成器，它接收的是一个随机噪声，并生成图像。</li>
@@ -3621,8 +3600,8 @@
 <li>从高斯分布中采样得到随机噪声</li>
 <li>当进行插值操作的时候，从大圆进行该操作，而不要直接从点 A 到 点 B 直线操作，如下图所示</li>
 </ul>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/216e62e351d8cc292.png" alt="216e62e351d8cc292.png"></p>
 <h3 id="3-4-BatchNorm"><a href="#3-4-BatchNorm" class="headerlink" title="3.4 BatchNorm"></a>3.4 BatchNorm</h3><ul>
 <li>采用 mini-batch BatchNorm，要保证每个 mini-batch 都是真实图片或者都是生成图片</li>
 <li>不采用 BatchNorm 的时候，可以采用 instance normalization（对每个样本的规范化操作，减均值除以标准差）</li>
@@ -3685,8 +3664,8 @@
 <li>训练和测试阶段，在 G 的几层使用</li>
 </ul>
 <h2 id="4-对抗样本"><a href="#4-对抗样本" class="headerlink" title="4. 对抗样本"></a>4. 对抗样本</h2><p><strong>对抗样本(adversarial example)，它是指经过精心计算得到的用于误导分类器的样本</strong>。例如下图就是一个例子，左边是一个熊猫，但是添加了少量随机噪声变成右图后，分类器给出的预测类别却是长臂猿，但视觉上左右两幅图片并没有太大改变。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/3279e8cd93152cfbd.png" alt="3279e8cd93152cfbd.png"></p>
 <p>这是因为图像分类器本质上是高维空间的一个复杂的决策边界。当然涉及到图像分类的时候，由于是高维空间而不是简单的两维或者三维空间，我们无法画出这个边界出来。但是我们可以肯定的是，训练完成后，分类器是无法泛化到所有数据上，除非我们的训练集包含了分类类别的所有数据，但实际上我们做不到。而做不到泛化到所有数据的分类器，其实就会过拟合训练集的数据，这也就是我们可以利用的一点。</p>
 <p>我们可以给图片添加一个非常接近于 0 的随机噪声，这可以通过控制噪声的 L2 范数来实现。L2 范数可以看做是一个向量的长度，这里有个诀窍就是图片的像素越多，即图片尺寸越大，其平均 L2 范数也就越大。因此，当添加的噪声的范数足够低，那么视觉上你不会觉得这张图片有什么不同，正如上述右边的图片一样，看起来依然和左边原始图片一模一样；但是，在向量空间上，添加噪声后的图片和原始图片已经有很大的距离了。</p>
 <p>因为在 L2 范数看来，对于熊猫和长臂猿的决策边界并没有那么远，添加了非常微弱的随机噪声的图片可能就远离了熊猫的决策边界内，到达长臂猿的预测范围内，因此欺骗了分类器。</p>
@@ -3698,16 +3677,16 @@
 <p>对于生成器G来说，其更新梯度为</p>
 <p>$$<br>\bigtriangledown_{\theta_g}\frac{1}{m} \sum^m_{i=1}\log(1-D(G(\boldsymbol{z}^{(i)})))<br>$$</p>
 <p>这里根据它们的损失函数分析下，G 网络的训练目标就是让<strong>D(G(z)) 趋近于 1</strong>，这也是让其 loss 变小的做法；而 D 网络的训练目标是区分真假数据，自然是让<strong>D(x) 趋近于 1，而 D(G(z)) 趋近于 0</strong>。这就是两个网络相互对抗，彼此博弈的过程了。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/40bd67b4be7a9365f.png" alt="40bd67b4be7a9365f.png"></p>
 <p>上图中，黑色曲线表示输入数据 x 的实际分布，绿色曲线表示的是 G 网络生成数据的分布，我们的目标自然是希望着两条曲线可以相互重合，也就是两个数据分布一致了。而蓝色的曲线表示的是生成数据对应于 D 的分布。</p>
 <p>在 a 图中是刚开始训练的时候，D 的分类能力还不是最好，因此有所波动，而生成数据的分布也自然和真实数据分布不同，毕竟 G 网络输入是随机生成的噪声；到了 b 图的时候，D 网络的分类能力就比较好了，可以看到对于真实数据和生成数据，它是明显可以区分出来，也就是给出的概率是不同的；</p>
 <p>而绿色的曲线，即 G 网络的目标是学习真实数据的分布，所以它会往蓝色曲线方向移动，也就是 c 图了，并且因为 G 和 D 是相互对抗的，当 G 网络提升，也会影响 D 网络的分辨能力。论文中，Ian Goodfellow 做出了证明，当假设 G 网络不变，训练 D 网络，最优的情况会是：</p>
 <p>$$<br>D_G^*(\boldsymbol{x}) = \frac{p_{data}(\boldsymbol{x})}{p_{data}(\boldsymbol{x}) + p_g(\boldsymbol{x})}<br>$$</p>
 <p>也就是当生成数据的分布$p_g(x)$趋近于真实数据分布$p_{data}(x)$的时候，D 网络输出的概率$D_G^*(x)$会趋近于 0.5，也就是 d 图的结果，这也是最终希望达到的训练结果，这时候 G 和 D 网络也就达到一个平衡状态。</p>
 <h2 id="6-算法"><a href="#6-算法" class="headerlink" title="6. 算法"></a>6. 算法</h2><p>论文给出的算法实现过程如下所示</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/5f601eac50c9eb3e3.png" alt="5f601eac50c9eb3e3.png"></p>
 <p>这里包含了一些训练的技巧和方法：</p>
 <ol>
 <li>首先 G 和 D 是同步训练，但两者训练次数不一样，通常是<strong>D 网络训练 k 次后，G 训练一次</strong>。主要原因是 GAN 刚开始训练时候会很不稳定；</li>
@@ -3732,8 +3711,8 @@
 </blockquote>
 <p>自编码器autoencoder是神经网络的一种，经过训练后能尝试将输入复制到输出。</p>
 <p>自编码器可以看作两个部分：一个由函数$\boldsymbol{h} = f(\boldsymbol{x})$表示的编码器和一个生成重构的解码器$\boldsymbol{r}=g(\boldsymbol{h})$。但是如果一个自编码器只是简单地学会处处设置为$g(f(\boldsymbol{x})) = \boldsymbol{x}$，那么这个自编码器毫无意义。相反我们不应该将自编码器设计成输入到输出完全相等。通常需要加入一些约束，使得自编码器的输出与训练数据的输入相似而不相同。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/07e4cdb0725dc1a4f.png" alt="07e4cdb0725dc1a4f.png"></p>
 <a id="more"></a>
 
 <h2 id="1-欠完备自编码器"><a href="#1-欠完备自编码器" class="headerlink" title="1. 欠完备自编码器"></a>1. 欠完备自编码器</h2><p>通过限制$\boldsymbol{h}$的维度比$\boldsymbol{x}$小，这种编码维度小于输入维度的自编码器称为<strong>欠完备</strong>自编码器。显然，欠完备自编码器可以实现两个功能：降维和学习数据分布中最显著的特征。</p>
@@ -3780,12 +3759,12 @@
 <p>$$<br>p_{encoder}(\boldsymbol{h}|\boldsymbol{x}) = p_{model}(\boldsymbol{h}|\boldsymbol{x})<br>$$</p>
 <p>以及一个随机解码器</p>
 <p>$$<br>p_{decoder}(\boldsymbol{x}|\boldsymbol{h}) = p_{model}(\boldsymbol{x}|\boldsymbol{h})<br>$$</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/1a23380310c4540c3.png" alt="1a23380310c4540c3.png"></p>
 <p>通常情况下，编码器和解码器的分布没有必要是与唯一一个联合分布$p_{model}(\boldsymbol{x}; \boldsymbol{h})$相容的条件分布。</p>
 <h2 id="5-去噪自编码器"><a href="#5-去噪自编码器" class="headerlink" title="5. 去噪自编码器"></a>5. 去噪自编码器</h2><p><strong>去噪自编码器</strong>DAE是一类接受损坏数据作为输入，并训练来预测原始未被损坏数据作为输出的自编码器。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/2b32c9d9b628e403b.png" alt="2b32c9d9b628e403b.png"></p>
 <p>DAE的训练过程如上图所示，引入了一个损坏过程$C(\tilde{\boldsymbol{x}}|\boldsymbol{x})$，这个条件分布代表给定数据样本$\boldsymbol{x}$产生损坏样本$\tilde{\boldsymbol{x}}$的概率。自编码器则根据一下过程，从训练数据对$(\boldsymbol{x}, \tilde{\boldsymbol{x}})$中学习重构分布$P_{reconstruct}(\boldsymbol{x}|\tilde{\boldsymbol{x}})$：</p>
 <ol>
 <li>从训练数据中采一个训练样本$\boldsymbol{x}$；</li>
@@ -3800,8 +3779,8 @@
 <p>$$<br>\bigtriangledown_{\boldsymbol{x}} \log p(\boldsymbol{x})<br>$$</p>
 <p>对于现在讨论的自编码器，理解学习$\log p_{data}$的梯度场是学习$p_{data}$结构的一种方式就足够了。</p>
 <p>DAE的训练准则（条件高斯$p(\boldsymbol{x}|\boldsymbol{h})$）能让自编码器学到能估计数据分布得分的向量场$g(f(\boldsymbol{x})) -\boldsymbol{x}$，这是DAE的一个重要特性。如下图所示</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/33c3276895f4e972d.png" alt="33c3276895f4e972d.png"></p>
 <p>对一类采用高斯噪声和均方误差作为重构误差的特定去噪自编码器（具有sigmoid 隐藏单元和线性重构单元）的去噪训练过程，与训练一类特定的被称为RBM的无向概率模型是等价的。</p>
 <p>对于现在的讨论，我们只需要知道这个模型能显示的给出$p_{model}(\boldsymbol{x};\boldsymbol{\theta})$。当RBM使用<strong>去噪得分匹配</strong>算法训练时，它的学习算法与训练对应的去噪自编码器是等价的。在一个确定的噪声水平下，正则化的得分匹配不是一致估计量；相反它会恢复分布的一个模糊版本。然而，当噪声水平趋向于0且训练样本数趋向于无穷时，一致性就会恢复。</p>
 <p>自编码器和RBM还存在其他联系。在RBM上应用得分匹配后，其代价函数将等价于重构误差结合类似CAE惩罚的正则项。自编码器的梯度是对RBM对比散度训练的近似。</p>
@@ -3810,15 +3789,15 @@
 <p>和噪声方差为$\sigma^2$的损坏</p>
 <p>$$<br>C(\tilde{\boldsymbol{x}} | \boldsymbol{x}) = N(\tilde{\boldsymbol{x}};\mu=\boldsymbol{x},\sum=\sigma^2 I)<br>$$</p>
 <p>的通用编码器-解码器架构可以用来训练估计得分。下图展示其中的工作原理</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/4f257f4afc83f01c5.png" alt="4f257f4afc83f01c5.png"></p>
 <p>一般情况下，不能保证重构函数$g(f(\boldsymbol{x}))$减去输入$\boldsymbol{x}$后对应于某个函数的梯度，更不用说得分。</p>
 <p>目前为止我们所讨论的仅限于去噪自编码器如何学习表示一个概率分布。更一般的，我们可能希望使用自编码器作为生成模型，并从其分布中进行采样。</p>
 <p>“去噪自编码器”的命名指的不仅仅是学习去噪，而且可以学到一个好的内部表示（作为学习去噪的副效用）。这个想法提出较晚。学习到的表示可以被用来预训练更深的无监督网络或监督网络。与稀疏自编码器、稀疏编码、收缩自编码器等正则化的自编码器类似，DAE的动机是允许学习容量很高的编码器，同时防止在编码器和解码器学习一个无用的恒等函数。</p>
 <h2 id="6-使用自编码器学习流形"><a href="#6-使用自编码器学习流形" class="headerlink" title="6. 使用自编码器学习流形"></a>6. 使用自编码器学习流形</h2><p>自编码器跟其他很多机器学习算法一样，也利用了数据集中在一个低维流形或者一小组这样的流形的思想。其中一些机器学习算法仅能学习到在流形上表现良好但给定不在流形上的输入会导致异常的函数。自编码器进一步借此想法，旨在学习流形的结构。</p>
 <p>流形的一个重要特征是切平面（tangent plane）的集合。$d$维流形上的一点$\boldsymbol{x}$，切平面由能张成流形上允许变动的局部方向的$d$维基向量给出。如下图所示，这些局部方向决定了我们能如何微小地变动$\boldsymbol{x}$ 而保持于流形上。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/5b4681512ea9d03b1.png" alt="5b4681512ea9d03b1.png"></p>
 <p>所有自编码器的训练过程涉及两种推动力的折衷：</p>
 <ol>
 <li>学习训练样本$\boldsymbol{x}$的表示$\boldsymbol{h}$使得$\boldsymbol{x}$能通过解码器近似地从$\boldsymbol{h}$中恢复。$\boldsymbol{x}$是从训练数据挑出的这一事实很关键，因为这意味着自编码器不需要成功重构不属于数据生成分布下的输入。</li>
@@ -3826,15 +3805,15 @@
 </ol>
 <p>重要的原则是，自编码器必须有能力表示重构训练实例所需的变化。如果该数据生成分布集中靠近一个低维流形，自编码器能隐式产生捕捉这个流形局部坐标系的表示：仅在$\boldsymbol{x}$周围关于流形的相切变化需要对应于$\boldsymbol{h} = f(\boldsymbol{x})$中的变化。因此，编码器学习从输入空间$\boldsymbol{x}$到表示空间的映射，映射仅对沿着流形方向的变化敏感，并且对流形正交方向的变化不敏感。</p>
 <p>下图的例子说明，我们可以通过构建对数据点周围的输入扰动不敏感的重构函数，使得自编码器恢复流形结构。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/6cf295ede7a3d6491.png" alt="6cf295ede7a3d6491.png"></p>
 <p>为了理解自编码器可用于流形学习的原因，我们可以将自编码器和其他方法进行对比。学习表征流形最常见的是流形上（或附近）数据点的表示（representation）。对于特定的实例，这样的表示也被称为嵌入。它通常由一个低维向量给出，具有比这个流形的“外围”空间更少的维数。有些算法（下面讨论的非参数流形学习算法）直接学习每个训练样例的嵌入，而其他算法学习更一般的映射（有时被称为编码器或表示函数），将周围空间（输入空间）的任意点映射到它的嵌入。</p>
 <p>流形学习大多专注于试图捕捉到这些流形的无监督学习过程。最初始的学习非线性流形的机器学习研究专注基于<strong>最近邻图</strong>（nearest neighbor graph）的<strong>非参数</strong>（non-parametric）方法。该图中每个训练样例对应一个节点，它的边连接近邻点对。这些方法将每个节点与张成实例和近邻之间的差向量变化方向的切平面相关联。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/766bed1cf93e86bdc.png" alt="766bed1cf93e86bdc.png"></p>
 <p>全局坐标系则可以通过优化或求解线性系统获得。下图展示了如何通过大量局部线性的类高斯样平铺（或“薄煎饼”，因为高斯块在切平面方向是扁平的）得到一个流形。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/8c8df4d30677de582.png" alt="8c8df4d30677de582.png"></p>
 <p>然而，Bengio and Monperrus (2005) 指出了这些局部非参数方法应用于流形学习的根本困难：如果流形不是很光滑（它们有许多波峰、波谷和曲折），为覆盖其中的每一个变化，我们可能需要非常多的训练样本，导致没有能力泛化到没见过的变化。实际上，这些方法只能通过内插，概括相邻实例之间流形的形状。不幸的是，AI 问题中涉及的流形可能具有非常复杂的结构，难以仅从局部插值捕获特征。考虑图14.6 转换所得的流形样例。如果我们只观察输入向量内的一个坐标$x_i$，当平移图像，我们可以观察到当这个坐标遇到波峰或波谷时，图像的亮度也会经历一个波峰或波谷。换句话说，底层图像模板亮度的模式复杂性决定执行简单的图像变换所产生的流形的复杂性。这是采用分布式表示和深度学习捕获流形结构的动机。</p>
 <h2 id="7-收缩自编码器"><a href="#7-收缩自编码器" class="headerlink" title="7. 收缩自编码器"></a>7. 收缩自编码器</h2><p>收缩自编码器CAE再编码$\boldsymbol{h} = f(\boldsymbol{x})$的基础上添加了显示的正则项，鼓励$f$的导数尽可能小：</p>
 <p>$$<br>\Omega(\boldsymbol{h}) = \lambda ||\frac{\partial f(\boldsymbol{x})}{\partial \boldsymbol{x}}||^2_F<br>$$</p>
@@ -3845,8 +3824,8 @@
 <p>我们可以认为点$\boldsymbol{x}$处的Jacobian 矩阵$\boldsymbol{J}$能将非线性编码器近似为线性算子。这允许我们更形式地使用“收缩”这个词。在线性理论中，当$\boldsymbol{Jx}$的范数对于所有单位$\boldsymbol{x}$都小于等于1 时，J 被称为收缩的。换句话说，如果J 收缩了单位球，他就是收缩的。我们可以认为CAE 为鼓励每个局部线性算子具有收缩性，而在每个训练数据点处将Frobenius 范数作为$f(\boldsymbol{x})$的局部线性近似的惩罚。</p>
 <p>正则自编码器基于两种相反的推动力学习流形。在CAE 的情况下，这两种推动力是重构误差和收缩惩罚$\Omega(\boldsymbol{h})$。单独的重构误差鼓励CAE 学习一个恒等函数。单独的收缩惩罚将鼓励CAE 学习关于$\boldsymbol{x}$是恒定的特征。这两种推动力的折衷产生导数$\frac{\partial f(\boldsymbol{x})}{\partial \boldsymbol{x}}$大多是微小的自编码器。只有少数隐藏单元，对应于一小部分输入数据的方向，可能有显著的导数。</p>
 <p>CAE 的目标是学习数据的流形结构。使$\boldsymbol{Jx}$很大的方向$\boldsymbol{x}$，会快速改变$\boldsymbol{h}$，因此很可能是近似流形切平面的方向。Rifai et al. (2011a,b) 的实验显示训练CAE 会导致$\boldsymbol{J}$中大部分奇异值（幅值）比1 小，因此是收缩的。然而，有些奇异值仍然比1 大，因为重构误差的惩罚鼓励CAE 对最大局部变化的方向进行编码。对应于最大奇异值的方向被解释为收缩自编码器学到的切方向。理想情况下，这些切方向应对应于数据的真实变化。比如，一个应用于图像的CAE 应该能学到显示图像改变的切向量，如图14.6 图中物体渐渐改变状态。如下图所示，实验获得的奇异向量的可视化似乎真的对应于输入图象有意义的变换。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/949b9f25e12366078.png" alt="949b9f25e12366078.png"></p>
 <p>收缩自编码器正则化准则的一个实际问题是，尽管它在单一隐藏层的自编码器情况下是容易计算的，但在更深的自编码器情况下会变的难以计算。根据Rifaiet al. (2011a) 的策略，分别训练一系列单层的自编码器，并且每个被训练为重构前一个自编码器的隐藏层。这些自编码器的组合就组成了一个深度自编码器。因为每个层分别训练成局部收缩，深度自编码器自然也是收缩的。这个结果与联合训练深度模型完整架构（带有关于Jacobian的惩罚项）获得的结果是不同的，但它抓住了许多理想的定性特征。</p>
 <p>另一个实际问题是，如果我们不对解码器强加一些约束，收缩惩罚可能导致无用的结果。例如，编码器将输入乘一个小常数$\epsilon$，解码器将编码除以一个小常数$\epsilon$。随着$\epsilon$趋向于0，编码器会使收缩惩罚项$\Omega(\boldsymbol{h})$趋向于0 而学不到任何关于分布的信息。同时，解码器保持完美的重构。Rifai et al. (2011a) 通过绑定$f$ 和$g$ 的权重来防止这种情况。$f$ 和$g$ 都是由线性仿射变换后进行逐元素非线性变换的标准神经网络层组成，因此将$g$ 的权重矩阵设成$f$ 权重矩阵的转置是很直观的。</p>
 <h2 id="8-预测稀疏分解"><a href="#8-预测稀疏分解" class="headerlink" title="8. 预测稀疏分解"></a>8. 预测稀疏分解</h2><p>预测稀疏分解（predictive sparse decomposition, PSD）是稀疏编码和参数化自编码器(Kavukcuoglu et al., 2008) 的混合模型。参数化编码器被训练为能预测迭代推断的输出。PSD 被应用于图片和视频中对象识别的无监督特征学习(Kavukcuogluet al., 2009, 2010; Jarrett et al., 2009b; Farabet et al., 2011)，在音频中也有所应用(Henaff et al., 2011)。这个模型由一个编码器$f(\boldsymbol{x})$和一个解码器$g(\boldsymbol{h})$组成，并且都是参数化的。在训练过程中，$\boldsymbol{h}$由优化算法控制。优化过程是最小化</p>
@@ -3884,8 +3863,8 @@
 <p>其中解释性因子$\boldsymbol{h}$从一个分布中抽取</p>
 <p>$$<br>\boldsymbol{h} \sim p(\boldsymbol{h})<br>$$</p>
 <p>其中$p(\boldsymbol{h})$是一个因子分布，满足$p(\boldsymbol{h}) = \prod_ip(h_i)$，噪声通常是对角化的且服从高斯分布。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/linear.png" alt="linear.png"></p>
 <a id="more"></a>
 
 <h2 id="1-概率PCA和因子分析"><a href="#1-概率PCA和因子分析" class="headerlink" title="1. 概率PCA和因子分析"></a>1. 概率PCA和因子分析</h2><p>概率PCA、因子分析和其他线性因子模型是上述等式的特殊情况，并且仅在对观测到$\boldsymbol{x}$之前的噪声分布和潜变量$\boldsymbol{h}$先验的选择上有所不同。</p>
@@ -3933,8 +3912,8 @@
 <h2 id="5-PCA的流形解释"><a href="#5-PCA的流形解释" class="headerlink" title="5. PCA的流形解释"></a>5. PCA的流形解释</h2><p>线性因子模型，包括 PCA 和因子分析，可以理解为学习一个流形。</p>
 <p>我们可以将概率 PCA 定义为高概率的薄饼状区域，即一个高斯分布，沿着某些轴非常窄，就像薄饼沿着其垂直轴非常平坦，但沿着其他轴是细长的，正如薄饼在其水平轴方向是很宽的一样。</p>
 <p>PCA 可以理解为将该薄饼与更高维空间中的线性流形对准。这种解释不仅适用于传统 PCA，而且适用于学习矩阵$\boldsymbol{W}$和$\boldsymbol{V}$的任何线性自编码器，其目的是使重构的$\boldsymbol{x}$尽可能接近于原始的$\boldsymbol{x}$。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/pca.png" alt="pca.png"></p>
 <p>编码器表示为</p>
 <p>$$<br>\boldsymbol{h} = f(\boldsymbol{x}) = \boldsymbol{W}^T(\boldsymbol{x} - \boldsymbol{\mu})<br>$$</p>
 <p>编码器计算$\boldsymbol{h}$的低维表示，解码器负责重构</p>
@@ -3969,14 +3948,14 @@
 <blockquote>
 <p><a href="https://github.com/keras-team/keras-applications" target="_blank" rel="noopener">Keras Applications</a><br><a href="https://keras.io/applications/#xception" target="_blank" rel="noopener">Models for image classification with weights trained on ImageNet</a><br><a href="https://blog.csdn.net/qq_40027052/article/details/79015827" target="_blank" rel="noopener">深度学习VGG模型核心拆解</a><br><a href="https://github.com/SnailTyan/deep-learning-papers-translation" target="_blank" rel="noopener">Deep Learning Papers Translation(CV)</a><br><a href="https://blog.csdn.net/Quincuntial/article/details/77263607" target="_blank" rel="noopener">ResNet论文翻译——中英文对照</a><br><a href="https://towardsdatascience.com/an-overview-of-resnet-and-its-variants-5281e2f56035" target="_blank" rel="noopener">An Overview of ResNet and its Variants</a><br><a href="https://blog.csdn.net/qq_38906523/article/details/80061075" target="_blank" rel="noopener">深度学习—GoogLeNet</a><br><a href="https://blog.csdn.net/stesha_chen/article/details/82115429" target="_blank" rel="noopener">Inception-V4和Inception-Resnet论文阅读和代码解析</a><br><a href="https://blog.csdn.net/just_sort/article/details/79901885" target="_blank" rel="noopener">MobileNet 翻译及总结：用于移动视觉应用的高效卷积神经网络</a><br><a href="https://blog.csdn.net/u011974639/article/details/79199588" target="_blank" rel="noopener">轻量级网络–MobileNetV2论文解读</a><br><a href="https://blog.csdn.net/qq_14845119/article/details/83050862" target="_blank" rel="noopener">NASNet</a></p>
 </blockquote>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/cnn.png" alt="cnn.png"></p>
 <a id="more"></a>
 
 <p>ImageNet项目是一个用于视觉对象识别软件研究的大型可视化数据库。超过1400万的图像URL被ImageNet手动注释，以指示图片中的对象；在至少一百万个图像中，还提供了边界框。ImageNet包含2万多个类别；一个典型的类别，如“气球”或“草莓”，包含数百个图像。第三方图像URL的注释数据库可以直接从ImageNet免费获得；但是，实际的图像不属于ImageNet。自2010年以来，ImageNet项目每年举办一次软件比赛，即ImageNet大规模视觉识别挑战赛（ILSVRC），软件程序竞相正确分类检测物体和场景。</p>
 <h2 id="1-VGG16-amp-VGG19"><a href="#1-VGG16-amp-VGG19" class="headerlink" title="1. VGG16 &amp; VGG19"></a>1. VGG16 &amp; VGG19</h2><p><a href="https://arxiv.org/abs/1409.1556" target="_blank" rel="noopener">Very Deep Convolutional Networks for Large-Scale Image Recognition</a></p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/vgg.png" alt="vgg.png"></p>
 <p>VGG模型结构：</p>
 <ol>
 <li>输入：$224 \times 224$ RGB图片</li>
@@ -4003,15 +3982,15 @@
 <li>由于采取了state-of-the-art，根据实验采取了很多小细节的操作。</li>
 </ul>
 <h2 id="2-ResNet50-amp-ResNet101-amp-ResNet152"><a href="#2-ResNet50-amp-ResNet101-amp-ResNet152" class="headerlink" title="2. ResNet50 &amp; ResNet101 &amp; ResNet152"></a>2. ResNet50 &amp; ResNet101 &amp; ResNet152</h2><p><a href="https://arxiv.org/abs/1512.03385" target="_blank" rel="noopener">Deep Residual Learning for Image Recognition</a></p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/res.png" alt="res.png"></p>
 <p>$$<br>\boldsymbol{y} = F(\boldsymbol{x}, \boldsymbol{W}_i) + \boldsymbol{x}<br>$$</p>
 <p>对于输入$\boldsymbol{x}$来说，映射$H(\boldsymbol{x})$是预测输出的最优解，但是实际上我们通过深度学习得到的映射并不一定是完美解，利用残差$F(\boldsymbol{x}) = H(\boldsymbol{x}) - \boldsymbol{x}$这种思想，使用$F(\boldsymbol{x}) + \boldsymbol{x}$作为期望的输出。我觉得采用残差类似于决策树中的残差概念，在ResNet网络中，对于输入到输出中不变的部分或维度，利用残差可以很好的保留这部分稀疏性，训练过程中变化的部分会产生梯度，这种前提是输入输出维度相同；对于输入与输出维度不同的时候，ResNet采取两种策略：补0或使用线性映射$\boldsymbol{W}_s$匹配维度（由1 $\times$ 1卷积完成）。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/resnet.png" alt="resnet.png"></p>
 <p>ResNet模型结构：</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/resnet0.png" alt="resnet0.png"></p>
 <p>ResNet模型Tricks：</p>
 <ol>
 <li>当输入和输出具有相同的维度时，可以直接使用恒等快捷连接；</li>
@@ -4038,11 +4017,11 @@
 <p>$$<br>\boldsymbol{y}<em>l = h(\boldsymbol{x}_l) + F(\boldsymbol{x}_l, \boldsymbol{W}_l)<br>\<br>\boldsymbol{x}</em>{l+1} = f(\boldsymbol{y}_l)<br>$$</p>
 <p>$h$表示恒等映射，$F$是残差函数，$f$是ReLU</p>
 <p>与初代不同的是，V2考虑如果$f$也是恒等映射的情况下，网络的性能</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/resnetv2-0.png" alt="resnetv2-0.png"></p>
 <p>对比了以上几种的$f$，实验结果表明恒等映射的训练误差最小</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/resnetv2-1.png" alt="resnetv2-1.png"></p>
 <p>在此基础上，分析了BN after addition，ReLU before addition，pre-activation方法作为$f$，研究$f$对ResNet效果的影响，效果自然是最后一个full pre-activation最好。</p>
 <p>ResNetV2模型总结：</p>
 <ul>
@@ -4051,8 +4030,8 @@
 </ul>
 <h2 id="4-ResNeXt50-amp-ResNeXt101"><a href="#4-ResNeXt50-amp-ResNeXt101" class="headerlink" title="4. ResNeXt50 &amp; ResNeXt101"></a>4. ResNeXt50 &amp; ResNeXt101</h2><p><a href="https://arxiv.org/abs/1611.05431" target="_blank" rel="noopener">Aggregated Residual Transformations for Deep Neural Networks</a></p>
 <p> ResNet的一种变体ResNeXt，它具备以下构建块：</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/resnetxt.png" alt="resnetxt.png"></p>
 <p>作者在论文中引入了一个叫作<strong>基数</strong>（cardinality）的超参数，指独立路径的数量，这提供了一种调整模型容量的新思路。实验表明，通过扩大基数值（而不是深度或宽度），准确率得到了高效提升。作者表示，与 Inception 相比，这个全新的架构更容易适应新的数据集或任务，因为它只有一个简单的范式和一个需要调整的超参数，而 Inception 需要调整很多超参数（比如每个路径的卷积层内核大小）。</p>
 <p>ResNetXt模型总结：</p>
 <ul>
@@ -4060,8 +4039,8 @@
 </ul>
 <h2 id="5-InceptionV3"><a href="#5-InceptionV3" class="headerlink" title="5. InceptionV3"></a>5. InceptionV3</h2><p><a href="https://arxiv.org/abs/1512.00567" target="_blank" rel="noopener">Rethinking the Inception Architecture for Computer Vision</a></p>
 <p>首先了解一下Inception结构，其目的是为了既能保持网络结构的稀疏性，又能利用密集矩阵的高计算性能</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/inception0.jpg" alt="inception0.jpg"></p>
 <ol>
 <li>采用不同大小的卷积核意味着不同大小的感受野，最后拼接意味着不同尺度特征的融合； </li>
 <li>之所以卷积核大小采用1、3和5，主要是为了方便对齐。设定卷积步长stride=1之后，只要分别设定pad=0、1、2，那么卷积之后便可以得到相同维度的特征，然后这些特征就可以直接拼接在一起了； </li>
@@ -4069,8 +4048,8 @@
 <li>网络越到后面，特征越抽象，而且每个特征所涉及的感受野也更大了，因此随着层数的增加，3x3和5x5卷积的比例也要增加。</li>
 </ol>
 <p>但是，使用5x5的卷积核仍然会带来巨大的计算量。 为此，文章借鉴NIN2，采用1x1卷积核来进行降维。<br>例如：上一层的输出为100x100x128，经过具有256个输出的5x5卷积层之后(stride=1，pad=2)，输出数据为100x100x256。其中，卷积层的参数为128x5x5x256。假如上一层输出先经过具有32个输出的1x1卷积层，再经过具有256个输出的5x5卷积层，那么最终的输出数据仍为为100x100x256，但卷积参数量已经减少为128x1x1x32 + 32x5x5x256，大约减少了4倍。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/inception1.jpg" alt="inception1.jpg"></p>
 <p>下面的准则来源于大量的实验，因此包含一定的推测，但实际证明基本都是有效的</p>
 <ol>
 <li>避免表达瓶颈，特别是在网络靠前的地方。 信息流前向传播过程中显然不能经过高度压缩的层，即表达瓶颈。从input到output，feature map的宽和高基本都会逐渐变小，但是不能一下子就变得很小。比如你上来就来个kernel = 7, stride = 5 ,这样显然不合适。 另外输出的维度channel，一般来说会逐渐增多(每层的num_output)，否则网络会很难训练。（特征维度并不代表信息的多少，只是作为一种估计的手段）</li>
@@ -4080,12 +4059,11 @@
 </ol>
 <p>再到InceptionV2中，采用不对称卷积，n×1卷积核替代n×n卷积核，这种结构在前几层效果不太好，但对特征图大小为12~20的中间层效果明显。 </p>
 <p>并且引入了Batch normal层，使用3×3替换5×5卷积核</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/inception2.png" alt="inception2.png"></p>
 <p>InceptionV3，一个最重要的改进是分解（Factorization），将7x7分解成两个一维的卷积（1x7,7x1），3x3也是一样（1x3,3x1），这样的好处，既可以加速计算（多余的计算能力可以用来加深网络），又可以将1个conv拆成2个conv，使得网络深度进一步增加，增加了网络的非线性，还有值得注意的地方是网络输入从224x224变为了299x299，更加精细设计了35x35/17x17/8x8的模块。</p>
-
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/inception4.png" alt="inception4.png"></p>
 <p>Inception模型总结：</p>
 <ul>
 <li>使用了集成方法的思想，将卷积行为变成并行的以增加不同维度特征间的联系；</li>
@@ -4094,72 +4072,72 @@
 <li>使用平行的步长为2的块来缩减特征图的网格大小，缩减网格尺寸的同时扩展滤波器组的Inception模块；</li>
 <li>通过标签平滑进行模型正则化。</li>
 </ul>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/inception3.png" alt="inception3.png"></p>
 <h2 id="6-InceptionResNetV2"><a href="#6-InceptionResNetV2" class="headerlink" title="6. InceptionResNetV2"></a>6. InceptionResNetV2</h2><p><a href="https://arxiv.org/abs/1602.07261" target="_blank" rel="noopener">Inception-v4, Inception-ResNet and the Impact of Residual Connections on Learning</a></p>
 <p>提到InceptionResNetV2就必须提到Inception-v4，作者首先使用纯Inception Block构建了Inception-v4模型，其结构为</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/inceptionresnet6.png" alt="inceptionresnet6.png"></p>
 <p>每个block的具体结构如下：（每个block中没有标记v的都表示same padding）</p>
 <p><strong>Stem</strong>，InceptionResNetV2和Inception-v4共用</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/inceptionresnet0.png" alt="inceptionresnet0.png"></p>
 <p><strong>Inception-A</strong></p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/inceptionresnet1.png" alt="inceptionresnet1.png"></p>
 <p><strong>Inception-B</strong></p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/inceptionresnet2.png" alt="inceptionresnet2.png"></p>
 <p><strong>Inception-C</strong></p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/inceptionresnet3.png" alt="inceptionresnet3.png"></p>
 <p><strong>35 to 17 ReductionA</strong>，共用，但是具体filters个数根据不同模型而不同，参考表格</p>
-
-
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/inceptionresnet4.png" alt="inceptionresnet4.png"></p>
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/inceptionresnet17.png" alt="inceptionresnet17.png"></p>
 <p><strong>17 to 8 ReductionB</strong></p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/inceptionresnet5.png" alt="inceptionresnet5.png"></p>
 <hr>
 <p>接下来是InceptionResNetV1和InceptionResNetV2，V1和V2整体结构相同，细节的block有差异，InceptionResNetV2的Stem通用，InceptionResNetV1的Stem与其他不同</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/inceptionresnet12.png" alt="inceptionresnet12.png"></p>
 <p><strong>Stem</strong>，仅限InceptionResNetV1</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/inceptionresnet11.png" alt="inceptionresnet11.png"></p>
 <p><strong>Inception-ResNet-v1 Inception-ResNet-A</strong></p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/inceptionresnet7.png" alt="inceptionresnet7.png"></p>
 <p><strong>Inception-ResNet-v1 Inception-ResNet-B</strong></p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/inceptionresnet8.png" alt="inceptionresnet8.png"></p>
 <p><strong>Inception-ResNet-v1 Inception-ResNet-C</strong></p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/inceptionresnet10.png" alt="inceptionresnet10.png"></p>
 <p><strong>35 to 17 ReductionA</strong>，共用，参考上面</p>
 <p><strong>17 to 8 ReductionB</strong>，注意这里与V2的小区别，filters数量不同</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/inceptionresnet9.png" alt="inceptionresnet9.png"></p>
 <hr>
 <p><strong>Inception-ResNet-v2 Inception-ResNet-A</strong></p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/inceptionresnet13.png" alt="inceptionresnet13.png"></p>
 <p><strong>Inception-ResNet-v2 Inception-ResNet-B</strong></p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/inceptionresnet14.png" alt="inceptionresnet14.png"></p>
 <p><strong>Inception-ResNet-v2 Inception-ResNet-C</strong></p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/inceptionresnet16.png" alt="inceptionresnet16.png"></p>
 <p><strong>35 to 17 ReductionA</strong>，共用，参考上面</p>
 <p><strong>17 to 8 ReductionB</strong>，注意这里与V1的小区别，filters数量不同</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/inceptionresnet15.png" alt="inceptionresnet15.png"></p>
 <hr>
 <p>最后，作者发现如果filter的个数超过1000个，残差网络会变得不稳定，网络会在训练的早期就“死掉”，也就意味着在几万次迭代之后，avg_pool之前的最后几层网络参数全是0。解决方案是要么减小learning rate，要么对这些层增加额外的batch normalization。</p>
 <p>作者又发现如果将残差部分缩放后再跟需要相加的层相加，会使网络在训练过程中更稳定。因此作者选择了一些缩放因子在0.1到0.3之间，用这个缩放因子去缩放残差网络，然后再做加法，如下图</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/inceptionresnet18.png" alt="inceptionresnet18.png"></p>
 <p>InceptionResNetV2模型总结：</p>
 <ul>
 <li>结合ResNet的思想，构建了Inception-ResNet模块，既优化了训练过程，又可以扩大特征间的联系；</li>
@@ -4168,11 +4146,11 @@
 <h2 id="7-Xception"><a href="#7-Xception" class="headerlink" title="7. Xception"></a>7. Xception</h2><p><a href="https://arxiv.org/abs/1610.02357" target="_blank" rel="noopener">Xception: Deep Learning with Depthwise Separable Convolutions</a></p>
 <p>Xception从Inception进化而来，同时Xception是ResNeXt的一个变种</p>
 <p>串行式group的module，被起名 separable convolution </p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/xception.png" alt="xception.png"></p>
 <p>Xception模型结构：</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/xception1.png" alt="xception1.png"></p>
 <p>实验结果，Xception在ImageNet上稍优于Inceptionv3，参数数量和Inceptionv3基本一致，速度也差不多。</p>
 <p>Xception模型总结：</p>
 <ul>
@@ -4181,8 +4159,8 @@
 <h2 id="8-MobileNet-alpha-0-25-0-50-0-75-1-0"><a href="#8-MobileNet-alpha-0-25-0-50-0-75-1-0" class="headerlink" title="8. MobileNet(alpha=0.25/0.50/0.75/1.0)"></a>8. MobileNet(alpha=0.25/0.50/0.75/1.0)</h2><p><a href="https://arxiv.org/abs/1704.04861" target="_blank" rel="noopener">MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications</a></p>
 <p>MobileNet的提出很明显是为了部署在移动设备上，与ImageNet比赛相比，移动设备对内存、运算速度等方面要求很高，精度要求可以适当降低，而传统的ImageNet比赛中取胜的模型的参数基本已经达到一个很高的程度，所以使用MobileNet在保持类似精度的条件下显著的减少模型参数和计算量成为另一个目标。</p>
 <p>MobileNet引入了几个重要的技巧以降低运算量：</p>
-<h3 id="8-1-Deep-wise-Separabe-深度可分离卷积"><a href="#8-1-Deep-wise-Separabe-深度可分离卷积" class="headerlink" title="8.1 Deep-wise Separabe 深度可分离卷积"></a>8.1 Deep-wise Separabe 深度可分离卷积</h3>
-
+<h3 id="8-1-Deep-wise-Separabe-深度可分离卷积"><a href="#8-1-Deep-wise-Separabe-深度可分离卷积" class="headerlink" title="8.1 Deep-wise Separabe 深度可分离卷积"></a>8.1 Deep-wise Separabe 深度可分离卷积</h3><!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/mobilenetv1-1.png" alt="mobilenetv1-1.png"></p>
 <p>传统卷积考虑到通道数，对于输入通道数为$N$，输出通道数为$M$，输入长宽$D_K$，输出长宽$D_F$，则卷积层的计算量为</p>
 <p>$$<br>D_K \times D_K \times M \times N \times D_F \times D_F<br>$$</p>
 <p>若采用深度可分离卷积，首先使用2D卷积核对所有通道进行处理，再使用3D1×1卷积核处理之前输出的特征图，最终得到的输出是与传统卷积是相同的</p>
@@ -4192,10 +4170,10 @@
 <p>$$<br>\frac{1}{N} + \frac{1}{D_K^2}<br>$$</p>
 <p>MobileNet对3×3卷积进行这种改变使得计算量减少为原始的$\frac{1}{9}$，准确率仅下降一点。</p>
 <h3 id="8-2-Network-Structure-and-Training-网络结构和训练"><a href="#8-2-Network-Structure-and-Training-网络结构和训练" class="headerlink" title="8.2 Network Structure and Training 网络结构和训练"></a>8.2 Network Structure and Training 网络结构和训练</h3><p>所有层之后都是BatchNormalization和ReLU非线性激活函数，但是最后的全连接层例外，它没有非线性激活函数，直接馈送到softmax层进行分类。</p>
-
-
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/mobilenetv1-2.png" alt="mobilenetv1-2.png"></p>
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/mobilenetv1.png" alt="mobilenetv1.png"></p>
 <p>与训练大模型相反，我们较少地使用正则化和数据增加技术，因为小模型不容易过拟合。当训练MobileNets时，我们不使用sideheads或者labelsmoothing，通过限制croping的尺寸来减少图片扭曲。另外，我们发现重要的是在depthwise滤波器上放置很少或没有重量衰减（L2正则化），因为它们参数很少</p>
 <h3 id="8-3-Width-Multiplier-Thinner-Models-alpha参数：更小的模型"><a href="#8-3-Width-Multiplier-Thinner-Models-alpha参数：更小的模型" class="headerlink" title="8.3 Width Multiplier: Thinner Models(alpha参数：更小的模型)"></a>8.3 Width Multiplier: Thinner Models(alpha参数：更小的模型)</h3><p>引入了一个非常简单的参数$\alpha$，称为width multiplier。这个参数widthmultiplier的作用是在每层均匀地减负网络。对于一个给定的层和widthmultiplierα，输入通道的数量从$M$变成$\alpha M$，输出通道的数量从$N$变成$\alpha N$。深度可分离卷积（以widthmultiplier参数$\alpha$为计）的计算复杂度：<br>$\alpha \in (0,1]$，通常设为1，0.75，0.5和0.25。$\alpha = 1$表示基准MobileNet，而$\alpha &lt; 1$则表示瘦身的MobileNets。Width multiplier有减少计算复杂度和参数数量（大概$\alpha$二次方）的作用。Width multiplier可以应用于任何模型结构，以定义一个具有合理准确性，延迟和尺寸的新的较小的模型。它用于定义新的简化结构，但需要重新进行训练。</p>
 <h3 id="8-4-Resolution-Multiplier-Reduced-Representation"><a href="#8-4-Resolution-Multiplier-Reduced-Representation" class="headerlink" title="8.4 Resolution Multiplier: Reduced Representation"></a>8.4 Resolution Multiplier: Reduced Representation</h3><p>降低神经网络的第二个超参数是resolution multiplier ρ，简而言之就是作用于输出特征图大小（输出大小的系数），$\rho \in (0,1]$，通常设为224,192,160或者128。$\rho=1$是基本MobileNets而$\rho&lt;1$示瘦身的MobileNets。计算量</p>
@@ -4209,25 +4187,25 @@
 <p>MobileNetv2架构是基于倒置残差结构(inverted residual structure)，原本的残差结构的主分支是有三个卷积，两个逐点卷积通道数较多，而倒置的残差结构刚好相反，中间的卷积通道数(依旧使用深度分离卷积结构)较多，旁边的较小。此外，我们发现去除主分支中的非线性变换是有效的，这可以保持模型表现力。</p>
 <p>MobileNetV2提出了manifold of interest（兴趣流形）概念，表示感兴趣的数据内容，但是目前无法定量描述，仅凭经验研究。</p>
 <p>我们的目的是在低维依然保持manifold of interest，但是实际上是将矩阵映射到低维后再进行ReLU，最后在求逆投影回原来的维度时，这种manifold of interest会丢失很多的信息。论文针对这个问题使用linear bottleneck(即不使用ReLU激活，做了线性变换)的来代替原本的非线性激活变换。所以通过在卷积模块中后插入linear bottleneck来捕获兴趣流形。 实验证明，使用linear bottleneck可以防止非线性破坏太多信息。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/mobilenetv2-1.png" alt="mobilenetv2-1.png"></p>
 <p>MobileNetv2的结构同样是将标准卷积拆分为深度卷积和逐点卷积，在逐点卷积后使用了接1×1卷积，该卷积使用线性变换，总称为一层低维linear bottleneck，其作用是将输入映射回低维空间。</p>
 <p>考虑到倒残差结构Inverted residuals，对于Expansion layer(即linear到深度卷积部分)仅是伴随张量非线性变换的部分实现细节，我们可将shortcuts放在linear bottleneck之间连接</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/mobilenetv2-2.png" alt="mobilenetv2-2.png"></p>
 <p>下表是bottleneck convolution的基本实现：</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/mobilenetv2-3.png" alt="mobilenetv2-3.png"></p>
 <ul>
 <li>首先是1×1 conv2d变换通道，后接ReLU6激活(ReLU6即最高输出为6，超过了会clip下来)</li>
 <li>中间是深度卷积,后接ReLU</li>
 <li>最后的1×1 conv2d后面不接ReLU了，而是论文提出的linear bottleneck</li>
 </ul>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/mobilenetv2-4.png" alt="mobilenetv2-4.png"></p>
 <p>可以看到相比与之前的残差模块，中间的深度卷积较宽，除了开始的升维的1×1 1×11×1卷积，做shortcut的1×1 1×11×1卷积通道数较少，呈现的是倒立状态，故称为Inverted residuals。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/mobilenetv2-5.png" alt="mobilenetv2-5.png"></p>
 <p>训练细节：</p>
 <ol>
 <li>训练器：RMSPropOptimizer, decay and momentum都设置0.9</li>
@@ -4238,14 +4216,14 @@
 </ol>
 <h2 id="10-DenseNet121-amp-DenseNet169-amp-DenseNet201"><a href="#10-DenseNet121-amp-DenseNet169-amp-DenseNet201" class="headerlink" title="10. DenseNet121 &amp; DenseNet169 &amp; DenseNet201"></a>10. DenseNet121 &amp; DenseNet169 &amp; DenseNet201</h2><p><a href="https://arxiv.org/abs/1608.06993" target="_blank" rel="noopener">Densely Connected Convolutional Networks</a></p>
 <p>DenseNet的提出基于快速连接的思想，与ResNet异曲同工，它进一步利用了快捷连接的效果 - 它将所有层直接相互连接。在这种新颖的架构中，每层的输入由所有早期层的特征图组成，其输出传递给每个后续层。特征映射与深度级联聚合在一起。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/densenet1.png" alt="densenet1.png"></p>
 <p>除了解决消失的渐变问题之外，作者认为这种架构还鼓励特征重用，使网络具有高参数效率。对此的一个简单解释是，身份映射的输出被添加到下一个块，如果两个层的特征映射具有非常不同的分布，则可能阻碍信息流。因此，连接特征映射可以保留所有特征映射并增加输出的方差，从而鼓励特征重用。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/densenet2.png" alt="densenet2.png"></p>
 <p>遵循这个范例，我们知道第l层将具有$k \times（l-1）+ k_0$个输入要素图，其中$k_0$是输入图像中的通道数。作者使用了一个称为增长率（k）的超参数来防止网络过长，他们还使用1x1卷积瓶颈层来减少昂贵的3x3卷积之前的特征映射数量。整体结构如下表所示：</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/densenet0.png" alt="densenet0.png"></p>
 <p>DenseNet模型总结：</p>
 <ul>
 <li>更远距离的快速连接。</li>
@@ -4253,31 +4231,31 @@
 <h2 id="11-NASNetLarge-amp-NASNetMobile"><a href="#11-NASNetLarge-amp-NASNetMobile" class="headerlink" title="11. NASNetLarge &amp; NASNetMobile"></a>11. NASNetLarge &amp; NASNetMobile</h2><p><a href="https://arxiv.org/abs/1707.07012" target="_blank" rel="noopener">Learning Transferable Architectures for Scalable Image Recognition</a></p>
 <p>NasNet，是当前图像识别领域的最佳模型，这个模型并非是人为设计出来的，而是通过谷歌很早之前推出的AutoML自动训练出来的。</p>
 <p>NasNet的组成由两种网络单元组合而成</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/nasnet1.png" alt="nasnet1.png"></p>
 <p>这两种单元的堆叠方案如下：</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/nasnet0.png" alt="nasnet0.png"></p>
 <p>搜索过程：</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/nasnet2.png" alt="nasnet2.png"></p>
 <p>如上图所示，控制器RNN从搜索空间中以概率p预测网络结构A。worker单元，学习该网络直到收敛，并得到准确性R。最终将梯度p*R传递给RNN控制器进行梯度更新。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/nasnet3.png" alt="nasnet3.png"></p>
 <p>控制器依次搜索隐藏状态，隐藏状态，何种操作，何种操作，何种组合方法，这5个方法和操作的组合。其中，每种方法，每种操作都对应于一个softmax损失。这样重复B次，得到一个最终block模块。最终的损失函数就有5B个。实验中最优的B=5。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/nasnet4.png" alt="nasnet4.png"></p>
 <p>其中，黄色的可选的操作包括上图所示的13种操作。</p>
 <p>最终论文得到了3个网络结构，分别为NASNet-A，NASNet-B， NASNet-C。</p>
 <p>NASNet-A：</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/nasnet-a.png" alt="nasnet-a.png"></p>
 <p>NASNet-B：</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/nasnet-b.png" alt="nasnet-b.png"></p>
 <p>NASNet-C：</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/nasnet-c.png" alt="nasnet-c.png"></p>
 <p>NasNet模型总结：</p>
 <ul>
 <li><p>设计了新的搜索空间，即NASNet search space，并在实验中搜索得到最优的网络结构NASNet</p>

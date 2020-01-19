@@ -53,12 +53,18 @@
 <meta property="og:site_name" content="Tao">
 <meta property="og:description" content="参考：  XGBoost: A Scalable Tree Boosting SystemXGBoost基本原理  1. 正则化学习目标假定数据集有$n$个样本，每个样本有$m$个特征，$\mathcal{D} &#x3D; { (\boldsymbol{x}_i, y_i) } (|\mathcal{D}| &#x3D; n, \boldsymbol{x}_i \in \mathbb{R}^m, y_i \in \">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/017978af7cab33961.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/13eac003017b1ae0e.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/2035ad92df7be84bf.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/35a2426a8bef4c332.png">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/468bda16a099fc1ae.png">
 <meta property="article:published_time" content="2019-01-03T13:32:09.000Z">
-<meta property="article:modified_time" content="2020-01-17T15:07:46.287Z">
+<meta property="article:modified_time" content="2020-01-19T04:23:38.397Z">
 <meta property="article:author" content="Tao Zhou">
 <meta property="article:tag" content="Theory">
 <meta property="article:tag" content="XGBoost">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://114.116.9.65:7777/images/2020/01/19/017978af7cab33961.png">
 
 <link rel="canonical" href="http://zhoutao822.coding.me/archives/ce8cbd0b.html">
 
@@ -238,7 +244,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-17 23:07:46" itemprop="dateModified" datetime="2020-01-17T23:07:46+08:00">2020-01-17</time>
+                <time title="修改时间：2020-01-19 12:23:38" itemprop="dateModified" datetime="2020-01-19T12:23:38+08:00">2020-01-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -305,8 +311,8 @@
 <h2 id="1-正则化学习目标"><a href="#1-正则化学习目标" class="headerlink" title="1. 正则化学习目标"></a>1. 正则化学习目标</h2><p>假定数据集有$n$个样本，每个样本有$m$个特征，$\mathcal{D} = { (\boldsymbol{x}_i, y_i) } (|\mathcal{D}| = n, \boldsymbol{x}_i \in \mathbb{R}^m, y_i \in \mathbb{R})$，并且该数据集属于回归任务，特征值和预测目标都是任意常数。假定用$K$个树构建模型，并且预测结果为所有树的预测结果的和</p>
 <p>$$<br>\hat{y}<em>i = \phi(\boldsymbol{x}_i) = \sum^K</em>{k=1}f_k(\boldsymbol{x}_i), \quad f_k \in \mathcal{F}<br>$$</p>
 <p>其中$\mathcal{F} = { f(\boldsymbol{x}) = w_{q(\boldsymbol{x})} }(q:\mathbb{R}^m \rightarrow T, w \in \mathbb{R}^T)$，$T$是当前树的叶结点数（我们将叶结点编号），$q$是从样本$\boldsymbol{x}$到叶结点index的映射，即样本$\boldsymbol{x}$落在树的index叶结点上，$w_{q(\boldsymbol{x})}$表示该样本属于的叶结点的权值，我们可以将$f$看作是一棵树的表示函数，其包括两个部分：树的结构函数$q$和树的叶结点权重$w$。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/017978af7cab33961.png" alt="017978af7cab33961.png"></p>
 <a id="more"></a>
 
 <p>XGBoost是由多个决策树相加形成的，考虑增加正则项$\Omega$，则整个模型的优化目标为</p>
@@ -322,8 +328,8 @@
 <p>$$<br>\tilde{\mathcal{L}}^{(t)} = \sum^n_{i=1}[g_if_t(\boldsymbol{x}_i) + \frac{1}{2}h_if_t^2(\boldsymbol{x}_i)] + \Omega(f_t)<br>$$</p>
 <p>定义$I_j = { i|q(\boldsymbol{x}_i) = j }$为划分到index为$j$的叶结点的样本的index集合（简单来说就是统计落入$j$叶结点的所有样本），那么重写上式为</p>
 <p>$$<br>\tilde{\mathcal{L}}^{(t)} = \sum^n_{i=1}[g_if_t(\boldsymbol{x}<em>i) + \frac{1}{2}h_if_t^2(\boldsymbol{x}_i)] + \gamma T + \frac{1}{2}\lambda \sum^T</em>{j=1}w_j^2<br>\<br>= \sum^T_{j=1}[(\sum_{i \in I_j}g_i)w_j + \frac{1}{2}(\sum_{i \in I_j}h_i + \lambda)w_j^2] + \gamma T<br>$$</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/13eac003017b1ae0e.png" alt="13eac003017b1ae0e.png"></p>
 <p>上式的两种变形考虑的对象不同，第一个式子考虑每个样本，第二个式子考虑的是当前树的每个叶结点（由于每个样本必定落入某个叶结点，因此考虑叶结点简化了计算过程），通过对$w_j$求偏导数使损失最小</p>
 <p>$$<br>w^*<em>j = - \frac{\sum</em>{i \in I_j} g_i}{\sum_{i \in I_j}h_i + \lambda}<br>$$</p>
 <p>一般令$G_j = \sum_{i \in I_j} g_i, H_j = \sum_{i \in I_j}h_i$，所以上式为</p>
@@ -340,15 +346,15 @@
 <li>Column Subsampling在随机森林中也使用过，先从当前结点的属性集合中随机选择一个包含k个属性的子集，然后再从这个子集中选择最优属性用于划分。</li>
 </ul>
 <h2 id="4-分支划分算法"><a href="#4-分支划分算法" class="headerlink" title="4. 分支划分算法"></a>4. 分支划分算法</h2><h3 id="4-1-精确贪心算法"><a href="#4-1-精确贪心算法" class="headerlink" title="4.1 精确贪心算法"></a>4.1 精确贪心算法</h3><p>原文是Exact Greedy Algorithm，这个算法在<code>决策树</code>连续值处理里面介绍过，通过遍历每个特征，寻找各个特征的最佳划分阈值，最后取能使$\mathcal{L}_{split}$分数最大的特征及阈值。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/2035ad92df7be84bf.png" alt="2035ad92df7be84bf.png"></p>
 <ul>
 <li>在XGBoost上面的介绍中已经说明采用了Column Subsampling策略，因此在确定某一棵树的结构时并不会遍历整个特征集，而在从特征集中采样出一个子集，这里子集的大小为$m$；</li>
 <li>需要将第$k$个特征的所有样本按照大小排序后再计算阈值（如果是连续值，排序后取相邻样本的均值作为待定阈值；如果是离散值，那么每次选择其中一个）。</li>
 </ul>
 <h3 id="4-2-近似算法"><a href="#4-2-近似算法" class="headerlink" title="4.2 近似算法"></a>4.2 近似算法</h3><p>Exact Greedy Algorithm存在两个问题：一是遍历大数据集是非常不可取的，二是不可能应用于分布式环境中，因此提出Approximate Algorithm用于解决上述两个问题。</p>
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/35a2426a8bef4c332.png" alt="35a2426a8bef4c332.png"></p>
 <p>相较于Exact Greedy Algorithm遍历所有可能的阈值，在Approximate Algorithm中直接将第$k$个特征的阈值集合$S_k$按百分比分类列出来，形成候选集合，然后类似Exact Greedy Algorithm中找到分数最大值对应的划分方式，按照近似算法得到的结果往往与精确贪心算法相差不大。</p>
 <h3 id="4-3-加权分位数草图"><a href="#4-3-加权分位数草图" class="headerlink" title="4.3 加权分位数草图"></a>4.3 加权分位数草图</h3><p>原文是Weighted Quantile Sketch，在近似算法中需要选出候选子集，那么如何以一个相对合理的方式划分出候选子集？定义数据集$\mathcal{D}<em>k = { (x</em>{1k}, h_1), (x_{2k}, h_2),…, (x_{nk}, h_n) }$包括第$k$个特征的值$x_k$以及二阶梯度$h$，且按照顺序排列好，则定义排序函数$r_k: \mathbb{R} \rightarrow [0, +\infty)$</p>
 <p>$$<br>r_k(z) = \frac{1}{\sum_{(x, h) \in \mathcal{D}<em>k}h} \sum</em>{(x, h) \in \mathcal{D}_k, x&lt;z} h<br>$$</p>
@@ -363,15 +369,8 @@
 <li>从数据中学到划分方向，这里参照下图，在计算左子树分支损失时将缺失值的样本作为右子树的集合，在计算右子树分支损失时将缺失值的样本作为左子树的集合；</li>
 <li>人为指定方向（或者不采用带有缺失值的数据）。</li>
 </ul>
-
-
-
-
-
-
-
-
-
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/468bda16a099fc1ae.png" alt="468bda16a099fc1ae.png"></p>
 
     </div>
 
