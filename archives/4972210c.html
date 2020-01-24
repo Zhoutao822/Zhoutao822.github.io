@@ -64,9 +64,9 @@
 <meta property="article:author" content="Tao Zhou">
 <meta property="article:tag" content="Android">
 <meta property="article:tag" content="Material">
-<meta property="article:tag" content="BottomSheetDialog">
-<meta property="article:tag" content="ViewPager">
 <meta property="article:tag" content="RecyclerView">
+<meta property="article:tag" content="ViewPager">
+<meta property="article:tag" content="BottomSheetDialog">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://114.116.9.65:7777/images/2020/01/19/bottomsheet-1.gif">
 
@@ -491,10 +491,10 @@
       <div class="popular-posts-title"><a href="/archives/2943f9f3.html" rel="bookmark">Android-共享元素动画效果</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/archives/c75dc4ab.html" rel="bookmark">Android IPC-AIDL、Messenger和Socket</a></div>
+      <div class="popular-posts-title"><a href="/archives/b0107659.html" rel="bookmark">Android框架-Gson</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/archives/b0107659.html" rel="bookmark">Android框架-Gson</a></div>
+      <div class="popular-posts-title"><a href="/archives/c75dc4ab.html" rel="bookmark">Android IPC-AIDL、Messenger和Socket</a></div>
     </li>
   </ul>
 
@@ -520,9 +520,9 @@
           <div class="post-tags">
               <a href="/tags/Android/" rel="tag"># Android</a>
               <a href="/tags/Material/" rel="tag"># Material</a>
-              <a href="/tags/BottomSheetDialog/" rel="tag"># BottomSheetDialog</a>
-              <a href="/tags/ViewPager/" rel="tag"># ViewPager</a>
               <a href="/tags/RecyclerView/" rel="tag"># RecyclerView</a>
+              <a href="/tags/ViewPager/" rel="tag"># ViewPager</a>
+              <a href="/tags/BottomSheetDialog/" rel="tag"># BottomSheetDialog</a>
           </div>
 
         
@@ -823,6 +823,54 @@
   
 
   
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
 
   
 

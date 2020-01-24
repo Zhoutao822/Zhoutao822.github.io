@@ -1584,11 +1584,11 @@ D^*(\boldsymbol{x}) = \frac{bp_{data}(\boldsymbol{x}) + ap_g(\boldsymbol{x})}{p_
       <tags>
         <tag>Android</tag>
         <tag>Material</tag>
-        <tag>ViewPager</tag>
-        <tag>RecyclerView</tag>
         <tag>ToolBar</tag>
         <tag>ContextMenu</tag>
         <tag>PopupMenu</tag>
+        <tag>RecyclerView</tag>
+        <tag>ViewPager</tag>
         <tag>onClick</tag>
         <tag>onLongClick</tag>
         <tag>onTouchEvent</tag>
@@ -2002,9 +2002,9 @@ D^*(\boldsymbol{x}) = \frac{bp_{data}(\boldsymbol{x}) + ap_g(\boldsymbol{x})}{p_
       <tags>
         <tag>Android</tag>
         <tag>Material</tag>
-        <tag>BottomSheetDialog</tag>
-        <tag>ViewPager</tag>
         <tag>RecyclerView</tag>
+        <tag>ViewPager</tag>
+        <tag>BottomSheetDialog</tag>
       </tags>
   </entry>
   <entry>
