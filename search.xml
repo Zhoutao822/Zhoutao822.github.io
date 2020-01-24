@@ -2418,7 +2418,8 @@ x_{30} , x_{31} , x_{32} , x_{33}]^T \\
 <h2 id="2-性能度量"><a href="#2-性能度量" class="headerlink" title="2. 性能度量"></a>2. 性能度量</h2><p>聚类性能度量亦称聚类有效性指标。与监督学习类似，需要通过某种性能度量来评估其好坏；另一方面，若明确了最终将要使用的性能度量，则可直接将其作为聚类过程的优化目标。</p>
 <p>样本集$D$被划分为若干个互不相交的子集，即样本簇。类似LDA的类间散度和类内散度定义，聚类结果要求簇内相似度高且簇间相似度低。</p>
 <p>聚类性能度量大致有两类。一类是将聚类结果与某个“参考模型”进行比较，称为外部指标；另一类是直接考察聚类结果而不利用任何参考模型，称为内部指标。</p>
-<p>对数据集$D = \{ \boldsymbol{x}_1, \boldsymbol{x}_2,…,\boldsymbol{x}_m \}$，假定通过聚类给出的簇划分为$\mathcal{C} = \{ C_1, C_2,…,C_k \}$，参考模型给出的簇划分为$\mathcal{C}^<em> = \{ C_1^</em>, C_2^<em>,…,C_k^</em> \}$。相应的，令$\boldsymbol{\lambda}$与$\boldsymbol{\lambda}^<em>$分别表示与$\mathcal{C}$和$\mathcal{C}^</em>$对应的簇标记向量。将样本两两配对，定义</p>
+<p>对数据集$D = \{ \boldsymbol{x}_1, \boldsymbol{x}_2,…,\boldsymbol{x}_m \}$，假定通过聚类给出的簇划分为$\mathcal{C} = \{ C_1, C_2,…,C_k \}$，参考模型给出的簇划分为$\mathcal{C}^<em> = \{ C_1^</em>, C_2^<em>,…,C_k^</em> \}$。</p>
+<p>相应的，令$\boldsymbol{\lambda}$与$\boldsymbol{\lambda}^<em>$分别表示与$\mathcal{C}$和$\mathcal{C}^</em>$对应的簇标记向量。将样本两两配对，定义</p>
 <script type="math/tex; mode=display">
 a = |SS|, \quad SS = \{ (\boldsymbol{x}_i, \boldsymbol{x}_j) | \lambda_i = \lambda_j, \lambda^*_i = \lambda^*_j, i < j \}
 \\
@@ -6206,8 +6207,8 @@ c_m^{(j + 1)} = \frac{1}{N}\sum^N_{t=1}h_m^{(j)}(t)
         <category>Coding</category>
       </categories>
       <tags>
-        <tag>Code</tag>
         <tag>Linear Model</tag>
+        <tag>Code</tag>
         <tag>LDA</tag>
         <tag>LinearClassifier</tag>
         <tag>LinearRegressor</tag>
