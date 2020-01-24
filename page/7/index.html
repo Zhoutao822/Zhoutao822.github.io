@@ -295,7 +295,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="令人愉悦的Python开发环境搭建"><a href="#令人愉悦的Python开发环境搭建" class="headerlink" title="令人愉悦的Python开发环境搭建"></a>令人愉悦的Python开发环境搭建</h1><h2 id="1-系统选择"><a href="#1-系统选择" class="headerlink" title="1. 系统选择"></a>1. 系统选择</h2><ul>
+          <h1 id="令人愉悦的python开发环境搭建"><a class="markdownIt-Anchor" href="#令人愉悦的python开发环境搭建"></a> 令人愉悦的Python开发环境搭建</h1>
+<h2 id="1-系统选择"><a class="markdownIt-Anchor" href="#1-系统选择"></a> 1. 系统选择</h2>
+<ul>
 <li>macOS</li>
 <li>Windows</li>
 <li>Linux</li>
@@ -305,9 +307,10 @@
 <li>黑苹果性能可控，配置自定义，可以比apple官网上强不少而且便宜，缺点是驱动配置很扎心，系统更新很难受，适合搞机党。</li>
 <li>apple官方产品造型好，系统环境稳定，接近linux的开发环境，缺点是配置固定，GPU辣鸡，贵死。</li>
 </ul>
-<h2 id="2-Python环境"><a href="#2-Python环境" class="headerlink" title="2. Python环境"></a>2. Python环境</h2><p>macOS自带的应该是python2.7版本，理论上可以直接跑代码：</p>
+<h2 id="2-python环境"><a class="markdownIt-Anchor" href="#2-python环境"></a> 2. Python环境</h2>
+<p>macOS自带的应该是python2.7版本，理论上可以直接跑代码：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python filename.py</span><br></pre></td></tr></table></figure>
-<p>但是初始环境的第三方库不多，需要自行安装，但是由于涉及到本机系统环境，我不推荐在本机环境装库，为什么呢，等你系统崩溃就凉了，所以可以使用一个好东西—虚拟环境。</p>
+<p>但是初始环境的第三方库不多，需要自行安装，但是由于涉及到本机系统环境，我不推荐在本机环境装库，为什么呢，等你系统崩溃就凉了，所以可以使用一个好东西–虚拟环境。</p>
 <p>在介绍虚拟环境之前我们需要知道python版本兼容问题：</p>
 <p>python目前的版本有两种2.x和3.x，为什么有两个版本呢，而且为什么要强调有这么两个版本呢，那是因为这两个版本<strong>不兼容</strong>，哈哈哈。3.x中对2.x的部分内容进行了修改优化，比如说可以在2.x的python版本下运行的代码，到3.x中<strong>不一定</strong>能运行，而且有的第三方库只支持3.x，比如Pytorch。所以开发时需要提前确定我们需要哪个版本的Python环境。</p>
 <p>这时候就有必要了解虚拟环境了，这是个好东西啊！</p>
@@ -455,12 +458,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">877k</span>
+    <span title="站点总字数">955k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:18</span>
+    <span title="站点阅读时长">14:28</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>
@@ -615,53 +618,8 @@
 
   
       
-<script type="text/x-mathjax-config">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0/dist/katex.min.css">
 
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') {
-          next = next.nextSibling;
-        }
-        if (next && next.nodeName.toLowerCase() === 'br') {
-          next.parentNode.removeChild(next);
-        }
-      }
-    });
-  });
-
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
-      if (element.nodeName.toLowerCase() == 'li') {
-        element = element.parentNode;
-      }
-      element.classList.add('has-jax');
-    }
-  });
-</script>
-<script>
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
-    MathJax.Hub.Typeset();
-  }, window.MathJax);
-</script>
-
-    
 
   
 

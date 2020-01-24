@@ -46,12 +46,12 @@
   };
 </script>
 
-  <meta name="description" content="参考：  Spectrogram, Cepstrum and Mel-Frequency Analysis《解析深度学习-语音识别实践》第1章 简介  语音识别过程：切除首尾端静音—-声音划分为帧—-对每一帧提取MFCC特征—-若干帧对应一个状态—-三个状态组成一个音素—-若干音素组成单词 1. 语音识别系统的基本结构语音识别系统主要由4个部分组成：信号处理和特征提取、声学模型（AM）、语言模型（">
+  <meta name="description" content="参考：  Spectrogram, Cepstrum and Mel-Frequency Analysis 《解析深度学习-语音识别实践》第1章 简介  语音识别过程：切除首尾端静音—声音划分为帧—对每一帧提取MFCC特征—若干帧对应一个状态—三个状态组成一个音素—若干音素组成单词  1. 语音识别系统的基本结构 语音识别系统主要由4个部分组成：信号处理和特征提取、声学模型（AM）、语言模型（LM">
 <meta property="og:type" content="article">
 <meta property="og:title" content="语音识别-MFCC">
 <meta property="og:url" content="http://zhoutao822.coding.me/archives/4b26bf35.html">
 <meta property="og:site_name" content="Tao">
-<meta property="og:description" content="参考：  Spectrogram, Cepstrum and Mel-Frequency Analysis《解析深度学习-语音识别实践》第1章 简介  语音识别过程：切除首尾端静音—-声音划分为帧—-对每一帧提取MFCC特征—-若干帧对应一个状态—-三个状态组成一个音素—-若干音素组成单词 1. 语音识别系统的基本结构语音识别系统主要由4个部分组成：信号处理和特征提取、声学模型（AM）、语言模型（">
+<meta property="og:description" content="参考：  Spectrogram, Cepstrum and Mel-Frequency Analysis 《解析深度学习-语音识别实践》第1章 简介  语音识别过程：切除首尾端静音—声音划分为帧—对每一帧提取MFCC特征—若干帧对应一个状态—三个状态组成一个音素—若干音素组成单词  1. 语音识别系统的基本结构 语音识别系统主要由4个部分组成：信号处理和特征提取、声学模型（AM）、语言模型（LM">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/asr.png">
 <meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/ft.gif">
@@ -294,7 +294,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.1k</span>
+              <span>2.3k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -315,12 +315,14 @@
       
         <p>参考：</p>
 <blockquote>
-<p><a href="http://www.speech.cs.cmu.edu/15-492/slides/03_mfcc.pdf" target="_blank" rel="noopener">Spectrogram, Cepstrum and Mel-Frequency Analysis</a><br>《解析深度学习-语音识别实践》第1章 简介</p>
+<p><a href="http://www.speech.cs.cmu.edu/15-492/slides/03_mfcc.pdf" target="_blank" rel="noopener">Spectrogram, Cepstrum and Mel-Frequency Analysis</a><br />
+《解析深度学习-语音识别实践》第1章 简介</p>
 </blockquote>
-<p><strong>语音识别过程：切除首尾端静音—-声音划分为帧—-对每一帧提取MFCC特征—-若干帧对应一个状态—-三个状态组成一个音素—-若干音素组成单词</strong></p>
-<h2 id="1-语音识别系统的基本结构"><a href="#1-语音识别系统的基本结构" class="headerlink" title="1. 语音识别系统的基本结构"></a>1. 语音识别系统的基本结构</h2><p>语音识别系统主要由4个部分组成：信号处理和特征提取、声学模型（AM）、语言模型（LM）和解码搜索部分。</p>
+<p><strong>语音识别过程：切除首尾端静音—声音划分为帧—对每一帧提取MFCC特征—若干帧对应一个状态—三个状态组成一个音素—若干音素组成单词</strong></p>
+<h2 id="1-语音识别系统的基本结构"><a class="markdownIt-Anchor" href="#1-语音识别系统的基本结构"></a> 1. 语音识别系统的基本结构</h2>
+<p>语音识别系统主要由4个部分组成：信号处理和特征提取、声学模型（AM）、语言模型（LM）和解码搜索部分。</p>
 <!--  -->
-<p><img src="http://114.116.9.65:7777/images/2020/01/19/asr.png" alt="asr.png"></p>
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/asr.png" alt="asr.png" /></p>
 <ul>
 <li>信号处理和特征提取部分以音频信号为输入，通过消除噪声和信道失真对语音进行增强，将信号从时域转化为频域，并为后面的声学模型提取合适的有代表性的特征向量；</li>
 <li>声学模型将声学和发音学的知识整合，以特征提取部分生成的特征作为输入，并为可变长特征序列生成声学模型分数；</li>
@@ -329,73 +331,85 @@
 </ul>
 <p>在信号处理和特征提取部分，通常使用梅尔频率倒谱系数（MFCC）或者相对频谱变换-感知线性预测（RASTA-PLP）作为特征向量，这里是对MFCC进行说明。</p>
 <a id="more"></a>
-<h2 id="2-傅里叶变换"><a href="#2-傅里叶变换" class="headerlink" title="2. 傅里叶变换"></a>2. 傅里叶变换</h2><p>傅里叶变换是一种将时域信息转换为频域信息的函数，转换后的频域信息是基于三角函数<code>sin，cos</code>的复合函数，<br>理论上来说傅里叶变换可以拟合任意形式的时域函数图像，最终得到的频谱图就包含了所有成分的频率和振幅。</p>
+<h2 id="2-傅里叶变换"><a class="markdownIt-Anchor" href="#2-傅里叶变换"></a> 2. 傅里叶变换</h2>
+<p>傅里叶变换是一种将时域信息转换为频域信息的函数，转换后的频域信息是基于三角函数<code>sin，cos</code>的复合函数，<br />
+理论上来说傅里叶变换可以拟合任意形式的时域函数图像，最终得到的频谱图就包含了所有成分的频率和振幅。</p>
 <!-- ![](2018-11-14-语音识别-MFCC/ft.gif) -->
 <!--  -->
-<p><img src="http://114.116.9.65:7777/images/2020/01/19/ft.gif" alt="ft.gif"></p>
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/ft.gif" alt="ft.gif" /></p>
 <p>由此可见，傅里叶变换在语音识别系统中非常实用，因为语音文件就是一个时域上的信息，我们将其映射到频域上可以得到关于声音更多的信息（音调/音色/响度？）</p>
 <p>首先看一下傅里叶变换的公式</p>
 <!--  -->
-<p><img src="http://114.116.9.65:7777/images/2020/01/19/dft.png" alt="dft.png"></p>
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/dft.png" alt="dft.png" /></p>
 <p>以及傅里叶逆变换</p>
 <!--  -->
-<p><img src="http://114.116.9.65:7777/images/2020/01/19/idft.png" alt="idft.png"></p>
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/idft.png" alt="idft.png" /></p>
 <p>而声音文件理论上是一个连续函数，但是连续不好描述，我们将声音划分为一帧一帧，每一帧表示的时间长度与这个声音文件的格式相关（不同格式采样率不同，但都是<code>ms</code>级别），所以最终我们观察到的声音信息是离散的。</p>
 <p>离散傅里叶变换</p>
 <!--  -->
-<p><img src="http://114.116.9.65:7777/images/2020/01/19/dtft.png" alt="dtft.png"></p>
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/dtft.png" alt="dtft.png" /></p>
 <p>以及离散傅里叶逆变换</p>
 <!--  -->
-<p><img src="http://114.116.9.65:7777/images/2020/01/19/idtft.png" alt="idtft.png"></p>
-<h2 id="3-声谱图Spectrogram"><a href="#3-声谱图Spectrogram" class="headerlink" title="3. 声谱图Spectrogram"></a>3. 声谱图Spectrogram</h2><p>首先将声音文件划分为一帧一帧，然后对每一帧的信息做快速傅里叶变换FFT，得到频谱图，纵轴是振幅（如果对振幅取对数，那么单位为<code>dB</code>分贝），横轴是频率<code>Hz</code></p>
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/idtft.png" alt="idtft.png" /></p>
+<h2 id="3-声谱图spectrogram"><a class="markdownIt-Anchor" href="#3-声谱图spectrogram"></a> 3. 声谱图Spectrogram</h2>
+<p>首先将声音文件划分为一帧一帧，然后对每一帧的信息做快速傅里叶变换FFT，得到频谱图，纵轴是振幅（如果对振幅取对数，那么单位为<code>dB</code>分贝），横轴是频率<code>Hz</code></p>
 <!--  -->
-<p><img src="http://114.116.9.65:7777/images/2020/01/19/fft.png" alt="fft.png"></p>
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/fft.png" alt="fft.png" /></p>
 <p>将得到的频谱图旋转<code>90°</code>，再将振幅映射为灰度值，而这些灰度值较大的位置称为<strong>共振峰</strong>（Formants），<strong>共振峰就是携带了声音的辨识属性</strong></p>
 <!--  -->
-<p><img src="http://114.116.9.65:7777/images/2020/01/19/map.png" alt="map.png"></p>
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/map.png" alt="map.png" /></p>
 <p>如果将每一帧的的灰度图连接起来，我们就得到了这段声音文件的声谱图</p>
 <!--  -->
-<p><img src="http://114.116.9.65:7777/images/2020/01/19/link.png" alt="link.png"></p>
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/link.png" alt="link.png" /></p>
 <p>一个真实数据的声谱图，从图中我们可以找出共振峰，而对应最上面的声音文件；声音不属于同一部分，那么共振峰的位置也不同；声音属于统一部份，则那些帧的共振峰基本相同。根据共振峰的位置我们可以实现声音的区分（不同声音通道/不同人/不同物种），以及对帧的合并，这些信息通过HMM有助于语音识别。</p>
 <!--  -->
-<p><img src="http://114.116.9.65:7777/images/2020/01/19/realdata.png" alt="realdata.png"></p>
-<h2 id="4-倒谱分析Cepstral-Analysis"><a href="#4-倒谱分析Cepstral-Analysis" class="headerlink" title="4. 倒谱分析Cepstral Analysis"></a>4. 倒谱分析Cepstral Analysis</h2><p>这是一帧声音文件，我们用点标注出振幅峰值点（<strong>共振峰</strong>），用线（<strong>包络</strong>）描述振幅变化过程，<strong>我们的目的是提取出包络的信息</strong></p>
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/realdata.png" alt="realdata.png" /></p>
+<h2 id="4-倒谱分析cepstral-analysis"><a class="markdownIt-Anchor" href="#4-倒谱分析cepstral-analysis"></a> 4. 倒谱分析Cepstral Analysis</h2>
+<p>这是一帧声音文件，我们用点标注出振幅峰值点（<strong>共振峰</strong>），用线（<strong>包络</strong>）描述振幅变化过程，<strong>我们的目的是提取出包络的信息</strong></p>
 <!--  -->
-<p><img src="http://114.116.9.65:7777/images/2020/01/19/formants.png" alt="formants.png"></p>
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/formants.png" alt="formants.png" /></p>
 <p>对频谱进行分解，我们可以的到包络和细节，这里默认我们已经经过对数运算，所以只需要简单叠加就能通过包络和细节还原声音信息。同时根据图像变化情况，我们将横轴当作时间，则包络属于低频成分（变化慢），细节属于高频成分（变化快），那么只需要增加一个低通滤波器，我们就可以得到包络的输出，过滤掉细节。</p>
 <!--  -->
-<p><img src="http://114.116.9.65:7777/images/2020/01/19/detail.png" alt="detail.png"></p>
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/detail.png" alt="detail.png" /></p>
 <p>那么倒谱分析的过程为：</p>
 <ol>
-<li><p>语音信号经过傅里叶变换称为频谱</p>
-<script type="math/tex; mode=display">
-X[k] = H[k]E[k]
-\\
-\left \| X[k] \right \| = \left \| H[k] \right \| \left \| E[k] \right \|，只考虑幅度</script></li>
-<li><p>两边取对数</p>
-</li>
+<li>语音信号经过傅里叶变换称为频谱</li>
 </ol>
-<script type="math/tex; mode=display">
-\log{\left \| X[k] \right \|} = \log{\left \| H[k] \right \|} + \log{\left \| E[k] \right \|}</script><ol>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>X</mi><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo><mo>=</mo><mi>H</mi><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo><mi>E</mi><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo><mspace linebreak="newline"></mspace><mrow><mo fence="true">∥</mo><mi>X</mi><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo><mo fence="true">∥</mo></mrow><mo>=</mo><mrow><mo fence="true">∥</mo><mi>H</mi><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo><mo fence="true">∥</mo></mrow><mrow><mo fence="true">∥</mo><mi>E</mi><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo><mo fence="true">∥</mo></mrow><mi mathvariant="normal">，</mi><mi mathvariant="normal">只</mi><mi mathvariant="normal">考</mi><mi mathvariant="normal">虑</mi><mi mathvariant="normal">幅</mi><mi mathvariant="normal">度</mi></mrow><annotation encoding="application/x-tex">X[k] = H[k]E[k]
+\\
+\left \| X[k] \right \| = \left \| H[k] \right \| \left \| E[k] \right \|，只考虑幅度
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mopen">[</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mopen">[</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="mopen">[</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span></span><span class="mspace newline"></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">∥</span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mopen">[</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mclose delimcenter" style="top:0em;">∥</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">∥</span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mopen">[</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mclose delimcenter" style="top:0em;">∥</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">∥</span><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="mopen">[</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mclose delimcenter" style="top:0em;">∥</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">只</span><span class="mord cjk_fallback">考</span><span class="mord cjk_fallback">虑</span><span class="mord cjk_fallback">幅</span><span class="mord cjk_fallback">度</span></span></span></span></span></p>
+<ol start="2">
+<li>两边取对数</li>
+</ol>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>log</mi><mo>⁡</mo><mrow><mo fence="true">∥</mo><mi>X</mi><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo><mo fence="true">∥</mo></mrow><mo>=</mo><mi>log</mi><mo>⁡</mo><mrow><mo fence="true">∥</mo><mi>H</mi><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo><mo fence="true">∥</mo></mrow><mo>+</mo><mi>log</mi><mo>⁡</mo><mrow><mo fence="true">∥</mo><mi>E</mi><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo><mo fence="true">∥</mo></mrow></mrow><annotation encoding="application/x-tex">\log{\left \| X[k] \right \|} = \log{\left \| H[k] \right \|} + \log{\left \| E[k] \right \|}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="minner"><span class="mopen delimcenter" style="top:0em;">∥</span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mopen">[</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mclose delimcenter" style="top:0em;">∥</span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="minner"><span class="mopen delimcenter" style="top:0em;">∥</span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mopen">[</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mclose delimcenter" style="top:0em;">∥</span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="minner"><span class="mopen delimcenter" style="top:0em;">∥</span><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="mopen">[</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mclose delimcenter" style="top:0em;">∥</span></span></span></span></span></span></span></p>
+<ol start="3">
 <li>两边做傅里叶逆变换</li>
 </ol>
-<script type="math/tex; mode=display">
-x[k] = h[k] + e[k]</script><h2 id="5-梅尔频率分析Mel-Frequency-Analysis"><a href="#5-梅尔频率分析Mel-Frequency-Analysis" class="headerlink" title="5. 梅尔频率分析Mel-Frequency Analysis"></a>5. 梅尔频率分析Mel-Frequency Analysis</h2><p>梅尔频率分析是基于人类听觉感知实验的，实验发现，如果将人耳表示为一个滤波器，那么这个滤波器的特点是在所有频率上不是均匀分布，在低频部分有更多的滤波器，在高频部分较少，并且只针对特定的某些频率有效。</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo><mo>=</mo><mi>h</mi><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo><mo>+</mo><mi>e</mi><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">x[k] = h[k] + e[k]
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">x</span><span class="mopen">[</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">h</span><span class="mopen">[</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">e</span><span class="mopen">[</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mclose">]</span></span></span></span></span></p>
+<h2 id="5-梅尔频率分析mel-frequency-analysis"><a class="markdownIt-Anchor" href="#5-梅尔频率分析mel-frequency-analysis"></a> 5. 梅尔频率分析Mel-Frequency Analysis</h2>
+<p>梅尔频率分析是基于人类听觉感知实验的，实验发现，如果将人耳表示为一个滤波器，那么这个滤波器的特点是在所有频率上不是均匀分布，在低频部分有更多的滤波器，在高频部分较少，并且只针对特定的某些频率有效。</p>
 <!--  -->
-<p><img src="http://114.116.9.65:7777/images/2020/01/19/filter.png" alt="filter.png"></p>
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/filter.png" alt="filter.png" /></p>
 <p>梅尔频率倒谱系数（MFCC）考虑到了人类的听觉特征，先将线性频谱映射到基于听觉感知的梅尔非线性频谱中，然后转换到倒谱上，也就是说我们需要修改上面的步骤1，增加梅尔滤波器进行频谱映射</p>
 <!--  -->
-<p><img src="http://114.116.9.65:7777/images/2020/01/19/mel.png" alt="mel.png"></p>
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/mel.png" alt="mel.png" /></p>
 <p>最终通过傅里叶逆变换，我们就可以获取到MFCCs特征。</p>
 <p>总结一下步骤：</p>
 <ol>
-<li><p>先对语音进行预加重、分帧和加窗；（加强语音信号性能（信噪比，处理精度等）的一些预处理）</p>
+<li>
+<p>先对语音进行预加重、分帧和加窗；（加强语音信号性能（信噪比，处理精度等）的一些预处理）</p>
 </li>
-<li><p>对每一个短时分析窗，通过FFT得到对应的频谱；（获得分布在时间轴上不同时间窗内的频谱）</p>
+<li>
+<p>对每一个短时分析窗，通过FFT得到对应的频谱；（获得分布在时间轴上不同时间窗内的频谱）</p>
 </li>
-<li><p>将上面的频谱通过Mel滤波器组得到Mel频谱；（通过Mel频谱，将线形的自然频谱转换为体现人类听觉特性的Mel频谱）</p>
+<li>
+<p>将上面的频谱通过Mel滤波器组得到Mel频谱；（通过Mel频谱，将线形的自然频谱转换为体现人类听觉特性的Mel频谱）</p>
 </li>
-<li><p>在Mel频谱上面进行倒谱分析（取对数，做逆变换，实际逆变换一般是通过DCT离散余弦变换来实现，取DCT后的第2个到第13个系数作为MFCC系数），获得Mel频率倒谱系数MFCC，这个MFCC就是这帧语音的特征；（倒谱分析，获得MFCC作为语音特征）</p>
+<li>
+<p>在Mel频谱上面进行倒谱分析（取对数，做逆变换，实际逆变换一般是通过DCT离散余弦变换来实现，取DCT后的第2个到第13个系数作为MFCC系数），获得Mel频率倒谱系数MFCC，这个MFCC就是这帧语音的特征；（倒谱分析，获得MFCC作为语音特征）</p>
 </li>
 </ol>
 
@@ -521,7 +535,7 @@ x[k] = h[k] + e[k]</script><h2 id="5-梅尔频率分析Mel-Frequency-Analysis"><
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-语音识别系统的基本结构"><span class="nav-text">1. 语音识别系统的基本结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-傅里叶变换"><span class="nav-text">2. 傅里叶变换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-声谱图Spectrogram"><span class="nav-text">3. 声谱图Spectrogram</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-倒谱分析Cepstral-Analysis"><span class="nav-text">4. 倒谱分析Cepstral Analysis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-梅尔频率分析Mel-Frequency-Analysis"><span class="nav-text">5. 梅尔频率分析Mel-Frequency Analysis</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-语音识别系统的基本结构"><span class="nav-text"> 1. 语音识别系统的基本结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-傅里叶变换"><span class="nav-text"> 2. 傅里叶变换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-声谱图spectrogram"><span class="nav-text"> 3. 声谱图Spectrogram</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-倒谱分析cepstral-analysis"><span class="nav-text"> 4. 倒谱分析Cepstral Analysis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-梅尔频率分析mel-frequency-analysis"><span class="nav-text"> 5. 梅尔频率分析Mel-Frequency Analysis</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -587,12 +601,12 @@ x[k] = h[k] + e[k]</script><h2 id="5-梅尔频率分析Mel-Frequency-Analysis"><
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">877k</span>
+    <span title="站点总字数">955k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:18</span>
+    <span title="站点阅读时长">14:28</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>
@@ -747,53 +761,8 @@ x[k] = h[k] + e[k]</script><h2 id="5-梅尔频率分析Mel-Frequency-Analysis"><
 
   
       
-<script type="text/x-mathjax-config">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0/dist/katex.min.css">
 
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') {
-          next = next.nextSibling;
-        }
-        if (next && next.nodeName.toLowerCase() === 'br') {
-          next.parentNode.removeChild(next);
-        }
-      }
-    });
-  });
-
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
-      if (element.nodeName.toLowerCase() == 'li') {
-        element = element.parentNode;
-      }
-      element.classList.add('has-jax');
-    }
-  });
-</script>
-<script>
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
-    MathJax.Hub.Typeset();
-  }, window.MathJax);
-</script>
-
-    
 
   
 

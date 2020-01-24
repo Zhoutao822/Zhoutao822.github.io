@@ -46,12 +46,12 @@
   };
 </script>
 
-  <meta name="description" content="参考：  Chevereto Free Docker使用Docker轻松搭建个人图床chevereto">
+  <meta name="description" content="参考：  Chevereto Free Docker 使用Docker轻松搭建个人图床chevereto">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Docker-Ubuntu服务器安装Chevereto图床">
 <meta property="og:url" content="http://zhoutao822.coding.me/archives/44250e0e.html">
 <meta property="og:site_name" content="Tao">
-<meta property="og:description" content="参考：  Chevereto Free Docker使用Docker轻松搭建个人图床chevereto">
+<meta property="og:description" content="参考：  Chevereto Free Docker 使用Docker轻松搭建个人图床chevereto">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/chevereto4.png">
 <meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/chevereto1.png">
@@ -306,11 +306,14 @@
       
         <p>参考：</p>
 <blockquote>
-<p><a href="https://hub.docker.com/r/nmtan/chevereto/" target="_blank" rel="noopener">Chevereto Free Docker</a><br><a href="https://zealot.top/%E4%BD%BF%E7%94%A8Docker%E8%BD%BB%E6%9D%BE%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%9B%BE%E5%BA%8Achevereto.html" target="_blank" rel="noopener">使用Docker轻松搭建个人图床chevereto</a></p>
+<p><a href="https://hub.docker.com/r/nmtan/chevereto/" target="_blank" rel="noopener">Chevereto Free Docker</a><br />
+<a href="https://zealot.top/%E4%BD%BF%E7%94%A8Docker%E8%BD%BB%E6%9D%BE%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%9B%BE%E5%BA%8Achevereto.html" target="_blank" rel="noopener">使用Docker轻松搭建个人图床chevereto</a></p>
 </blockquote>
 <!--  -->
-<p><img src="http://114.116.9.65:7777/images/2020/01/18/chevereto4.png" alt="chevereto4.png"><br><a id="more"></a></p>
-<h2 id="1-Ubuntu服务器安装docker"><a href="#1-Ubuntu服务器安装docker" class="headerlink" title="1. Ubuntu服务器安装docker"></a>1. Ubuntu服务器安装docker</h2><p><strong>强烈建议在ubuntu上使用apt安装docker，brew安装docker会出现很多问题</strong></p>
+<p><img src="http://114.116.9.65:7777/images/2020/01/18/chevereto4.png" alt="chevereto4.png" /></p>
+<a id="more"></a>
+<h2 id="1-ubuntu服务器安装docker"><a class="markdownIt-Anchor" href="#1-ubuntu服务器安装docker"></a> 1. Ubuntu服务器安装docker</h2>
+<p><strong>强烈建议在ubuntu上使用apt安装docker，brew安装docker会出现很多问题</strong></p>
 <p>需要安装两个关键包<code>docker</code>和<code>docker-compose</code>，前者是docker容器，后者是一个可以根据<code>docker-compose.yml</code>配置文件快速部署docker应用的软件，后续会使用到。</p>
 <p>使用<code>sudo apt install docker.io</code>以及<code>sudo apt install docker-compose</code>安装（如果你想尝试使用brew也可以按照以下方式使用）。</p>
 <p>首先查看一下docker相关包</p>
@@ -318,7 +321,8 @@
 <p>执行<code>brew install docker</code>以及<code>brew install docker-compose</code></p>
 <p>安装完成查看版本信息并<strong>开启docker服务<code>sudo systemctl stop docker</code></strong>，然后可以执行<code>docker run hello-world</code>测试docker是否可以正常运行</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">ubuntu@VM-0-9-ubuntu ~ docker-compose -v</span><br><span class="line">docker-compose version 1.25.1, build unknown</span><br><span class="line">ubuntu@VM-0-9-ubuntu ~ docker -v        </span><br><span class="line">Docker version 19.03.5, build 633a0ea</span><br><span class="line">ubuntu@VM-0-9-ubuntu ~ sudo systemctl stop docker</span><br><span class="line"></span><br><span class="line">ubuntu@VM-0-9-ubuntu ~ docker run hello-world</span><br><span class="line">Unable to find image 'hello-world:latest' locally</span><br><span class="line">latest: Pulling from library/hello-world</span><br><span class="line">1b930d010525: Pull complete </span><br><span class="line">Digest: sha256:d1668a9a1f5b42ed3f46b70b9cb7c88fd8bdc8a2d73509bb0041cf436018fbf5</span><br><span class="line">Status: Downloaded newer image for hello-world:latest</span><br><span class="line"></span><br><span class="line">Hello from Docker!</span><br><span class="line">This message shows that your installation appears to be working correctly.</span><br></pre></td></tr></table></figure>
-<h2 id="2-配置docker-compose"><a href="#2-配置docker-compose" class="headerlink" title="2. 配置docker-compose"></a>2. 配置docker-compose</h2><p>Chevereto支持通过docker部署，这样方便进行管理而且不会影响服务器环境，数据保存和导入也更加方便。使用<code>docker-compose</code>可以快速部署，并且配置一些数据卷挂载以及依赖容器等等。</p>
+<h2 id="2-配置docker-compose"><a class="markdownIt-Anchor" href="#2-配置docker-compose"></a> 2. 配置docker-compose</h2>
+<p>Chevereto支持通过docker部署，这样方便进行管理而且不会影响服务器环境，数据保存和导入也更加方便。使用<code>docker-compose</code>可以快速部署，并且配置一些数据卷挂载以及依赖容器等等。</p>
 <p>首先在根目录下创建一个隐藏文件夹<code>.chevereto</code>存放我们的配置文件以及挂载的数据卷，进入<code>.chevereto</code>目录，并新建一个<code>docker-compose.yml</code>文件，以及三个文件夹<code>chevereto_images、conf、database</code>，<code>docker-compose.yml</code>内容如下：</p>
 <figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'3'</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">db:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">mariadb</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">chevereto-mysql</span></span><br><span class="line">    <span class="comment"># 挂载容器中的mysql数据卷到本地database文件夹</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./database:/var/lib/mysql:rw</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">chevereto-net</span></span><br><span class="line">    <span class="comment"># 设置容器中的mysql的root用户密码以及其他用户</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">MYSQL_ROOT_PASSWORD:</span> <span class="string">root</span></span><br><span class="line">      <span class="attr">MYSQL_DATABASE:</span> <span class="string">chevereto</span></span><br><span class="line">      <span class="attr">MYSQL_USER:</span> <span class="string">chevereto</span></span><br><span class="line">      <span class="attr">MYSQL_PASSWORD:</span> <span class="string">chevereto</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">chevereto:</span></span><br><span class="line">    <span class="attr">depends_on:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">db</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nmtan/chevereto</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">chevereto</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">chevereto-net</span></span><br><span class="line">    <span class="comment"># 设置CHEVERETO_DB的一些参数</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">CHEVERETO_DB_HOST:</span> <span class="string">db</span></span><br><span class="line">      <span class="attr">CHEVERETO_DB_USERNAME:</span> <span class="string">chevereto</span></span><br><span class="line">      <span class="attr">CHEVERETO_DB_PASSWORD:</span> <span class="string">chevereto</span></span><br><span class="line">      <span class="attr">CHEVERETO_DB_NAME:</span> <span class="string">chevereto</span></span><br><span class="line">      <span class="attr">CHEVERETO_DB_PREFIX:</span> <span class="string">chv_</span></span><br><span class="line">    <span class="comment"># 挂载容器中的images文件夹到本地的chevereto_images文件夹，以及</span></span><br><span class="line">    <span class="comment"># 将本地的conf/upload.ini配置文件挂载到容器的/usr/local/etc/php/conf.d/中</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./chevereto_images:/var/www/html/images:rw</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./conf/upload.ini:/usr/local/etc/php/conf.d/upload.ini:ro</span></span><br><span class="line">    <span class="comment"># 端口映射，本机:容器，需要配置安全组</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="number">7777</span><span class="string">:80</span></span><br><span class="line"></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">chevereto-net:</span></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">database:</span></span><br><span class="line">  <span class="attr">chevereto_images:</span></span><br></pre></td></tr></table></figure>
 <p>我们创建的三个文件夹分别挂载了不同的容器文件夹，<code>chevereto_images</code>和<code>database</code>用于数据迁移，<code>/conf/upload.ini</code>用于配置上传文件限制。</p>
@@ -326,14 +330,15 @@
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">PHP:</span><br><span class="line"><span class="attr">max_execution_time</span> = <span class="number">60</span><span class="comment">;</span></span><br><span class="line"><span class="attr">memory_limit</span> = <span class="number">256</span>M<span class="comment">;</span></span><br><span class="line"><span class="attr">upload_max_filesize</span> = <span class="number">256</span>M<span class="comment">;</span></span><br><span class="line"><span class="attr">post_max_size</span> =  <span class="number">256</span>M<span class="comment">;</span></span><br></pre></td></tr></table></figure>
 <p>然后修改权限<code>sudo chown -R www-data:www-data database chevereto_images conf</code>，最后启动<code>docker-compose up -d</code>，然后就可以通过IP+端口号访问chevereto图床了（<strong>应该只能通过http访问，https是不可以的</strong>）。首次登录如下：</p>
 <!--  -->
-<p><img src="http://114.116.9.65:7777/images/2020/01/18/chevereto1.png" alt="chevereto1.png"></p>
+<p><img src="http://114.116.9.65:7777/images/2020/01/18/chevereto1.png" alt="chevereto1.png" /></p>
 <p>修改语言为中文</p>
 <!--  -->
-<p><img src="http://114.116.9.65:7777/images/2020/01/18/chevereto2.png" alt="chevereto2.png"></p>
+<p><img src="http://114.116.9.65:7777/images/2020/01/18/chevereto2.png" alt="chevereto2.png" /></p>
 <p>可以看到文件上传大小被修改为上面的<code>uploda.ini</code>的内容了</p>
 <!--  -->
-<p><img src="http://114.116.9.65:7777/images/2020/01/18/chevereto3.png" alt="chevereto3.png"></p>
-<h2 id="3-数据迁移"><a href="#3-数据迁移" class="headerlink" title="3. 数据迁移"></a>3. 数据迁移</h2><p>上面我们的<code>database</code>文件夹保存的是我们的账号信息、配置信息等等，<code>chevereto_images</code>保存了我们上传的图片数据，如果我们需要从当前服务器迁移到另一个服务器只需要保存好<code>.chevereto</code>中的所有内容，然后全部放到另一个服务器的<code>.chevereto</code>目录中，同样设置权限，然后安装<code>docker</code>和<code>docker-compose</code>，然后执行<code>docker-compose up -d</code>就可以直接运行，我们的数据也会一起同步过来。</p>
+<p><img src="http://114.116.9.65:7777/images/2020/01/18/chevereto3.png" alt="chevereto3.png" /></p>
+<h2 id="3-数据迁移"><a class="markdownIt-Anchor" href="#3-数据迁移"></a> 3. 数据迁移</h2>
+<p>上面我们的<code>database</code>文件夹保存的是我们的账号信息、配置信息等等，<code>chevereto_images</code>保存了我们上传的图片数据，如果我们需要从当前服务器迁移到另一个服务器只需要保存好<code>.chevereto</code>中的所有内容，然后全部放到另一个服务器的<code>.chevereto</code>目录中，同样设置权限，然后安装<code>docker</code>和<code>docker-compose</code>，然后执行<code>docker-compose up -d</code>就可以直接运行，我们的数据也会一起同步过来。</p>
 
     </div>
 
@@ -458,7 +463,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Ubuntu服务器安装docker"><span class="nav-text">1. Ubuntu服务器安装docker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-配置docker-compose"><span class="nav-text">2. 配置docker-compose</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-数据迁移"><span class="nav-text">3. 数据迁移</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-ubuntu服务器安装docker"><span class="nav-text"> 1. Ubuntu服务器安装docker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-配置docker-compose"><span class="nav-text"> 2. 配置docker-compose</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-数据迁移"><span class="nav-text"> 3. 数据迁移</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -524,12 +529,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">877k</span>
+    <span title="站点总字数">955k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:18</span>
+    <span title="站点阅读时长">14:28</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>
@@ -684,53 +689,8 @@
 
   
       
-<script type="text/x-mathjax-config">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0/dist/katex.min.css">
 
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') {
-          next = next.nextSibling;
-        }
-        if (next && next.nodeName.toLowerCase() === 'br') {
-          next.parentNode.removeChild(next);
-        }
-      }
-    });
-  });
-
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
-      if (element.nodeName.toLowerCase() == 'li') {
-        element = element.parentNode;
-      }
-      element.classList.add('has-jax');
-    }
-  });
-</script>
-<script>
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
-    MathJax.Hub.Typeset();
-  }, window.MathJax);
-</script>
-
-    
 
   
 
