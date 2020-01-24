@@ -857,7 +857,7 @@
 <p>西瓜书第9章 聚类</p>
 </blockquote>
 <h2 id="1-聚类任务"><a href="#1-聚类任务" class="headerlink" title="1. 聚类任务"></a>1. 聚类任务</h2><p>聚类在无监督学习任务中研究最为广泛，从字面上理解就是具有类似特征（取决于目标）的数据可能会在某个样本空间中呈现聚集的状态（可以是原始样本空间也就可以是映射后的样本空间）。聚类试图将数据集中的样本划分为若干个通常是不相交的子集，每个子集成为一个“簇”（cluster）。</p>
-<p>形式化地说，假定样本集$D = { \boldsymbol{x}<em>1, \boldsymbol{x}_2,…,\boldsymbol{x}_m }$包含$m$个无标记样本，每个样本$\boldsymbol{x}_i = (x</em>{i1};x<em>{i2};…;x</em>{in})$是一个$n$维特征向量，则聚类算法将样本集$D$划分为$k$个不相交的簇${ C<em>l|l = 1,2,…,k }$，其中$C</em>{l’} \cap<em>{l’\neq l} C_l = \text{\O}$且$D = \cup^k</em>{l=1}C<em>l$。相应地，我们用$\lambda_j \in { 1,2,…,k }$表示样本$\boldsymbol{x}_j$的簇标记，即$\boldsymbol{x}_j \in C</em>{\lambda_j}$。于是，聚类的结果可用包含$m$个元素的簇标记向量$\boldsymbol{\lambda} = (\lambda_1;\lambda_2;…;\lambda_m)$表示。</p>
+<p>形式化地说，假定样本集$D = \{ \boldsymbol{x}_1, \boldsymbol{x}_2,…,\boldsymbol{x}_m \}$包含$m$个无标记样本，每个样本$\boldsymbol{x}_i = (x_{i1};x_{i2};…;x_{in})$是一个$n$维特征向量，则聚类算法将样本集$D$划分为$k$个不相交的簇$\{ C_l|l = 1,2,…,k \}$，其中$C_{l’} \cap_{l’\neq l} C_l = \text{\O}$且$D = \cup^k_{l=1}C_l$。相应地，我们用$\lambda_j \in \{ 1,2,…,k \}$表示样本$\boldsymbol{x}_j$的簇标记，即$\boldsymbol{x}_j \in C_{\lambda_j}$。于是，聚类的结果可用包含$m$个元素的簇标记向量$\boldsymbol{\lambda} = (\lambda_1;\lambda_2;…;\lambda_m)$表示。</p>
 <p>根据聚类的功能描述，显然它可以作为单独的分类方法使用，也可以作为其他任务的前驱过程。</p>
           <!--noindex-->
             <div class="post-button">
@@ -1079,14 +1079,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>3.8k</span>
+              <span>3.9k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
+              <span>4 分钟</span>
             </span>
 
         </div>
@@ -1102,9 +1102,9 @@
 <blockquote>
 <p><a href="https://arxiv.org/pdf/1603.02754v3.pdf" target="_blank" rel="noopener">XGBoost: A Scalable Tree Boosting System</a><br><a href="https://juejin.im/post/5a13c9a8f265da43333e0648" target="_blank" rel="noopener">XGBoost基本原理</a></p>
 </blockquote>
-<h2 id="1-正则化学习目标"><a href="#1-正则化学习目标" class="headerlink" title="1. 正则化学习目标"></a>1. 正则化学习目标</h2><p>假定数据集有$n$个样本，每个样本有$m$个特征，$\mathcal{D} = { (\boldsymbol{x}_i, y_i) } (|\mathcal{D}| = n, \boldsymbol{x}_i \in \mathbb{R}^m, y_i \in \mathbb{R})$，并且该数据集属于回归任务，特征值和预测目标都是任意常数。假定用$K$个树构建模型，并且预测结果为所有树的预测结果的和</p>
+<h2 id="1-正则化学习目标"><a href="#1-正则化学习目标" class="headerlink" title="1. 正则化学习目标"></a>1. 正则化学习目标</h2><p>假定数据集有$n$个样本，每个样本有$m$个特征，$\mathcal{D} = \{ (\boldsymbol{x}_i, y_i) \} (|\mathcal{D}| = n, \boldsymbol{x}_i \in \mathbb{R}^m, y_i \in \mathbb{R})$，并且该数据集属于回归任务，特征值和预测目标都是任意常数。假定用$K$个树构建模型，并且预测结果为所有树的预测结果的和</p>
 <script type="math/tex; mode=display">
-\hat{y}_i = \phi(\boldsymbol{x}_i) = \sum^K_{k=1}f_k(\boldsymbol{x}_i), \quad f_k \in \mathcal{F}</script><p>其中$\mathcal{F} = { f(\boldsymbol{x}) = w<em>{q(\boldsymbol{x})} }(q:\mathbb{R}^m \rightarrow T, w \in \mathbb{R}^T)$，$T$是当前树的叶结点数（我们将叶结点编号），$q$是从样本$\boldsymbol{x}$到叶结点index的映射，即样本$\boldsymbol{x}$落在树的index叶结点上，$w</em>{q(\boldsymbol{x})}$表示该样本属于的叶结点的权值，我们可以将$f$看作是一棵树的表示函数，其包括两个部分：树的结构函数$q$和树的叶结点权重$w$。</p>
+\hat{y}_i = \phi(\boldsymbol{x}_i) = \sum^K_{k=1}f_k(\boldsymbol{x}_i), \quad f_k \in \mathcal{F}</script><p>其中$\mathcal{F} = \{ f(\boldsymbol{x}) = w_{q(\boldsymbol{x})} \}(q:\mathbb{R}^m \rightarrow T, w \in \mathbb{R}^T)$，$T$是当前树的叶结点数（我们将叶结点编号），$q$是从样本$\boldsymbol{x}$到叶结点index的映射，即样本$\boldsymbol{x}$落在树的index叶结点上，$w_{q(\boldsymbol{x})}$表示该样本属于的叶结点的权值，我们可以将$f$看作是一棵树的表示函数，其包括两个部分：树的结构函数$q$和树的叶结点权重$w$。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/017978af7cab33961.png" alt="017978af7cab33961.png"></p>
           <!--noindex-->
@@ -1337,7 +1337,7 @@
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>12 分钟</span>
+              <span>13 分钟</span>
             </span>
 
         </div>
@@ -1511,7 +1511,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:17</span>
+    <span title="站点阅读时长">13:18</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

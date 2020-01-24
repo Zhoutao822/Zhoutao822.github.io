@@ -318,9 +318,9 @@ f(\boldsymbol{x}) = w_1x_1 + w_2x_2 + ... + w_dx_d + b</script><p>一般用向�
 <script type="math/tex; mode=display">
 f(\boldsymbol{x}) = \boldsymbol{w}^T\boldsymbol{x} + b</script><p>其中$\boldsymbol{w} = (w_1; w_2;…; w_d)$，$\boldsymbol{w}$和$b$学得之后，模型就得以确定。</p>
 <a id="more"></a>
-<h2 id="2-线性回归"><a href="#2-线性回归" class="headerlink" title="2. 线性回归"></a>2. 线性回归</h2><h3 id="2-1-数学推导"><a href="#2-1-数学推导" class="headerlink" title="2.1 数学推导"></a>2.1 数学推导</h3><p>给定数据集$D = {(\boldsymbol{x}<em>1, y_1), (\boldsymbol{x}_2, y_2),…, (\boldsymbol{x}_m, y_m)}$，其中$\boldsymbol{x}_i = (x</em>{i1};x<em>{i2};…; x</em>{id})$，$y_i \in \mathbb{R}$，线性回归（linear regression）试图学得一个线性模型以尽可能准确地预测实值输出标记。</p>
+<h2 id="2-线性回归"><a href="#2-线性回归" class="headerlink" title="2. 线性回归"></a>2. 线性回归</h2><h3 id="2-1-数学推导"><a href="#2-1-数学推导" class="headerlink" title="2.1 数学推导"></a>2.1 数学推导</h3><p>给定数据集$D = \{(\boldsymbol{x}_1, y_1), (\boldsymbol{x}_2, y_2),…, (\boldsymbol{x}_m, y_m)\}$，其中$\boldsymbol{x}_i = (x_{i1};x_{i2};…; x_{id})$，$y_i \in \mathbb{R}$，线性回归（linear regression）试图学得一个线性模型以尽可能准确地预测实值输出标记。</p>
 <blockquote>
-<p>首先，从单属性出发考虑如何求解，即$D = {(x<em>i, y_i)}^m</em>{i=1}$，线性回归试图学得</p>
+<p>首先，从单属性出发考虑如何求解，即$D = \{(x_i, y_i)\}^m_{i=1}$，线性回归试图学得</p>
 </blockquote>
 <script type="math/tex; mode=display">
 f(x_i) = wx_i + b, 使得f(x_i) \simeq y_i</script><p>我们使用均方误差MSE衡量$f(x)$与$y$之间的差异，并使得均方误差最小化，即</p>
@@ -328,7 +328,7 @@ f(x_i) = wx_i + b, 使得f(x_i) \simeq y_i</script><p>我们使用均方误差MS
 (w^*, b^*) = \underset{(w, b)}{\arg \min}\sum^{m}_{i=1}(f(x_i) - y_i)^2
 \\
  = \underset{(w, b)}{\arg \min}\sum^{m}_{i=1}(y_i - wx_i - b)^2</script><p>基于均方误差最小化来进行模型求解的方法称为“最小二乘法”，即找到一条直线使得所有样本到直线的欧式距离之和最小。</p>
-<p>求解$w$和$b$使$E<em>{(w, b)} = \sum^m</em>{i=1}(y<em>i - wx_i - b)^2$最小化的过程，称为线性回归模型的最小二乘“参数估计”。将$E</em>{(w, b)}$分别对$w$和$b$求导，得到</p>
+<p>求解$w$和$b$使$E_{(w, b)} = \sum^m_{i=1}(y_i - wx_i - b)^2$最小化的过程，称为线性回归模型的最小二乘“参数估计”。将$E_{(w, b)}$分别对$w$和$b$求导，得到</p>
 <script type="math/tex; mode=display">
 \frac{\partial E_{(w, b)}}{\partial w} = 2(w\sum_{i=1}^{m}x^2_i - \sum_{i=1}^{m}(y_i - b)x_i)
 \\
@@ -356,7 +356,7 @@ f(\boldsymbol{x}_i) = \boldsymbol{w}^T\boldsymbol{x}_i + b, 使得f(\boldsymbol{
  \boldsymbol{x}^T_2& 1\\ 
  \vdots& \vdots\\ 
  \boldsymbol{x}^T_m& 1
-\end{pmatrix}</script><p>把标记也写成向量形式$\boldsymbol{y} = (y<em>1; y_2;…; y_m)$，令$E</em>{\hat{\boldsymbol{w}}} = (\boldsymbol{y} - \boldsymbol{x}\hat{\boldsymbol{w}})^T(\boldsymbol{y} - \boldsymbol{x}\hat{\boldsymbol{w}})$</p>
+\end{pmatrix}</script><p>把标记也写成向量形式$\boldsymbol{y} = (y_1; y_2;…; y_m)$，令$E_{\hat{\boldsymbol{w}}} = (\boldsymbol{y} - \boldsymbol{x}\hat{\boldsymbol{w}})^T(\boldsymbol{y} - \boldsymbol{x}\hat{\boldsymbol{w}})$</p>
 <script type="math/tex; mode=display">
 \hat{\boldsymbol{w}}^* = \underset{\hat{\boldsymbol{w}}}{\arg\min}E_{\hat{\boldsymbol{w}}}</script><p>对$\hat{\boldsymbol{w}}$求导得到</p>
 <script type="math/tex; mode=display">
@@ -383,7 +383,7 @@ y = g^{-1}(\boldsymbol{w}^T\boldsymbol{x} + b)</script><p>这样得到的模型�
 <li>由推广可知，线性回归也可以用于分类问题，将分类问题看做分类概率的近似求解，那么我们就将分类问题转换成回归问题了，此时我们训练模型的目标变成了分类概率，最后根据分类概率确定分类结果。</li>
 </ul>
 <h2 id="3-对数几率回归"><a href="#3-对数几率回归" class="headerlink" title="3. 对数几率回归"></a>3. 对数几率回归</h2><h3 id="3-1-说明"><a href="#3-1-说明" class="headerlink" title="3.1 说明"></a>3.1 说明</h3><p>从广义线性模型可知，对于二分类问题，我们需要找到一个单调可微的函数将分类任务的真实标记$y$与线性回归模型的预测值联系起来。</p>
-<p>二分类输出标记$y \in {0, 1}$，而线性回归模型产生的预测值$z = \boldsymbol{w}^T\boldsymbol{x} + b$是实值，需要将$z$转换成0/1值。单位阶跃函数与sigmoid函数</p>
+<p>二分类输出标记$y \in \{0, 1\}$，而线性回归模型产生的预测值$z = \boldsymbol{w}^T\boldsymbol{x} + b$是实值，需要将$z$转换成0/1值。单位阶跃函数与sigmoid函数</p>
 <!-- ![](images/sigmoid.jpg) -->
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/18/sigmoid.jpg" alt="sigmoid.jpg"></p>
@@ -401,7 +401,7 @@ y = \frac{1}{1 + e^{-(\boldsymbol{w}^T\boldsymbol{x} + b)}}</script><p>分类问
 <script type="math/tex; mode=display">
 p(y=1\mid\boldsymbol{x}) = \frac{e^{\boldsymbol{w}^T\boldsymbol{x} + b}}{1 + e^{\boldsymbol{w}^T\boldsymbol{x} + b}}
 \\
-p(y=0\mid\boldsymbol{x}) = \frac{1}{1 + e^{\boldsymbol{w}^T\boldsymbol{x} + b}}</script><p>通过“极大似然法”来估计$\boldsymbol{w}$和$b$，给定数据集${(\boldsymbol{x}<em>i, y_i)}^m</em>{i=1}$，对率回归模型最大化“对数似然”</p>
+p(y=0\mid\boldsymbol{x}) = \frac{1}{1 + e^{\boldsymbol{w}^T\boldsymbol{x} + b}}</script><p>通过“极大似然法”来估计$\boldsymbol{w}$和$b$，给定数据集$\{(\boldsymbol{x}_i, y_i)\}^m_{i=1}$，对率回归模型最大化“对数似然”</p>
 <script type="math/tex; mode=display">
 l (\boldsymbol{w}, b) = \sum^m_{i=1}\ln p(y_i \mid \boldsymbol{x}_i; \boldsymbol{w}, b)</script><p>即令每个样本属于其真实标记的概率越大越好。令$\beta = (\boldsymbol{w}; b)，\hat{\boldsymbol{x}} = (\boldsymbol{x}; 1)$，则$\boldsymbol{w}^T\boldsymbol{x} + b$可简写为$\beta^T\hat{\boldsymbol{x}}$，再令$p_1(\hat{\boldsymbol{x}}; \beta) = p(y=1 \mid\hat{\boldsymbol{x}};\beta)，p_0(\hat{\boldsymbol{x}}; \beta) = p(y=0 \mid\hat{\boldsymbol{x}};\beta) = 1-p_1(\hat{\boldsymbol{x}}; \beta)$，则似然项重写为</p>
 <script type="math/tex; mode=display">
@@ -429,7 +429,7 @@ l(\beta) = \sum^m_{i=1}(-y_i\beta^T\hat{\boldsymbol{x}_i} + \ln(1 + e^{\beta^T\h
 <!-- ![](images/lda.png) -->
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/18/lda.png" alt="lda.png"></p>
-<h3 id="4-2-数学推导"><a href="#4-2-数学推导" class="headerlink" title="4.2 数学推导"></a>4.2 数学推导</h3><p>给定数据集$D = {(\boldsymbol{x}<em>i, y_i)}^m</em>{i=1}，y_i \in {0, 1}$，令$X_i、\mu_i、\Sigma_i$分别表示第$i\in{0,1}$类示例的集和、均值向量、协方差矩阵。若将数据投影到直线$\boldsymbol{w}$上，则两类样本的中心在直线上的投影分别为$\boldsymbol{w}^T\mu_0$和$\boldsymbol{w}^T\mu_1$；若将所有样本点都投影到直线上，则两类样本的协方差分别为$\boldsymbol{w}^T\Sigma_0\boldsymbol{w}$和$\boldsymbol{w}^T\Sigma_1\boldsymbol{w}$，由于直线是一维空间，因此4个值均为实数。</p>
+<h3 id="4-2-数学推导"><a href="#4-2-数学推导" class="headerlink" title="4.2 数学推导"></a>4.2 数学推导</h3><p>给定数据集$D = \{(\boldsymbol{x}_i, y_i)\}^m_{i=1}，y_i \in \{0, 1\}$，令$X_i、\mu_i、\Sigma_i$分别表示第$i\in\{0,1\}$类示例的集和、均值向量、协方差矩阵。若将数据投影到直线$\boldsymbol{w}$上，则两类样本的中心在直线上的投影分别为$\boldsymbol{w}^T\mu_0$和$\boldsymbol{w}^T\mu_1$；若将所有样本点都投影到直线上，则两类样本的协方差分别为$\boldsymbol{w}^T\Sigma_0\boldsymbol{w}$和$\boldsymbol{w}^T\Sigma_1\boldsymbol{w}$，由于直线是一维空间，因此4个值均为实数。</p>
 <p>同类样例的投影点尽可能接近，即$\boldsymbol{w}^T\Sigma_0\boldsymbol{w} + \boldsymbol{w}^T\Sigma_1\boldsymbol{w}$尽可能小；异类样例的投影点尽可能远离，即${\parallel \boldsymbol{w}^T\mu_0 - \boldsymbol{w}^T\mu_1\parallel}^2_2$尽可能大。若同时考虑二者，则最大化目标为</p>
 <script type="math/tex; mode=display">
 J = \frac{\parallel \boldsymbol{w}^T\mu_0 - \boldsymbol{w}^T\mu_1 \parallel^2_2}{\boldsymbol{w}^T\Sigma_0\boldsymbol{w} + \boldsymbol{w}^T\Sigma_1\boldsymbol{w}}
@@ -702,7 +702,7 @@ S_bW = \lambda S_wW</script><p>$W$的闭式解则是$S_w^{-1}S_b$的$d’$个最
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:17</span>
+    <span title="站点阅读时长">13:18</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

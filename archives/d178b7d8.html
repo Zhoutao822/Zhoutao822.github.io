@@ -329,7 +329,7 @@ L(\boldsymbol{x}, g(f(\boldsymbol{x})))</script><p>当解码器是线性的且$L
 <h3 id="2-1-稀疏自编码器"><a href="#2-1-稀疏自编码器" class="headerlink" title="2.1 稀疏自编码器"></a>2.1 稀疏自编码器</h3><p>稀疏自编码器在训练时增加编码层的稀疏惩罚$\Omega(\boldsymbol{h})$：</p>
 <script type="math/tex; mode=display">
 L(\boldsymbol{x}, g(f(\boldsymbol{x}))) + \Omega(\boldsymbol{h})</script><p>上式如何理解，首先我们知道贝叶斯近似推断认为，正则化的惩罚对应于模型参数的先验概率分布，也就说最大化对数似然对应最大化$p(\boldsymbol{\theta}|\boldsymbol{x})$，相当于最大化$\log p(\boldsymbol{x}|\boldsymbol{\theta}) + \log p(\boldsymbol{\theta})$。$\log p(\boldsymbol{x}|\boldsymbol{\theta})$即通常的数据似然项，参数的对数先验项$\log p(\boldsymbol{\theta})$则包含了对$\boldsymbol{\theta}$特定值的偏好。但是正则自编码器不适用这样的解释是因为正则项取决于数据（损失$L$与惩罚$\Omega$面向对象不同）。虽然我们任可以认为正则项隐式地表达了对函数的偏好。</p>
-<p>从$\boldsymbol{h}$的角度来看，我们可以将$\boldsymbol{h}$作为潜变量，而整个稀疏自编码器框架是对潜变量$\boldsymbol{h}$的生成模型的近似最大似然训练。对于具有明确联合分布$p<em>{model}(\boldsymbol{x}, \boldsymbol{h}) = p</em>{model}(\boldsymbol{h})p<em>{model}(\boldsymbol{x}|\boldsymbol{h})$的模型，可以将$p</em>{model}(\boldsymbol{h})$视为模型关于潜变量的先验分布，表示模型看到$\boldsymbol{x}$的信念先验。对数似然可分解为</p>
+<p>从$\boldsymbol{h}$的角度来看，我们可以将$\boldsymbol{h}$作为潜变量，而整个稀疏自编码器框架是对潜变量$\boldsymbol{h}$的生成模型的近似最大似然训练。对于具有明确联合分布$p_{model}(\boldsymbol{x}, \boldsymbol{h}) = p_{model}(\boldsymbol{h})p_{model}(\boldsymbol{x}|\boldsymbol{h})$的模型，可以将$p_{model}(\boldsymbol{h})$视为模型关于潜变量的先验分布，表示模型看到$\boldsymbol{x}$的信念先验。对数似然可分解为</p>
 <script type="math/tex; mode=display">
 \log p_{model}(\boldsymbol{x}) = \log \sum_{\boldsymbol{h}}p_{model}(\boldsymbol{h}, \boldsymbol{x})</script><p>我们可以认为自编码器使用一个高似然值$\boldsymbol{h}$的点估计近似这个总和。但是$\boldsymbol{h}$是参数编码器的输出，从这个角度，我们根据这个选择的$\boldsymbol{h}$，最大化如下</p>
 <script type="math/tex; mode=display">
@@ -355,7 +355,7 @@ L(\boldsymbol{x}, g(f(\boldsymbol{x}))) + \Omega(\boldsymbol{h}, \boldsymbol{x})
 <p>深度可以指数地降低表示某些函数的计算成本。深度也能指数地减少学习一些函数所需的训练数据量。</p>
 <p>实验中，深度自编码器能比相应的浅层或线性自编码器产生更好的压缩效率。</p>
 <p>训练深度自编码器的普遍策略是训练一堆浅层的自编码器来贪心地预训练相应的深度架构。所以即使最终目标是训练深度自编码器，我们也经常会遇到浅层自编码器。</p>
-<h2 id="4-随机编码器和解码器"><a href="#4-随机编码器和解码器" class="headerlink" title="4. 随机编码器和解码器"></a>4. 随机编码器和解码器</h2><p>在给定隐藏编码$\boldsymbol{h}$的条件下，我们可以认为解码器提供了一个条件分布$p<em>{model}(\boldsymbol{x}|\boldsymbol{h})$。接着根据最小化$-\log p</em>{decoder}(\boldsymbol{x}|\boldsymbol{h})$来训练自编码器。损失函数的具体形式视$p_{decoder}$的形式而定：</p>
+<h2 id="4-随机编码器和解码器"><a href="#4-随机编码器和解码器" class="headerlink" title="4. 随机编码器和解码器"></a>4. 随机编码器和解码器</h2><p>在给定隐藏编码$\boldsymbol{h}$的条件下，我们可以认为解码器提供了一个条件分布$p_{model}(\boldsymbol{x}|\boldsymbol{h})$。接着根据最小化$-\log p_{decoder}(\boldsymbol{x}|\boldsymbol{h})$来训练自编码器。损失函数的具体形式视$p_{decoder}$的形式而定：</p>
 <ol>
 <li>$\boldsymbol{x}$为连续实值，通常使用ReLU线性输出单元参数化高斯分布的均值，此时负对数似然对应均方误差；</li>
 <li>$\boldsymbol{x}$为二值变量，对应伯努利分布，通常由Sigmoid输出单元确定；</li>
@@ -376,7 +376,7 @@ p_{decoder}(\boldsymbol{x}|\boldsymbol{h}) = p_{model}(\boldsymbol{x}|\boldsymbo
 <ol>
 <li>从训练数据中采一个训练样本$\boldsymbol{x}$；</li>
 <li>从$C(\tilde{\boldsymbol{x}}|\boldsymbol{x})$采一个损坏样本$\tilde{\boldsymbol{x}}$；</li>
-<li>将$(\boldsymbol{x}, \tilde{\boldsymbol{x}})$作为训练样本来估计自编码器的重构分布$P<em>{reconstruct}(\boldsymbol{x}|\tilde{\boldsymbol{x}}) = p</em>{decoder}(\boldsymbol{x}|\boldsymbol{h})$。</li>
+<li>将$(\boldsymbol{x}, \tilde{\boldsymbol{x}})$作为训练样本来估计自编码器的重构分布$P_{reconstruct}(\boldsymbol{x}|\tilde{\boldsymbol{x}}) = p_{decoder}(\boldsymbol{x}|\boldsymbol{h})$。</li>
 </ol>
 <p>通常我们可以简单地对负对数似然$\log p_{decoder}(\boldsymbol{x} | \boldsymbol{h})$进行基于梯度法（如小批量梯度下降）的近似最小化。只要编码器是确定性的，去噪自编码器就是一个前馈网络，并且可以使用与其他前馈网络完全相同的方式进行训练。</p>
 <p>因此我们可以认为DAE是在以下期望下进行随机梯度下降：</p>
@@ -384,7 +384,7 @@ p_{decoder}(\boldsymbol{x}|\boldsymbol{h}) = p_{model}(\boldsymbol{x}|\boldsymbo
 -\mathbb{E}_{\boldsymbol{x} \sim \hat{p}_{data}(\boldsymbol{x})}\mathbb{E}_{\tilde{\boldsymbol{x}} \sim C(\tilde{\boldsymbol{x}}|\boldsymbol{x})} \log p_{decoder}(\boldsymbol{x}|\boldsymbol{h} = f(\tilde{\boldsymbol{x}}))</script><p>其中$\hat{p}_{data}(\boldsymbol{x})$是训练数据的分布。</p>
 <h3 id="5-1-得分估计"><a href="#5-1-得分估计" class="headerlink" title="5.1 得分估计"></a>5.1 得分估计</h3><p>得分匹配是最大似然的代替。它提供了概率分布的一致估计，促使模型在各个数据点$\boldsymbol{x}$上获得与数据分布相同的<strong>得分</strong>。在这种情况下，得分是一个特定的梯度场：</p>
 <script type="math/tex; mode=display">
-\bigtriangledown_{\boldsymbol{x}} \log p(\boldsymbol{x})</script><p>对于现在讨论的自编码器，理解学习$\log p<em>{data}$的梯度场是学习$p</em>{data}$结构的一种方式就足够了。</p>
+\bigtriangledown_{\boldsymbol{x}} \log p(\boldsymbol{x})</script><p>对于现在讨论的自编码器，理解学习$\log p_{data}$的梯度场是学习$p_{data}$结构的一种方式就足够了。</p>
 <p>DAE的训练准则（条件高斯$p(\boldsymbol{x}|\boldsymbol{h})$）能让自编码器学到能估计数据分布得分的向量场$g(f(\boldsymbol{x})) -\boldsymbol{x}$，这是DAE的一个重要特性。如下图所示</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/33c3276895f4e972d.png" alt="33c3276895f4e972d.png"></p>
@@ -642,7 +642,7 @@ C(\tilde{\boldsymbol{x}} | \boldsymbol{x}) = N(\tilde{\boldsymbol{x}};\mu=\bolds
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:17</span>
+    <span title="站点阅读时长">13:18</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

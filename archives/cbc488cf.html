@@ -315,13 +315,13 @@
 <script type="math/tex; mode=display">
 p(s_i,c_j|\boldsymbol{x}_t) = p(s_i|\boldsymbol{x}_t)p(c_j|s_i,\boldsymbol{x}_t)</script><p>或者</p>
 <script type="math/tex; mode=display">
-p(s_i,c_j|\boldsymbol{x}_t) = p(c_j|\boldsymbol{x}_t)p(s_i|c_j,\boldsymbol{x}_t)</script><p>其中$\boldsymbol{x}_t$是在$t$时刻的声学观察值，$c_j$是聚类后的上下文种类${ c_1, …, c_J }$中的一种，$s_i$是一个上下文无关的音素或音素中的状态。</p>
+p(s_i,c_j|\boldsymbol{x}_t) = p(c_j|\boldsymbol{x}_t)p(s_i|c_j,\boldsymbol{x}_t)</script><p>其中$\boldsymbol{x}_t$是在$t$时刻的声学观察值，$c_j$是聚类后的上下文种类$\{ c_1, …, c_J \}$中的一种，$s_i$是一个上下文无关的音素或音素中的状态。</p>
 <p>为了提升性能：</p>
 <ol>
 <li>把传统的浅层神经网络替换成深层神经网络（可选择的预训练）；</li>
 <li>使用聚类后的状态（绑定后的三音素状态）替代单音素状态作为神经网络的输出单元。</li>
 </ol>
-<p>这种改善后的模型称为CD-DNN-HMM，对于所有的状态$s \in [1, S]$，我们只训练一个完整的DNN来估计状态的后验概率$p(q<em>t = s|\boldsymbol{x}_t)$。这和传统的GMM是不同的，因为GMM框架下，我们会使用其多个不同的GMM对不同的状态建模。除此之外，典型的DNN输入不是单一的一帧，而是一个$2w+1$（如9 ~ 13）帧大小的窗口特征$\boldsymbol{x}_t = [\boldsymbol{o}</em>{\max (0, t-w)}…\boldsymbol{o}<em>t…\boldsymbol{o}</em>{\min (T, t+w)}]$，这使得相邻帧的信息可以被有效地利用。</p>
+<p>这种改善后的模型称为CD-DNN-HMM，对于所有的状态$s \in [1, S]$，我们只训练一个完整的DNN来估计状态的后验概率$p(q_t = s|\boldsymbol{x}_t)$。这和传统的GMM是不同的，因为GMM框架下，我们会使用其多个不同的GMM对不同的状态建模。除此之外，典型的DNN输入不是单一的一帧，而是一个$2w+1$（如9 ~ 13）帧大小的窗口特征$\boldsymbol{x}_t = [\boldsymbol{o}_{\max (0, t-w)}…\boldsymbol{o}_t…\boldsymbol{o}_{\min (T, t+w)}]$，这使得相邻帧的信息可以被有效地利用。</p>
 <h3 id="1-2-用CD-DNN-HMM解码"><a href="#1-2-用CD-DNN-HMM解码" class="headerlink" title="1.2 用CD-DNN-HMM解码"></a>1.2 用CD-DNN-HMM解码</h3><p>解码过程中HMM需要似然度$p(\boldsymbol{x}_t|q_t)$，而不是后验概率：</p>
 <script type="math/tex; mode=display">
 p(\boldsymbol{x}_t|q_t = s) = \frac{p(q_t = s|\boldsymbol{x}_t)p(\boldsymbol{x}_t)}{p(s)}</script><p>其中$p(s) = \frac{T_s}{T}$是从训练集中统计地每个状态（聚类后地状态）的先验概率，$T_s$是标记属于状态$s$的帧数，$T$是总帧数。$p(\boldsymbol{x}_t)$是与字词序无关的，计算时可以忽略，得到近似缩放过的似然度$\bar{p}(\boldsymbol{x}_t|q_t) = \frac{p(q_t=s|\boldsymbol{x}_t)}{p(s)}$。</p>
@@ -333,7 +333,7 @@ p(\boldsymbol{x}_t|q_t = s) = \frac{p(q_t = s|\boldsymbol{x}_t)p(\boldsymbol{x}_
 <script type="math/tex; mode=display">
 p(\boldsymbol{x}|w) = \sum_qp(\boldsymbol{x},q|w)p(q|w)
 \\
-\approx \pi(q_0) \prod^T_{t=1}a_{q_{t-1}q_t} \prod^T_{t=0}\frac{p(q_t|\boldsymbol{x}_t)}{p(q_t)}</script><p>是声学模型（AM）的概率，其中$p(q<em>t|\boldsymbol{x}_t)$由DNN计算得出，$p(q_t)$是状态先验概率，这个概率也是训练过程中训练出来的（就是把观测值（特征向量）网状态上对齐，跟某个状态对齐的观测值的个数占比就是这个状态的先验概率），$\pi(q_0)$和$a</em>{q_{t-1}q_t}$分别是状态初始概率和状态转移概率，各自由HMM决定。语音模型权重稀疏$\lambda$用于平衡声学和语言模型得分，最终解码路径由以下公式确定</p>
+\approx \pi(q_0) \prod^T_{t=1}a_{q_{t-1}q_t} \prod^T_{t=0}\frac{p(q_t|\boldsymbol{x}_t)}{p(q_t)}</script><p>是声学模型（AM）的概率，其中$p(q_t|\boldsymbol{x}_t)$由DNN计算得出，$p(q_t)$是状态先验概率，这个概率也是训练过程中训练出来的（就是把观测值（特征向量）网状态上对齐，跟某个状态对齐的观测值的个数占比就是这个状态的先验概率），$\pi(q_0)$和$a_{q_{t-1}q_t}$分别是状态初始概率和状态转移概率，各自由HMM决定。语音模型权重稀疏$\lambda$用于平衡声学和语言模型得分，最终解码路径由以下公式确定</p>
 <script type="math/tex; mode=display">
 \hat{w} = \underset{w}{\arg \max} [\log p(\boldsymbol{x}|w) + \lambda \log p(w)]</script><h3 id="1-3-CD-DNN-HMM训练过程"><a href="#1-3-CD-DNN-HMM训练过程" class="headerlink" title="1.3 CD-DNN-HMM训练过程"></a>1.3 CD-DNN-HMM训练过程</h3><p>CD-DNN-HMM包含三个组成部分，一个深度神经网络dnn，一个隐马尔可夫模型hmm以及一个状态先验概率分布prior。</p>
 <ol>
@@ -541,7 +541,7 @@ p(\boldsymbol{x}|w) = \sum_qp(\boldsymbol{x},q|w)p(q|w)
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:17</span>
+    <span title="站点阅读时长">13:18</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

@@ -1740,7 +1740,7 @@ D^*(\boldsymbol{x}) = \frac{bp_{data}(\boldsymbol{x}) + ap_g(\boldsymbol{x})}{p_
 <a id="more"></a>
 <p>也可以通过行注释来抑制警告</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">dict = 'something awful'  # Bad Idea... pylint: disable=redefined-builtin</span><br></pre></td></tr></table></figure>
-<p>要抑制”参数未使用”告警, 你可以用”<em>”作为参数标识符, 或者在参数名前加”unused</em>”. 遇到不能改变参数名的情况, 你可以通过在函数开头”提到”它们来消除告警. 例如:</p>
+<p>要抑制”参数未使用”告警, 你可以用”_”作为参数标识符, 或者在参数名前加”unused_”. 遇到不能改变参数名的情况, 你可以通过在函数开头”提到”它们来消除告警. 例如:</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">foo</span><span class="params">(a, unused_b, unused_c, d=None, e=None)</span>:</span></span><br><span class="line">    _ = d, e</span><br><span class="line">    <span class="keyword">return</span> a</span><br></pre></td></tr></table></figure>
 <h2 id="2-导入"><a href="#2-导入" class="headerlink" title="2. 导入"></a>2. 导入</h2><ul>
 <li><p>使用 <code>import x</code> 来导入包和模块.</p>
@@ -2412,13 +2412,13 @@ x_{30} , x_{31} , x_{32} , x_{33}]^T \\
 <p>西瓜书第9章 聚类</p>
 </blockquote>
 <h2 id="1-聚类任务"><a href="#1-聚类任务" class="headerlink" title="1. 聚类任务"></a>1. 聚类任务</h2><p>聚类在无监督学习任务中研究最为广泛，从字面上理解就是具有类似特征（取决于目标）的数据可能会在某个样本空间中呈现聚集的状态（可以是原始样本空间也就可以是映射后的样本空间）。聚类试图将数据集中的样本划分为若干个通常是不相交的子集，每个子集成为一个“簇”（cluster）。</p>
-<p>形式化地说，假定样本集$D = { \boldsymbol{x}<em>1, \boldsymbol{x}_2,…,\boldsymbol{x}_m }$包含$m$个无标记样本，每个样本$\boldsymbol{x}_i = (x</em>{i1};x<em>{i2};…;x</em>{in})$是一个$n$维特征向量，则聚类算法将样本集$D$划分为$k$个不相交的簇${ C<em>l|l = 1,2,…,k }$，其中$C</em>{l’} \cap<em>{l’\neq l} C_l = \text{\O}$且$D = \cup^k</em>{l=1}C<em>l$。相应地，我们用$\lambda_j \in { 1,2,…,k }$表示样本$\boldsymbol{x}_j$的簇标记，即$\boldsymbol{x}_j \in C</em>{\lambda_j}$。于是，聚类的结果可用包含$m$个元素的簇标记向量$\boldsymbol{\lambda} = (\lambda_1;\lambda_2;…;\lambda_m)$表示。</p>
+<p>形式化地说，假定样本集$D = \{ \boldsymbol{x}_1, \boldsymbol{x}_2,…,\boldsymbol{x}_m \}$包含$m$个无标记样本，每个样本$\boldsymbol{x}_i = (x_{i1};x_{i2};…;x_{in})$是一个$n$维特征向量，则聚类算法将样本集$D$划分为$k$个不相交的簇$\{ C_l|l = 1,2,…,k \}$，其中$C_{l’} \cap_{l’\neq l} C_l = \text{\O}$且$D = \cup^k_{l=1}C_l$。相应地，我们用$\lambda_j \in \{ 1,2,…,k \}$表示样本$\boldsymbol{x}_j$的簇标记，即$\boldsymbol{x}_j \in C_{\lambda_j}$。于是，聚类的结果可用包含$m$个元素的簇标记向量$\boldsymbol{\lambda} = (\lambda_1;\lambda_2;…;\lambda_m)$表示。</p>
 <p>根据聚类的功能描述，显然它可以作为单独的分类方法使用，也可以作为其他任务的前驱过程。</p>
 <a id="more"></a>
 <h2 id="2-性能度量"><a href="#2-性能度量" class="headerlink" title="2. 性能度量"></a>2. 性能度量</h2><p>聚类性能度量亦称聚类有效性指标。与监督学习类似，需要通过某种性能度量来评估其好坏；另一方面，若明确了最终将要使用的性能度量，则可直接将其作为聚类过程的优化目标。</p>
 <p>样本集$D$被划分为若干个互不相交的子集，即样本簇。类似LDA的类间散度和类内散度定义，聚类结果要求簇内相似度高且簇间相似度低。</p>
 <p>聚类性能度量大致有两类。一类是将聚类结果与某个“参考模型”进行比较，称为外部指标；另一类是直接考察聚类结果而不利用任何参考模型，称为内部指标。</p>
-<p>对数据集$D = { \boldsymbol{x}_1, \boldsymbol{x}_2,…,\boldsymbol{x}_m }$，假定通过聚类给出的簇划分为$\mathcal{C} = { C_1, C_2,…,C_k }$，参考模型给出的簇划分为$\mathcal{C}^<em> = { C_1^</em>, C_2^<em>,…,C_k^</em> }$。相应的，令$\boldsymbol{\lambda}$与$\boldsymbol{\lambda}^<em>$分别表示与$\mathcal{C}$和$\mathcal{C}^</em>$对应的簇标记向量。将样本两两配对，定义</p>
+<p>对数据集$D = \{ \boldsymbol{x}_1, \boldsymbol{x}_2,…,\boldsymbol{x}_m \}$，假定通过聚类给出的簇划分为$\mathcal{C} = \{ C_1, C_2,…,C_k \}$，参考模型给出的簇划分为$\mathcal{C}^<em> = \{ C_1^</em>, C_2^<em>,…,C_k^</em> \}$。相应的，令$\boldsymbol{\lambda}$与$\boldsymbol{\lambda}^<em>$分别表示与$\mathcal{C}$和$\mathcal{C}^</em>$对应的簇标记向量。将样本两两配对，定义</p>
 <script type="math/tex; mode=display">
 a = |SS|, \quad SS = \{ (\boldsymbol{x}_i, \boldsymbol{x}_j) | \lambda_i = \lambda_j, \lambda^*_i = \lambda^*_j, i < j \}
 \\
@@ -2441,7 +2441,7 @@ FMI = \sqrt{\frac{a}{a+b} \cdot \frac{a}{a+c}}</script><ul>
 </ul>
 <script type="math/tex; mode=display">
 RI = \frac{2(a+d)}{m(m-1)}</script><p>显然上述结果在$[0,1]$区间，值越大性能越好。</p>
-<p>考虑聚类结果的簇划分$\mathcal{C} = { C_1,C_2,…,C_k }$，定义</p>
+<p>考虑聚类结果的簇划分$\mathcal{C} = \{ C_1,C_2,…,C_k \}$，定义</p>
 <script type="math/tex; mode=display">
 avg(C) = \frac{2}{|C|(|C| - 1)}\sum_{1 \leqslant i <j\leqslant |C|} dist(\boldsymbol{x}_i, \boldsymbol{x}_j)
 \\
@@ -2449,7 +2449,7 @@ diam(C) = \max_{1 \leqslant i <j\leqslant |C|} dist(\boldsymbol{x}_i, \boldsymbo
 \\
 d_{min}(C_i,C_j) = \min_{\boldsymbol{x}_i \in C_i,\boldsymbol{x}_j \in C_j} dist(\boldsymbol{x}_i, \boldsymbol{x}_j)
 \\
-d_{cen}(C_i,C_j) = dist(\boldsymbol{\mu}_i, \boldsymbol{\mu}_j)</script><p>其中$dist(\cdot)$用于计算两个样本之间的距离；$\boldsymbol{\mu}$代表簇$C$的中心点$\boldsymbol{\mu} = \frac{1}{|C|}\sum<em>{1 \leqslant i \leqslant|C|}\boldsymbol{x}_i$。显然$avg(C)$对应于簇$C$内样本间的平均距离，$diam(C)$对应于簇$C$内样本间最远距离，$d</em>{min}(C<em>i,C_j)$对应于簇$C_i$与簇$C_j$最近样本间的距离，$d</em>{cen}(C_i,C_j)$对应于簇$C_i$与簇$C_j$中心点间的距离。</p>
+d_{cen}(C_i,C_j) = dist(\boldsymbol{\mu}_i, \boldsymbol{\mu}_j)</script><p>其中$dist(\cdot)$用于计算两个样本之间的距离；$\boldsymbol{\mu}$代表簇$C$的中心点$\boldsymbol{\mu} = \frac{1}{|C|}\sum_{1 \leqslant i \leqslant|C|}\boldsymbol{x}_i$。显然$avg(C)$对应于簇$C$内样本间的平均距离，$diam(C)$对应于簇$C$内样本间最远距离，$d_{min}(C_i,C_j)$对应于簇$C_i$与簇$C_j$最近样本间的距离，$d_{cen}(C_i,C_j)$对应于簇$C_i$与簇$C_j$中心点间的距离。</p>
 <p>基于上式可导出下面这些常用的聚类性能度量内部指标：</p>
 <ul>
 <li>DB 指数（简称DBI）</li>
@@ -2467,25 +2467,25 @@ DI = \underset{1 \leqslant i \leqslant k}{\min} \{ \underset{j \neq i}{\min} (\f
 <li>对称性：$dist(\boldsymbol{x}_i, \boldsymbol{x}_j) = dist(\boldsymbol{x}_j, \boldsymbol{x}_i)$；</li>
 <li>直递性：$dist(\boldsymbol{x}_i, \boldsymbol{x}_j) \leqslant dist(\boldsymbol{x}_i, \boldsymbol{x}_k) + dist(\boldsymbol{x}_k, \boldsymbol{x}_j)$</li>
 </ul>
-<p>给定样本$\boldsymbol{x}<em>i = { x</em>{i1};x<em>{i2};…;x</em>{in} }$与$\boldsymbol{x}<em>j = { x</em>{j1};x<em>{j2};…;x</em>{jn} }$，最常用的是闵科夫斯基距离</p>
+<p>给定样本$\boldsymbol{x}_i = \{ x_{i1};x_{i2};…;x_{in} \}$与$\boldsymbol{x}_j = \{ x_{j1};x_{j2};…;x_{jn} \}$，最常用的是闵科夫斯基距离</p>
 <script type="math/tex; mode=display">
 dist_{mk}(\boldsymbol{x}_i, \boldsymbol{x}_j) = (\sum^n_{u=1}|x_{iu}-x_{ju}|^p)^{\frac{1}{p}}</script><p>显然$p=2$时，即欧式距离</p>
 <script type="math/tex; mode=display">
 dist_{ed}(\boldsymbol{x}_i, \boldsymbol{x}_j) = ||\boldsymbol{x}_i- \boldsymbol{x}_j||_2</script><p>$p=1$时，即曼哈顿距离</p>
 <script type="math/tex; mode=display">
 dist_{man}(\boldsymbol{x}_i, \boldsymbol{x}_j) = ||\boldsymbol{x}_i- \boldsymbol{x}_j||_1</script><p>有序属性例如{1，2，3}，可直接计算距离，而无序属性如{飞机，火车，轮船}无法使用闵科夫斯基距离计算。</p>
-<p>对无序属性可采用VDM，令$m<em>{u,a}$表示在属性$u$上取值为$a$的样本数，$m</em>{u,a,i}$表示在第$i$个样本簇中在属性$u$上取值为$a$的样本数，$k$为样本簇数，则属性$u$上两个离散值$a$与$b$之间的VDM距离为</p>
+<p>对无序属性可采用VDM，令$m_{u,a}$表示在属性$u$上取值为$a$的样本数，$m_{u,a,i}$表示在第$i$个样本簇中在属性$u$上取值为$a$的样本数，$k$为样本簇数，则属性$u$上两个离散值$a$与$b$之间的VDM距离为</p>
 <script type="math/tex; mode=display">
 VDM_p(a,b) = \sum^k_{i=1}|\frac{m_{u,a,i}}{m_{u,a}} - \frac{m_{u,b,i}}{m_{u,b}}|^p</script><p>于是，将闵科夫斯基距离和VDM结合即可处理混合属性。假定有$n_c$个有序属性、$n-n_c$个无序属性，不失一般性，令有序属性排列在无序属性之前，则</p>
 <script type="math/tex; mode=display">
 MinkovDM_p(\boldsymbol{x}_i, \boldsymbol{x}_j) = (\sum^{n_c}_{u=1}|x_{iu} - x_{ju}|^p + \sum^n_{u=n_c+1}VDM_p(x_{iu},x_{ju}))^{\frac{1}{p}}</script><p>当样本空间中不同属性的重要性不同时，可使用加权距离，以加权闵科夫斯基距离为例</p>
 <script type="math/tex; mode=display">
-dist_{wmk}(\boldsymbol{x}_i, \boldsymbol{x}_j) = (w_1\cdot |x_{i1} - x_{j1}|^p + ...+ w_n\cdot |x_{in} - x_{jn}|^p)^{\frac{1}{p}}</script><p>其中权重$w<em>i \geqslant 0$，通常$\sum^n</em>{i=1}w_i = 1$</p>
+dist_{wmk}(\boldsymbol{x}_i, \boldsymbol{x}_j) = (w_1\cdot |x_{i1} - x_{j1}|^p + ...+ w_n\cdot |x_{in} - x_{jn}|^p)^{\frac{1}{p}}</script><p>其中权重$w_i \geqslant 0$，通常$\sum^n_{i=1}w_i = 1$</p>
 <p>在某些条件下，直递性不一定需要满足，比如我们希望“人”“马”分别于“人马”相似，但是“人”与“马”之间距离很大。这样的距离称为非度量距离，在不少现实任务中需要基于样本数据来确定合适的距离计算方式。</p>
 <h2 id="4-原型聚类"><a href="#4-原型聚类" class="headerlink" title="4. 原型聚类"></a>4. 原型聚类</h2><p>原型指的是样本空间中具有代表性的点，基本算法是先对原型进行初始化，然后对原型进行迭代更新求解。</p>
 <h3 id="4-1-k-均值算法"><a href="#4-1-k-均值算法" class="headerlink" title="4.1 $k$均值算法"></a>4.1 $k$均值算法</h3><p>$k$均值算法最小化平方误差</p>
 <script type="math/tex; mode=display">
-E = \sum^k_{i=1}\sum_{\boldsymbol{x} \in C_i}||\boldsymbol{x} - \boldsymbol{\mu}_i||^2_2</script><p>其中$\boldsymbol{\mu}<em>i = \frac{1}{|C_i|}\sum</em>{\boldsymbol{x}\in C_i}\boldsymbol{x}$是簇$C_i$的均值向量。显然，E越小则簇内样本相似度越高。</p>
+E = \sum^k_{i=1}\sum_{\boldsymbol{x} \in C_i}||\boldsymbol{x} - \boldsymbol{\mu}_i||^2_2</script><p>其中$\boldsymbol{\mu}_i = \frac{1}{|C_i|}\sum_{\boldsymbol{x}\in C_i}\boldsymbol{x}$是簇$C_i$的均值向量。显然，E越小则簇内样本相似度越高。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/17b3444a9855b4b8d.jpg" alt="17b3444a9855b4b8d.jpg"></p>
 <h3 id="4-2-学习向量量化"><a href="#4-2-学习向量量化" class="headerlink" title="4.2 学习向量量化"></a>4.2 学习向量量化</h3><h3 id="4-3-高斯混合聚类"><a href="#4-3-高斯混合聚类" class="headerlink" title="4.3 高斯混合聚类"></a>4.3 高斯混合聚类</h3><h2 id="5-密度聚类"><a href="#5-密度聚类" class="headerlink" title="5. 密度聚类"></a>5. 密度聚类</h2><h2 id="6-层次聚类"><a href="#6-层次聚类" class="headerlink" title="6. 层次聚类"></a>6. 层次聚类</h2>]]></content>
@@ -2596,7 +2596,7 @@ E = \sum^k_{i=1}\sum_{\boldsymbol{x} \in C_i}||\boldsymbol{x} - \boldsymbol{\mu}
 <li>只需做一次减法就得到两棵树的一阶梯度和，那么速度比分别计算左右两边快两倍。</li>
 </ol>
 <h3 id="5-4-增加缓存命中率"><a href="#5-4-增加缓存命中率" class="headerlink" title="5.4 增加缓存命中率"></a>5.4 增加缓存命中率</h3><p>cache miss一般发生在访问的数据随机性很大的任务中，这是由于内存的管理机制决定的，因此如果访问的数据是相邻的或有序的，那么缓存命中率就会提升，缓存命中率提升会增加访问速度，从另一个角度增加计算速度。</p>
-<p>在XGBoost中我们计算某个叶结点权重的最优值需要用到落入此结点的所有样本的一阶梯度以及二阶梯度，与此同时，划分依据的特征也是需要遍历的，也就是说，在划分并确定最佳权重的阶段，计算复杂度为$O(n<em>{data} \times n</em>{feature})$，而且数据之间没有规律可循，因此缓存命中率低。</p>
+<p>在XGBoost中我们计算某个叶结点权重的最优值需要用到落入此结点的所有样本的一阶梯度以及二阶梯度，与此同时，划分依据的特征也是需要遍历的，也就是说，在划分并确定最佳权重的阶段，计算复杂度为$O(n_{data} \times n_{feature})$，而且数据之间没有规律可循，因此缓存命中率低。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/9.png" alt="9.png"></p>
 <p>在LightGBM使用基于直方图算法，它是如何增加缓存命中率的？</p>
@@ -2658,9 +2658,9 @@ E = \sum^k_{i=1}\sum_{\boldsymbol{x} \in C_i}||\boldsymbol{x} - \boldsymbol{\mu}
 <blockquote>
 <p><a href="https://arxiv.org/pdf/1603.02754v3.pdf" target="_blank" rel="noopener">XGBoost: A Scalable Tree Boosting System</a><br><a href="https://juejin.im/post/5a13c9a8f265da43333e0648" target="_blank" rel="noopener">XGBoost基本原理</a></p>
 </blockquote>
-<h2 id="1-正则化学习目标"><a href="#1-正则化学习目标" class="headerlink" title="1. 正则化学习目标"></a>1. 正则化学习目标</h2><p>假定数据集有$n$个样本，每个样本有$m$个特征，$\mathcal{D} = { (\boldsymbol{x}_i, y_i) } (|\mathcal{D}| = n, \boldsymbol{x}_i \in \mathbb{R}^m, y_i \in \mathbb{R})$，并且该数据集属于回归任务，特征值和预测目标都是任意常数。假定用$K$个树构建模型，并且预测结果为所有树的预测结果的和</p>
+<h2 id="1-正则化学习目标"><a href="#1-正则化学习目标" class="headerlink" title="1. 正则化学习目标"></a>1. 正则化学习目标</h2><p>假定数据集有$n$个样本，每个样本有$m$个特征，$\mathcal{D} = \{ (\boldsymbol{x}_i, y_i) \} (|\mathcal{D}| = n, \boldsymbol{x}_i \in \mathbb{R}^m, y_i \in \mathbb{R})$，并且该数据集属于回归任务，特征值和预测目标都是任意常数。假定用$K$个树构建模型，并且预测结果为所有树的预测结果的和</p>
 <script type="math/tex; mode=display">
-\hat{y}_i = \phi(\boldsymbol{x}_i) = \sum^K_{k=1}f_k(\boldsymbol{x}_i), \quad f_k \in \mathcal{F}</script><p>其中$\mathcal{F} = { f(\boldsymbol{x}) = w<em>{q(\boldsymbol{x})} }(q:\mathbb{R}^m \rightarrow T, w \in \mathbb{R}^T)$，$T$是当前树的叶结点数（我们将叶结点编号），$q$是从样本$\boldsymbol{x}$到叶结点index的映射，即样本$\boldsymbol{x}$落在树的index叶结点上，$w</em>{q(\boldsymbol{x})}$表示该样本属于的叶结点的权值，我们可以将$f$看作是一棵树的表示函数，其包括两个部分：树的结构函数$q$和树的叶结点权重$w$。</p>
+\hat{y}_i = \phi(\boldsymbol{x}_i) = \sum^K_{k=1}f_k(\boldsymbol{x}_i), \quad f_k \in \mathcal{F}</script><p>其中$\mathcal{F} = \{ f(\boldsymbol{x}) = w_{q(\boldsymbol{x})} \}(q:\mathbb{R}^m \rightarrow T, w \in \mathbb{R}^T)$，$T$是当前树的叶结点数（我们将叶结点编号），$q$是从样本$\boldsymbol{x}$到叶结点index的映射，即样本$\boldsymbol{x}$落在树的index叶结点上，$w_{q(\boldsymbol{x})}$表示该样本属于的叶结点的权值，我们可以将$f$看作是一棵树的表示函数，其包括两个部分：树的结构函数$q$和树的叶结点权重$w$。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/017978af7cab33961.png" alt="017978af7cab33961.png"></p>
 <a id="more"></a>
@@ -2674,9 +2674,9 @@ E = \sum^k_{i=1}\sum_{\boldsymbol{x} \in C_i}||\boldsymbol{x} - \boldsymbol{\mu}
 <script type="math/tex; mode=display">
 \mathcal{L}^{(t)} = \sum^n_{i=1}l(y_i, \hat{y}_i^{(i-1)} + f_t(\boldsymbol{x}_i)) + \Omega(f_t)</script><p>我们仅考虑加入$f_t$以优化模型，这种做法是贪心的。通过二阶近似$f(x+\bigtriangleup x) = f(x) + f’(x)\bigtriangleup x + \frac{1}{2}f’’(x) (\bigtriangleup x)^2$，可以将上式近似表示为</p>
 <script type="math/tex; mode=display">
-\mathcal{L}^{(t)} \simeq \sum^n_{i=1}[l(y_i, \hat{y}_i^{(t-1)})+ g_if_t(\boldsymbol{x}_i) + \frac{1}{2}h_if_t^2(\boldsymbol{x}_i)] + \Omega(f_t)</script><p>其中$g<em>i = \partial</em>{\hat{y}<em>i^{(t-1)}}l(y_i, \hat{y}_i^{(t-1)})$，$h_i = \partial^2</em>{\hat{y}_i^{(t-1)}}l(y_i, \hat{y}_i^{(t-1)})$，本质上就是损失的一阶梯度和二阶梯度，由于我们的目标是最小化$t$轮的误差，所以可以去掉与$f_t$无关的量</p>
+\mathcal{L}^{(t)} \simeq \sum^n_{i=1}[l(y_i, \hat{y}_i^{(t-1)})+ g_if_t(\boldsymbol{x}_i) + \frac{1}{2}h_if_t^2(\boldsymbol{x}_i)] + \Omega(f_t)</script><p>其中$g_i = \partial_{\hat{y}_i^{(t-1)}}l(y_i, \hat{y}_i^{(t-1)})$，$h_i = \partial^2_{\hat{y}_i^{(t-1)}}l(y_i, \hat{y}_i^{(t-1)})$，本质上就是损失的一阶梯度和二阶梯度，由于我们的目标是最小化$t$轮的误差，所以可以去掉与$f_t$无关的量</p>
 <script type="math/tex; mode=display">
-\tilde{\mathcal{L}}^{(t)} = \sum^n_{i=1}[g_if_t(\boldsymbol{x}_i) + \frac{1}{2}h_if_t^2(\boldsymbol{x}_i)] + \Omega(f_t)</script><p>定义$I_j = { i|q(\boldsymbol{x}_i) = j }$为划分到index为$j$的叶结点的样本的index集合（简单来说就是统计落入$j$叶结点的所有样本），那么重写上式为</p>
+\tilde{\mathcal{L}}^{(t)} = \sum^n_{i=1}[g_if_t(\boldsymbol{x}_i) + \frac{1}{2}h_if_t^2(\boldsymbol{x}_i)] + \Omega(f_t)</script><p>定义$I_j = \{ i|q(\boldsymbol{x}_i) = j \}$为划分到index为$j$的叶结点的样本的index集合（简单来说就是统计落入$j$叶结点的所有样本），那么重写上式为</p>
 <script type="math/tex; mode=display">
 \tilde{\mathcal{L}}^{(t)} = \sum^n_{i=1}[g_if_t(\boldsymbol{x}_i) + \frac{1}{2}h_if_t^2(\boldsymbol{x}_i)] + \gamma T + \frac{1}{2}\lambda \sum^T_{j=1}w_j^2
 \\
@@ -2684,12 +2684,12 @@ E = \sum^k_{i=1}\sum_{\boldsymbol{x} \in C_i}||\boldsymbol{x} - \boldsymbol{\mu}
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/13eac003017b1ae0e.png" alt="13eac003017b1ae0e.png"></p>
 <p>上式的两种变形考虑的对象不同，第一个式子考虑每个样本，第二个式子考虑的是当前树的每个叶结点（由于每个样本必定落入某个叶结点，因此考虑叶结点简化了计算过程），通过对$w_j$求偏导数使损失最小</p>
 <script type="math/tex; mode=display">
-w^*_j = - \frac{\sum_{i \in I_j} g_i}{\sum_{i \in I_j}h_i + \lambda}</script><p>一般令$G<em>j = \sum</em>{i \in I<em>j} g_i, H_j = \sum</em>{i \in I_j}h_i$，所以上式为</p>
+w^*_j = - \frac{\sum_{i \in I_j} g_i}{\sum_{i \in I_j}h_i + \lambda}</script><p>一般令$G_j = \sum_{i \in I_j} g_i, H_j = \sum_{i \in I_j}h_i$，所以上式为</p>
 <script type="math/tex; mode=display">
 w^*_j = - \frac{G_j}{H_j + \lambda}</script><p>将最优$w_j^*$代入到损失函数中，我们得到与树结构$q$相关的损失函数</p>
 <script type="math/tex; mode=display">
 \tilde{\mathcal{L}}^{(t)}(q) = -\frac{1}{2}\sum^T_{j=1}\frac{(\sum_{i \in I_j}g_i)^2}{\sum_{i \in I_j}h_i + \lambda} + \gamma T</script><p>因此上式可以作为衡量当前决策树性能的分数函数，通常用$Obj$表示。</p>
-<p>如何确定最优树结构，理论上遍历所有树结构可以得到最小损失，但是很明显实际不可行。通常从一个根结点出发，逐渐增加左右两个分支，令$I<em>L$和$I_R$分别表示落入到左子树和右子树的样本集，计算损失下降$\mathcal{L}</em>{split}$</p>
+<p>如何确定最优树结构，理论上遍历所有树结构可以得到最小损失，但是很明显实际不可行。通常从一个根结点出发，逐渐增加左右两个分支，令$I_L$和$I_R$分别表示落入到左子树和右子树的样本集，计算损失下降$\mathcal{L}_{split}$</p>
 <script type="math/tex; mode=display">
 \mathcal{L}_{split} = \frac{1}{2}[\frac{(\sum_{i \in I_L}g_i)^2}{\sum_{i \in I_L}h_i + \lambda} + \frac{(\sum_{i \in I_R}g_i)^2}{\sum_{i \in I_R}h_i + \lambda} - \frac{(\sum_{i \in I}g_i)^2}{\sum_{i \in I}h_i + \lambda}] - \lambda</script><p>这个式子很好理解，就是<code>未分支损失-分枝后损失</code>（$\lambda$系数为1是由于仅增加了一个叶结点），所以这个值越大说明分支效果越好。</p>
 <h2 id="3-收缩与特征采样"><a href="#3-收缩与特征采样" class="headerlink" title="3. 收缩与特征采样"></a>3. 收缩与特征采样</h2><p>原文是Shrinkage和Column Subsampling，是两种避免过拟合的策略</p>
@@ -2708,9 +2708,9 @@ w^*_j = - \frac{G_j}{H_j + \lambda}</script><p>将最优$w_j^*$代入到损失�
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/35a2426a8bef4c332.png" alt="35a2426a8bef4c332.png"></p>
 <p>相较于Exact Greedy Algorithm遍历所有可能的阈值，在Approximate Algorithm中直接将第$k$个特征的阈值集合$S_k$按百分比分类列出来，形成候选集合，然后类似Exact Greedy Algorithm中找到分数最大值对应的划分方式，按照近似算法得到的结果往往与精确贪心算法相差不大。</p>
-<h3 id="4-3-加权分位数草图"><a href="#4-3-加权分位数草图" class="headerlink" title="4.3 加权分位数草图"></a>4.3 加权分位数草图</h3><p>原文是Weighted Quantile Sketch，在近似算法中需要选出候选子集，那么如何以一个相对合理的方式划分出候选子集？定义数据集$\mathcal{D}<em>k = { (x</em>{1k}, h<em>1), (x</em>{2k}, h<em>2),…, (x</em>{nk}, h_n) }$包括第$k$个特征的值$x_k$以及二阶梯度$h$，且按照顺序排列好，则定义排序函数$r_k: \mathbb{R} \rightarrow [0, +\infty)$</p>
+<h3 id="4-3-加权分位数草图"><a href="#4-3-加权分位数草图" class="headerlink" title="4.3 加权分位数草图"></a>4.3 加权分位数草图</h3><p>原文是Weighted Quantile Sketch，在近似算法中需要选出候选子集，那么如何以一个相对合理的方式划分出候选子集？定义数据集$\mathcal{D}_k = \{ (x_{1k}, h_1), (x_{2k}, h_2),…, (x_{nk}, h_n) \}$包括第$k$个特征的值$x_k$以及二阶梯度$h$，且按照顺序排列好，则定义排序函数$r_k: \mathbb{R} \rightarrow [0, +\infty)$</p>
 <script type="math/tex; mode=display">
-r_k(z) = \frac{1}{\sum_{(x, h) \in \mathcal{D}_k}h} \sum_{(x, h) \in \mathcal{D}_k, x<z} h</script><p>则最佳划分候选子集${s<em>{k1}, s</em>{k2}, …, s_{kl}}$为</p>
+r_k(z) = \frac{1}{\sum_{(x, h) \in \mathcal{D}_k}h} \sum_{(x, h) \in \mathcal{D}_k, x<z} h</script><p>则最佳划分候选子集$\{s_{k1}, s_{k2}, …, s_{kl}\}$为</p>
 <script type="math/tex; mode=display">
 |r_k(s_{k,j}) - r_k(s_{k,j+1})|<\epsilon, \quad s_{k1} = \underset{i}{\min} x_{ik}, s_{kl} = \underset{i}{\max} x_{ik}</script><p>对上式的理解为，若排序后的样本的二阶梯度占所有样本的二阶梯度和的比例小于$\epsilon$，则认为这个区间内的样本属于同一区域，那么我们取这个区域的最大值和最小值作为候选子集的首尾（同样取均值作为划分阈值）。</p>
 <p>$\epsilon$是近似因子，一般意味候选子集大小为$\frac{1}{\epsilon}$，也就是说通过控制$\epsilon$的大小我们可以控制候选子集的大小，同时也是划分的精度，从这个角度来看优化目标，我们需要二阶梯度尽可能小的样本作为候选子集，由$w^*_j$计算公式表明样本$\boldsymbol{x}_i$的最优权重可以表示为$\frac{g_i}{h_i}$。我们可以重写第$t$棵树的优化目标为</p>
@@ -2789,7 +2789,7 @@ r_k(z) = \frac{1}{\sum_{(x, h) \in \mathcal{D}_k}h} \sum_{(x, h) \in \mathcal{D}
 <a id="more"></a>
 <hr>
 <p><em>集成学习性能证明</em></p>
-<p>考虑二分类问题$y \in { -1, +1 }$和真实函数$f$，假定基学习器的错误率为$\epsilon$，即对每个基学习器$h_i$有</p>
+<p>考虑二分类问题$y \in \{ -1, +1 \}$和真实函数$f$，假定基学习器的错误率为$\epsilon$，即对每个基学习器$h_i$有</p>
 <script type="math/tex; mode=display">
 P(h_i(\boldsymbol{x}) \neq f(\boldsymbol{x})) = \epsilon</script><p>假设集成策略为简单投票法结合$T$个基学习器，超过半数原则</p>
 <script type="math/tex; mode=display">
@@ -2811,14 +2811,14 @@ P(H(\boldsymbol{x}) \neq f(\boldsymbol{x})) = \sum^{\left \lfloor T/2 \right \rf
 <li>基于调整后的样本分布来训练下一个基学习器</li>
 <li>判断基学习器数目是否达到指定的值$T$，未达到则返回第2步，否则将这$T$个基学习器进行加权结合</li>
 </ol>
-<p>Boosting族算法中最著名的是AdaBoost，其中$y_i \in { -1, +1 }$，$f$是真实函数。</p>
+<p>Boosting族算法中最著名的是AdaBoost，其中$y_i \in \{ -1, +1 \}$，$f$是真实函数。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/288ec896965340bb4.png" alt="288ec896965340bb4.png"></p>
 <p>AdaBoost算法有多种推导方式，比较容易理解的是基于“加性模型”</p>
 <script type="math/tex; mode=display">
 H(\boldsymbol{x}) = \sum^T_{t=1}\alpha_th_t(\boldsymbol{x})</script><p>来最小化指数损失函数</p>
 <script type="math/tex; mode=display">
-l_{\exp}(H|\mathcal{D}) = \mathbb{E}_{\boldsymbol{x} \sim \mathcal{D}}[e^{-f(\boldsymbol{x})H(\boldsymbol{x})}]</script><p>对于二分类$y_i \in { -1, +1 }$来说，损失函数可以有<code>0-1损失</code>、<code>Logistic loss</code>、<code>Hinge loss</code>、<code>指数损失(Exponential loss)</code>、<code>modified Huber loss</code>，这里选择指数损失的原因推导如下：</p>
+l_{\exp}(H|\mathcal{D}) = \mathbb{E}_{\boldsymbol{x} \sim \mathcal{D}}[e^{-f(\boldsymbol{x})H(\boldsymbol{x})}]</script><p>对于二分类$y_i \in \{ -1, +1 \}$来说，损失函数可以有<code>0-1损失</code>、<code>Logistic loss</code>、<code>Hinge loss</code>、<code>指数损失(Exponential loss)</code>、<code>modified Huber loss</code>，这里选择指数损失的原因推导如下：</p>
 <p>若$H(\boldsymbol{x})$能令指数损失最小化，则考虑上式对$H(\boldsymbol{x})$的偏导数</p>
 <script type="math/tex; mode=display">
 \frac{\partial l_{\exp}(H|\mathcal{D})}{\partial H(\boldsymbol{x})} = -e^{-H(\boldsymbol{x})} P(f(\boldsymbol{x}) = 1|\boldsymbol{x}) + e^{H(\boldsymbol{x})} P(f(\boldsymbol{x}) = -1|\boldsymbol{x})</script><p>令上式为0，解得</p>
@@ -2852,14 +2852,14 @@ l_{\exp}(\alpha_th_t|\mathcal{D}_t) = \mathbb{E}_{\boldsymbol{x} \sim \mathcal{D
 \\
 = e^{-\alpha_t}(1-\epsilon_t) + e^{\alpha_t}\epsilon_t
 \\
-\mathbb{I}指示函数，真取1，假取0</script><p>其中$\epsilon<em>t = P</em>{\boldsymbol{x}\sim \mathcal{D}_t}(h_t(\boldsymbol{x}) \neq f(\boldsymbol{x}))$，考虑指数损失函数的导数</p>
+\mathbb{I}指示函数，真取1，假取0</script><p>其中$\epsilon_t = P_{\boldsymbol{x}\sim \mathcal{D}_t}(h_t(\boldsymbol{x}) \neq f(\boldsymbol{x}))$，考虑指数损失函数的导数</p>
 <script type="math/tex; mode=display">
 \frac{\partial l_{\exp}(\alpha_th_t|\mathcal{D}_t)}{\partial \alpha_t} = -e^{-\alpha_t}(1-\epsilon_t) + e^{\alpha_t}\epsilon_t</script><p>令上式为0，解得</p>
 <script type="math/tex; mode=display">
 \alpha_t = \frac{1}{2} \ln (\frac{1-\epsilon_t}{\epsilon_t})</script><p>证毕</p>
 <hr>
 <p>样本权重更新公式证明</p>
-<p>AdaBoost算法在获得$H<em>{t-1}$之后样本分布将进行调整，使得下一轮的基学习器$h_t$能纠正$H</em>{t-1}$的一些错误，即最小化</p>
+<p>AdaBoost算法在获得$H_{t-1}$之后样本分布将进行调整，使得下一轮的基学习器$h_t$能纠正$H_{t-1}$的一些错误，即最小化</p>
 <script type="math/tex; mode=display">
 l_{\exp}(H_{t-1} + h_t|\mathcal{D}) = \mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})(H_{t-1}(\boldsymbol{x})+h_t(\boldsymbol{x}))}]
 \\
@@ -2876,23 +2876,23 @@ h_t(\boldsymbol{x}) = \underset{h}{\arg \min} l_{\exp}(H_{t-1} + h|\mathcal{D})
 \\
 = \underset{h}{\arg \max} \mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})} f(\boldsymbol{x})h(\boldsymbol{x})]
 \\
-= \underset{h}{\arg \max} \mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[\frac{e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})}}{\mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})}]} f(\boldsymbol{x})h(\boldsymbol{x})]</script><p>注意到$\mathbb{E}<em>{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H</em>{t-1}(\boldsymbol{x})}]$是一个常数，所以被除也不影响结果。令$\mathcal{D}_t$表示一个分布</p>
+= \underset{h}{\arg \max} \mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[\frac{e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})}}{\mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})}]} f(\boldsymbol{x})h(\boldsymbol{x})]</script><p>注意到$\mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})}]$是一个常数，所以被除也不影响结果。令$\mathcal{D}_t$表示一个分布</p>
 <script type="math/tex; mode=display">
 \mathcal{D}_t(\boldsymbol{x}) = \frac{\mathcal{D}(\boldsymbol{x})e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})}}{\mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})}]}</script><p>根据数学期望的定义，这等价于令</p>
 <script type="math/tex; mode=display">
 h_t(\boldsymbol{x}) = \underset{h}{\arg \max} \mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[\frac{e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})}}{\mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})}]} f(\boldsymbol{x})h(\boldsymbol{x})]
 \\
-= \underset{h}{\arg \max} \mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}_t}[f(\boldsymbol{x})h(\boldsymbol{x})]</script><p>由$f(\boldsymbol{x})h(\boldsymbol{x}) \in {-1, 1}$，有</p>
+= \underset{h}{\arg \max} \mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}_t}[f(\boldsymbol{x})h(\boldsymbol{x})]</script><p>由$f(\boldsymbol{x})h(\boldsymbol{x}) \in \{-1, 1\}$，有</p>
 <script type="math/tex; mode=display">
 f(\boldsymbol{x})h(\boldsymbol{x}) = 1- 2\mathbb{I}(f(\boldsymbol{x}) \neq h(\boldsymbol{x}))</script><p>则理想的基学习器</p>
 <script type="math/tex; mode=display">
-h_t(\boldsymbol{x}) = \underset{h}{\arg \max} \mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}_t} [\mathbb{I}(f(\boldsymbol{x}) \neq h(\boldsymbol{x}))]</script><p>由此可见，理想的$h<em>t$将在分布$\mathcal{D}_t$下最小化分类误差。因此弱分类器将基于分布$\mathcal{D}_t$来训练，且分类误差应小于0.5。考虑到$\mathcal{D}_t$和$\mathcal{D}</em>{t+1}$的关系，有</p>
+h_t(\boldsymbol{x}) = \underset{h}{\arg \max} \mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}_t} [\mathbb{I}(f(\boldsymbol{x}) \neq h(\boldsymbol{x}))]</script><p>由此可见，理想的$h_t$将在分布$\mathcal{D}_t$下最小化分类误差。因此弱分类器将基于分布$\mathcal{D}_t$来训练，且分类误差应小于0.5。考虑到$\mathcal{D}_t$和$\mathcal{D}_{t+1}$的关系，有</p>
 <script type="math/tex; mode=display">
 \mathcal{D}_{t+1}(\boldsymbol{x}) = \frac{\mathcal{D}(\boldsymbol{x})e^{-f(\boldsymbol{x})H_t(\boldsymbol{x})}}{\mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H_t(\boldsymbol{x})}]}
 \\
 = \frac{\mathcal{D}(\boldsymbol{x})e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})}e^{-f(\boldsymbol{x})\alpha_th_t(\boldsymbol{x})}}{\mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H_t(\boldsymbol{x})}]}
 \\
-= \mathcal{D}_t(\boldsymbol{x}) \cdot e^{-f(\boldsymbol{x})\alpha_th_t(\boldsymbol{x})} \frac{\mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})}]}{\mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H_t(\boldsymbol{x})}]}</script><p><em>注意这里将$H<em>t$分解为$H</em>{t-1}$和$\alpha_th_t$，是因为递归式已经将$H_t$作为最优解，即输出模型，所以需要加上基学习器权重</em></p>
+= \mathcal{D}_t(\boldsymbol{x}) \cdot e^{-f(\boldsymbol{x})\alpha_th_t(\boldsymbol{x})} \frac{\mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})}]}{\mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H_t(\boldsymbol{x})}]}</script><p><em>注意这里将$H_t$分解为$H_{t-1}$和$\alpha_th_t$，是因为递归式已经将$H_t$作为最优解，即输出模型，所以需要加上基学习器权重</em></p>
 <p>证毕</p>
 <hr>
 <p>通过上面的证明，我们会发现Boosting算法的关键是更新样本权重然后生成新的基学习器，在上面的算法中使用的是“重赋权法”；在某些任务中，基学习算法不支持带权样本，则需要通过“重采样法”来处理，根据样本分布对训练集进行重新采样，再用重采样得到的样本集对基学习器进行训练。一般而言，这两种方式没有显著的优劣区别。</p>
@@ -2936,7 +2936,7 @@ H^{oob}(\boldsymbol{x}) = \underset{y \in \mathcal{Y}}{\arg \max} \sum^T_{t=1}\m
 </ol>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/5ba1d67313047c5a2.png" alt="5ba1d67313047c5a2.png"></p>
-<p>假定集成包含$T$个基学习器${ h_1, h_2,…,h_T }$，其中$h_i$在示例$\boldsymbol{x}$上的输出为$h_i(\boldsymbol{x})$</p>
+<p>假定集成包含$T$个基学习器$\{ h_1, h_2,…,h_T \}$，其中$h_i$在示例$\boldsymbol{x}$上的输出为$h_i(\boldsymbol{x})$</p>
 <h3 id="4-1-平均法"><a href="#4-1-平均法" class="headerlink" title="4.1 平均法"></a>4.1 平均法</h3><p>对数值型输出$h_i(\boldsymbol{x}) \in \mathbb{R}$</p>
 <ul>
 <li>简单平均法</li>
@@ -2946,8 +2946,8 @@ H(\boldsymbol{x}) = \frac{1}{T} \sum^T_{i=1}h_i(\boldsymbol{x})</script><ul>
 <li>加权平均法</li>
 </ul>
 <script type="math/tex; mode=display">
-H(\boldsymbol{x}) =  \sum^T_{i=1}w_ih_i(\boldsymbol{x})</script><p>其中$w<em>i$是个体学习器$h_i$的权重，通常要求$w_i \geqslant 0, \sum^T</em>{i=1}w_i = 1$，权重一般从训练数据中学习而得（比如权重大小与个体学习器误差大小成反比），实验和应用显示，加权并不一定优于简单平均法。一般而言，在个体学习器性能差异较大时宜使用加权平均法，否则简单平均法。</p>
-<h3 id="4-2-投票法"><a href="#4-2-投票法" class="headerlink" title="4.2 投票法"></a>4.2 投票法</h3><p>对分类任务来说，总计$N$个类别${ c_1,c_2,…,c_N }$，$h_i$在样本$\boldsymbol{x}$上的预测输出表示为一个$N$维向量$(h_i^1(\boldsymbol{x});h_i^2(\boldsymbol{x});…;h_i^N(\boldsymbol{x}))$</p>
+H(\boldsymbol{x}) =  \sum^T_{i=1}w_ih_i(\boldsymbol{x})</script><p>其中$w_i$是个体学习器$h_i$的权重，通常要求$w_i \geqslant 0, \sum^T_{i=1}w_i = 1$，权重一般从训练数据中学习而得（比如权重大小与个体学习器误差大小成反比），实验和应用显示，加权并不一定优于简单平均法。一般而言，在个体学习器性能差异较大时宜使用加权平均法，否则简单平均法。</p>
+<h3 id="4-2-投票法"><a href="#4-2-投票法" class="headerlink" title="4.2 投票法"></a>4.2 投票法</h3><p>对分类任务来说，总计$N$个类别$\{ c_1,c_2,…,c_N \}$，$h_i$在样本$\boldsymbol{x}$上的预测输出表示为一个$N$维向量$(h_i^1(\boldsymbol{x});h_i^2(\boldsymbol{x});…;h_i^N(\boldsymbol{x}))$</p>
 <ul>
 <li>绝对多数投票法，超过半数</li>
 </ul>
@@ -2965,7 +2965,7 @@ H(\boldsymbol{x}) = c_{\underset{j}{\arg \max}\sum^T_{i=1}h_i^j(\boldsymbol{x})}
 <script type="math/tex; mode=display">
 H(\boldsymbol{x}) = c_{\underset{j}{\arg \max}\sum^T_{i=1}w_ih_i^j(\boldsymbol{x})}</script><p>在现实任务中，个体学习器产生的结果$h_i^j(\boldsymbol{x})$可能是不同类型的：</p>
 <ul>
-<li>类标记：$h_i^j(\boldsymbol{x}) \in {0, 1}$，类似于onehot变量；</li>
+<li>类标记：$h_i^j(\boldsymbol{x}) \in \{0, 1\}$，类似于onehot变量；</li>
 <li>类概率：$h_i^j(\boldsymbol{x}) \in [0, 1]$，类似于softmax输出。</li>
 </ul>
 <p>不同类型的输出不可混用，若使用类概率需要规范化，使用类概率往往性能优于类标记；不同类型的基学习器输出的概率不能直接进行比较，需要转换为类标记然后再投票。</p>
@@ -3004,12 +3004,12 @@ E_i = \int E(h_i|\boldsymbol{x})p(\boldsymbol{x})d\boldsymbol{x}
 \\
 A_i = \int A(h_i|\boldsymbol{x})p(\boldsymbol{x})d\boldsymbol{x}</script><p>集成的泛化误差为</p>
 <script type="math/tex; mode=display">
-E = \int E(H|\boldsymbol{x})p(\boldsymbol{x})d\boldsymbol{x}</script><p>将上式代入，再令$\bar{E} = \sum^T<em>{i=1}w_iE_i$表示个体学习器泛化误差的加权值，$\bar{A} = \sum^T</em>{i=1}w_iA_i$表示个体学习器的加权分歧值，有</p>
+E = \int E(H|\boldsymbol{x})p(\boldsymbol{x})d\boldsymbol{x}</script><p>将上式代入，再令$\bar{E} = \sum^T_{i=1}w_iE_i$表示个体学习器泛化误差的加权值，$\bar{A} = \sum^T_{i=1}w_iA_i$表示个体学习器的加权分歧值，有</p>
 <script type="math/tex; mode=display">
 E = \bar{E} - \bar{A}</script><p>这个式子表明：个体学习器准确性越高、多样性越大，则集成越好。</p>
 <p>现实任务中很难将$\bar{E} - \bar{A}$作为优化目标求解，而且上式推导只适用于回归学习，难以推广到分类学习任务上去。</p>
 <h3 id="5-2-多样性度量"><a href="#5-2-多样性度量" class="headerlink" title="5.2 多样性度量"></a>5.2 多样性度量</h3><p>个体学习器之间的多样性的度量方式，典型做法是考虑个体学习器的两两相似/不相似性。</p>
-<p>给定数据集$D = { (\boldsymbol{x}_1, y_1),(\boldsymbol{x}_2, y_2),…,(\boldsymbol{x}_m, y_m) }$，对二分类任务，$y_i \in {-1, +1}$，分类器$h_i$与$h_j$的预测结果列联表为</p>
+<p>给定数据集$D = \{ (\boldsymbol{x}_1, y_1),(\boldsymbol{x}_2, y_2),…,(\boldsymbol{x}_m, y_m) \}$，对二分类任务，$y_i \in \{-1, +1\}$，分类器$h_i$与$h_j$的预测结果列联表为</p>
 <div class="table-container">
 <table>
 <thead>
@@ -3048,7 +3048,7 @@ dis_{ij} = \frac{b+c}{m}</script><p>&emsp;值域$[0, 1]$，值越大多样性越
 <li>$Q$-统计量</li>
 </ul>
 <script type="math/tex; mode=display">
-Q_{ij} = \frac{ad-bc}{ad+bc}</script><p>&emsp;与$\rho<em>{ij}$符号相同，且$|Q</em>{ij}| \geqslant |\rho_{ij}|$</p>
+Q_{ij} = \frac{ad-bc}{ad+bc}</script><p>&emsp;与$\rho_{ij}$符号相同，且$|Q_{ij}| \geqslant |\rho_{ij}|$</p>
 <ul>
 <li>$\kappa$-统计量</li>
 </ul>
@@ -3233,7 +3233,7 @@ p_2 = \frac{(a+b)(a+c) + (c+d)(b+d)}{m^2}</script><p>&emsp;$p_1$是两个分类�
 <p>在 a 图中是刚开始训练的时候，D 的分类能力还不是最好，因此有所波动，而生成数据的分布也自然和真实数据分布不同，毕竟 G 网络输入是随机生成的噪声；到了 b 图的时候，D 网络的分类能力就比较好了，可以看到对于真实数据和生成数据，它是明显可以区分出来，也就是给出的概率是不同的；</p>
 <p>而绿色的曲线，即 G 网络的目标是学习真实数据的分布，所以它会往蓝色曲线方向移动，也就是 c 图了，并且因为 G 和 D 是相互对抗的，当 G 网络提升，也会影响 D 网络的分辨能力。论文中，Ian Goodfellow 做出了证明，当假设 G 网络不变，训练 D 网络，最优的情况会是：</p>
 <script type="math/tex; mode=display">
-D_G^*(\boldsymbol{x}) = \frac{p_{data}(\boldsymbol{x})}{p_{data}(\boldsymbol{x}) + p_g(\boldsymbol{x})}</script><p>也就是当生成数据的分布$p<em>g(x)$趋近于真实数据分布$p</em>{data}(x)$的时候，D 网络输出的概率$D_G^*(x)$会趋近于 0.5，也就是 d 图的结果，这也是最终希望达到的训练结果，这时候 G 和 D 网络也就达到一个平衡状态。</p>
+D_G^*(\boldsymbol{x}) = \frac{p_{data}(\boldsymbol{x})}{p_{data}(\boldsymbol{x}) + p_g(\boldsymbol{x})}</script><p>也就是当生成数据的分布$p_g(x)$趋近于真实数据分布$p_{data}(x)$的时候，D 网络输出的概率$D_G^*(x)$会趋近于 0.5，也就是 d 图的结果，这也是最终希望达到的训练结果，这时候 G 和 D 网络也就达到一个平衡状态。</p>
 <h2 id="6-算法"><a href="#6-算法" class="headerlink" title="6. 算法"></a>6. 算法</h2><p>论文给出的算法实现过程如下所示</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/5f601eac50c9eb3e3.png" alt="5f601eac50c9eb3e3.png"></p>
@@ -3273,7 +3273,7 @@ L(\boldsymbol{x}, g(f(\boldsymbol{x})))</script><p>当解码器是线性的且$L
 <h3 id="2-1-稀疏自编码器"><a href="#2-1-稀疏自编码器" class="headerlink" title="2.1 稀疏自编码器"></a>2.1 稀疏自编码器</h3><p>稀疏自编码器在训练时增加编码层的稀疏惩罚$\Omega(\boldsymbol{h})$：</p>
 <script type="math/tex; mode=display">
 L(\boldsymbol{x}, g(f(\boldsymbol{x}))) + \Omega(\boldsymbol{h})</script><p>上式如何理解，首先我们知道贝叶斯近似推断认为，正则化的惩罚对应于模型参数的先验概率分布，也就说最大化对数似然对应最大化$p(\boldsymbol{\theta}|\boldsymbol{x})$，相当于最大化$\log p(\boldsymbol{x}|\boldsymbol{\theta}) + \log p(\boldsymbol{\theta})$。$\log p(\boldsymbol{x}|\boldsymbol{\theta})$即通常的数据似然项，参数的对数先验项$\log p(\boldsymbol{\theta})$则包含了对$\boldsymbol{\theta}$特定值的偏好。但是正则自编码器不适用这样的解释是因为正则项取决于数据（损失$L$与惩罚$\Omega$面向对象不同）。虽然我们任可以认为正则项隐式地表达了对函数的偏好。</p>
-<p>从$\boldsymbol{h}$的角度来看，我们可以将$\boldsymbol{h}$作为潜变量，而整个稀疏自编码器框架是对潜变量$\boldsymbol{h}$的生成模型的近似最大似然训练。对于具有明确联合分布$p<em>{model}(\boldsymbol{x}, \boldsymbol{h}) = p</em>{model}(\boldsymbol{h})p<em>{model}(\boldsymbol{x}|\boldsymbol{h})$的模型，可以将$p</em>{model}(\boldsymbol{h})$视为模型关于潜变量的先验分布，表示模型看到$\boldsymbol{x}$的信念先验。对数似然可分解为</p>
+<p>从$\boldsymbol{h}$的角度来看，我们可以将$\boldsymbol{h}$作为潜变量，而整个稀疏自编码器框架是对潜变量$\boldsymbol{h}$的生成模型的近似最大似然训练。对于具有明确联合分布$p_{model}(\boldsymbol{x}, \boldsymbol{h}) = p_{model}(\boldsymbol{h})p_{model}(\boldsymbol{x}|\boldsymbol{h})$的模型，可以将$p_{model}(\boldsymbol{h})$视为模型关于潜变量的先验分布，表示模型看到$\boldsymbol{x}$的信念先验。对数似然可分解为</p>
 <script type="math/tex; mode=display">
 \log p_{model}(\boldsymbol{x}) = \log \sum_{\boldsymbol{h}}p_{model}(\boldsymbol{h}, \boldsymbol{x})</script><p>我们可以认为自编码器使用一个高似然值$\boldsymbol{h}$的点估计近似这个总和。但是$\boldsymbol{h}$是参数编码器的输出，从这个角度，我们根据这个选择的$\boldsymbol{h}$，最大化如下</p>
 <script type="math/tex; mode=display">
@@ -3299,7 +3299,7 @@ L(\boldsymbol{x}, g(f(\boldsymbol{x}))) + \Omega(\boldsymbol{h}, \boldsymbol{x})
 <p>深度可以指数地降低表示某些函数的计算成本。深度也能指数地减少学习一些函数所需的训练数据量。</p>
 <p>实验中，深度自编码器能比相应的浅层或线性自编码器产生更好的压缩效率。</p>
 <p>训练深度自编码器的普遍策略是训练一堆浅层的自编码器来贪心地预训练相应的深度架构。所以即使最终目标是训练深度自编码器，我们也经常会遇到浅层自编码器。</p>
-<h2 id="4-随机编码器和解码器"><a href="#4-随机编码器和解码器" class="headerlink" title="4. 随机编码器和解码器"></a>4. 随机编码器和解码器</h2><p>在给定隐藏编码$\boldsymbol{h}$的条件下，我们可以认为解码器提供了一个条件分布$p<em>{model}(\boldsymbol{x}|\boldsymbol{h})$。接着根据最小化$-\log p</em>{decoder}(\boldsymbol{x}|\boldsymbol{h})$来训练自编码器。损失函数的具体形式视$p_{decoder}$的形式而定：</p>
+<h2 id="4-随机编码器和解码器"><a href="#4-随机编码器和解码器" class="headerlink" title="4. 随机编码器和解码器"></a>4. 随机编码器和解码器</h2><p>在给定隐藏编码$\boldsymbol{h}$的条件下，我们可以认为解码器提供了一个条件分布$p_{model}(\boldsymbol{x}|\boldsymbol{h})$。接着根据最小化$-\log p_{decoder}(\boldsymbol{x}|\boldsymbol{h})$来训练自编码器。损失函数的具体形式视$p_{decoder}$的形式而定：</p>
 <ol>
 <li>$\boldsymbol{x}$为连续实值，通常使用ReLU线性输出单元参数化高斯分布的均值，此时负对数似然对应均方误差；</li>
 <li>$\boldsymbol{x}$为二值变量，对应伯努利分布，通常由Sigmoid输出单元确定；</li>
@@ -3320,7 +3320,7 @@ p_{decoder}(\boldsymbol{x}|\boldsymbol{h}) = p_{model}(\boldsymbol{x}|\boldsymbo
 <ol>
 <li>从训练数据中采一个训练样本$\boldsymbol{x}$；</li>
 <li>从$C(\tilde{\boldsymbol{x}}|\boldsymbol{x})$采一个损坏样本$\tilde{\boldsymbol{x}}$；</li>
-<li>将$(\boldsymbol{x}, \tilde{\boldsymbol{x}})$作为训练样本来估计自编码器的重构分布$P<em>{reconstruct}(\boldsymbol{x}|\tilde{\boldsymbol{x}}) = p</em>{decoder}(\boldsymbol{x}|\boldsymbol{h})$。</li>
+<li>将$(\boldsymbol{x}, \tilde{\boldsymbol{x}})$作为训练样本来估计自编码器的重构分布$P_{reconstruct}(\boldsymbol{x}|\tilde{\boldsymbol{x}}) = p_{decoder}(\boldsymbol{x}|\boldsymbol{h})$。</li>
 </ol>
 <p>通常我们可以简单地对负对数似然$\log p_{decoder}(\boldsymbol{x} | \boldsymbol{h})$进行基于梯度法（如小批量梯度下降）的近似最小化。只要编码器是确定性的，去噪自编码器就是一个前馈网络，并且可以使用与其他前馈网络完全相同的方式进行训练。</p>
 <p>因此我们可以认为DAE是在以下期望下进行随机梯度下降：</p>
@@ -3328,7 +3328,7 @@ p_{decoder}(\boldsymbol{x}|\boldsymbol{h}) = p_{model}(\boldsymbol{x}|\boldsymbo
 -\mathbb{E}_{\boldsymbol{x} \sim \hat{p}_{data}(\boldsymbol{x})}\mathbb{E}_{\tilde{\boldsymbol{x}} \sim C(\tilde{\boldsymbol{x}}|\boldsymbol{x})} \log p_{decoder}(\boldsymbol{x}|\boldsymbol{h} = f(\tilde{\boldsymbol{x}}))</script><p>其中$\hat{p}_{data}(\boldsymbol{x})$是训练数据的分布。</p>
 <h3 id="5-1-得分估计"><a href="#5-1-得分估计" class="headerlink" title="5.1 得分估计"></a>5.1 得分估计</h3><p>得分匹配是最大似然的代替。它提供了概率分布的一致估计，促使模型在各个数据点$\boldsymbol{x}$上获得与数据分布相同的<strong>得分</strong>。在这种情况下，得分是一个特定的梯度场：</p>
 <script type="math/tex; mode=display">
-\bigtriangledown_{\boldsymbol{x}} \log p(\boldsymbol{x})</script><p>对于现在讨论的自编码器，理解学习$\log p<em>{data}$的梯度场是学习$p</em>{data}$结构的一种方式就足够了。</p>
+\bigtriangledown_{\boldsymbol{x}} \log p(\boldsymbol{x})</script><p>对于现在讨论的自编码器，理解学习$\log p_{data}$的梯度场是学习$p_{data}$结构的一种方式就足够了。</p>
 <p>DAE的训练准则（条件高斯$p(\boldsymbol{x}|\boldsymbol{h})$）能让自编码器学到能估计数据分布得分的向量场$g(f(\boldsymbol{x})) -\boldsymbol{x}$，这是DAE的一个重要特性。如下图所示</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/33c3276895f4e972d.png" alt="33c3276895f4e972d.png"></p>
@@ -3558,7 +3558,7 @@ p(h_i) \propto \frac{1}{(1 + \frac{h_i^2}{v})^{\frac{v+1}{2}}}</script><p>使用
 <li>学习速度从0.1开始，当误差稳定时学习率除以10，并且模型训练高达$60 \times 10^4$次迭代。我们使用的权重衰减为0.0001，动量为0.9；</li>
 <li>不使用丢弃；</li>
 <li>在测试阶段，为了比较学习我们采用标准的10-crop测试；</li>
-<li>采用如$[40, 12]$中的全卷积形式，并在多尺度上对分数进行平均（图像归一化，短边位于${224, 256, 384, 480, 640}$中）；</li>
+<li>采用如$[40, 12]$中的全卷积形式，并在多尺度上对分数进行平均（图像归一化，短边位于$\{224, 256, 384, 480, 640\}$中）；</li>
 <li>更深的瓶颈结构，三层是1 $\times$ 1，3 $\times$ 3和1 $\times$ 1卷积，其中1 $\times$ 1层负责减小然后增加（恢复）维度，使3 $\times$ 3层成为具有较小输入/输出维度的瓶颈，两个设计具有相似的时间复杂度。</li>
 </ol>
 <p>ResNet模型总结：</p>
@@ -3891,13 +3891,13 @@ D_K \times D_K \times \alpha M \times \rho D_F \times \rho D_F + \alpha M \times
 <script type="math/tex; mode=display">
 p(s_i,c_j|\boldsymbol{x}_t) = p(s_i|\boldsymbol{x}_t)p(c_j|s_i,\boldsymbol{x}_t)</script><p>或者</p>
 <script type="math/tex; mode=display">
-p(s_i,c_j|\boldsymbol{x}_t) = p(c_j|\boldsymbol{x}_t)p(s_i|c_j,\boldsymbol{x}_t)</script><p>其中$\boldsymbol{x}_t$是在$t$时刻的声学观察值，$c_j$是聚类后的上下文种类${ c_1, …, c_J }$中的一种，$s_i$是一个上下文无关的音素或音素中的状态。</p>
+p(s_i,c_j|\boldsymbol{x}_t) = p(c_j|\boldsymbol{x}_t)p(s_i|c_j,\boldsymbol{x}_t)</script><p>其中$\boldsymbol{x}_t$是在$t$时刻的声学观察值，$c_j$是聚类后的上下文种类$\{ c_1, …, c_J \}$中的一种，$s_i$是一个上下文无关的音素或音素中的状态。</p>
 <p>为了提升性能：</p>
 <ol>
 <li>把传统的浅层神经网络替换成深层神经网络（可选择的预训练）；</li>
 <li>使用聚类后的状态（绑定后的三音素状态）替代单音素状态作为神经网络的输出单元。</li>
 </ol>
-<p>这种改善后的模型称为CD-DNN-HMM，对于所有的状态$s \in [1, S]$，我们只训练一个完整的DNN来估计状态的后验概率$p(q<em>t = s|\boldsymbol{x}_t)$。这和传统的GMM是不同的，因为GMM框架下，我们会使用其多个不同的GMM对不同的状态建模。除此之外，典型的DNN输入不是单一的一帧，而是一个$2w+1$（如9 ~ 13）帧大小的窗口特征$\boldsymbol{x}_t = [\boldsymbol{o}</em>{\max (0, t-w)}…\boldsymbol{o}<em>t…\boldsymbol{o}</em>{\min (T, t+w)}]$，这使得相邻帧的信息可以被有效地利用。</p>
+<p>这种改善后的模型称为CD-DNN-HMM，对于所有的状态$s \in [1, S]$，我们只训练一个完整的DNN来估计状态的后验概率$p(q_t = s|\boldsymbol{x}_t)$。这和传统的GMM是不同的，因为GMM框架下，我们会使用其多个不同的GMM对不同的状态建模。除此之外，典型的DNN输入不是单一的一帧，而是一个$2w+1$（如9 ~ 13）帧大小的窗口特征$\boldsymbol{x}_t = [\boldsymbol{o}_{\max (0, t-w)}…\boldsymbol{o}_t…\boldsymbol{o}_{\min (T, t+w)}]$，这使得相邻帧的信息可以被有效地利用。</p>
 <h3 id="1-2-用CD-DNN-HMM解码"><a href="#1-2-用CD-DNN-HMM解码" class="headerlink" title="1.2 用CD-DNN-HMM解码"></a>1.2 用CD-DNN-HMM解码</h3><p>解码过程中HMM需要似然度$p(\boldsymbol{x}_t|q_t)$，而不是后验概率：</p>
 <script type="math/tex; mode=display">
 p(\boldsymbol{x}_t|q_t = s) = \frac{p(q_t = s|\boldsymbol{x}_t)p(\boldsymbol{x}_t)}{p(s)}</script><p>其中$p(s) = \frac{T_s}{T}$是从训练集中统计地每个状态（聚类后地状态）的先验概率，$T_s$是标记属于状态$s$的帧数，$T$是总帧数。$p(\boldsymbol{x}_t)$是与字词序无关的，计算时可以忽略，得到近似缩放过的似然度$\bar{p}(\boldsymbol{x}_t|q_t) = \frac{p(q_t=s|\boldsymbol{x}_t)}{p(s)}$。</p>
@@ -3909,7 +3909,7 @@ p(\boldsymbol{x}_t|q_t = s) = \frac{p(q_t = s|\boldsymbol{x}_t)p(\boldsymbol{x}_
 <script type="math/tex; mode=display">
 p(\boldsymbol{x}|w) = \sum_qp(\boldsymbol{x},q|w)p(q|w)
 \\
-\approx \pi(q_0) \prod^T_{t=1}a_{q_{t-1}q_t} \prod^T_{t=0}\frac{p(q_t|\boldsymbol{x}_t)}{p(q_t)}</script><p>是声学模型（AM）的概率，其中$p(q<em>t|\boldsymbol{x}_t)$由DNN计算得出，$p(q_t)$是状态先验概率，这个概率也是训练过程中训练出来的（就是把观测值（特征向量）网状态上对齐，跟某个状态对齐的观测值的个数占比就是这个状态的先验概率），$\pi(q_0)$和$a</em>{q_{t-1}q_t}$分别是状态初始概率和状态转移概率，各自由HMM决定。语音模型权重稀疏$\lambda$用于平衡声学和语言模型得分，最终解码路径由以下公式确定</p>
+\approx \pi(q_0) \prod^T_{t=1}a_{q_{t-1}q_t} \prod^T_{t=0}\frac{p(q_t|\boldsymbol{x}_t)}{p(q_t)}</script><p>是声学模型（AM）的概率，其中$p(q_t|\boldsymbol{x}_t)$由DNN计算得出，$p(q_t)$是状态先验概率，这个概率也是训练过程中训练出来的（就是把观测值（特征向量）网状态上对齐，跟某个状态对齐的观测值的个数占比就是这个状态的先验概率），$\pi(q_0)$和$a_{q_{t-1}q_t}$分别是状态初始概率和状态转移概率，各自由HMM决定。语音模型权重稀疏$\lambda$用于平衡声学和语言模型得分，最终解码路径由以下公式确定</p>
 <script type="math/tex; mode=display">
 \hat{w} = \underset{w}{\arg \max} [\log p(\boldsymbol{x}|w) + \lambda \log p(w)]</script><h3 id="1-3-CD-DNN-HMM训练过程"><a href="#1-3-CD-DNN-HMM训练过程" class="headerlink" title="1.3 CD-DNN-HMM训练过程"></a>1.3 CD-DNN-HMM训练过程</h3><p>CD-DNN-HMM包含三个组成部分，一个深度神经网络dnn，一个隐马尔可夫模型hmm以及一个状态先验概率分布prior。</p>
 <ol>
@@ -4065,7 +4065,7 @@ loss = \max(x, 0) - x * z + \log(1 + \exp(-abs(x)))</script><h2 id="9-softmax-cr
 <p>Huber损失是对二者的综合，当$|y−f(\boldsymbol{x})|$小于一个事先指定的值$delta$时，变为平方损失，大于$delta$时，则变成类似于绝对值损失，因此也是比较robust的损失函数。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/0554cfeb35d912975.png" alt="0554cfeb35d912975.png"></p>
-<h3 id="11-2-分类问题"><a href="#11-2-分类问题" class="headerlink" title="11.2 分类问题"></a>11.2 分类问题</h3><p>对于二分类问题，$y \in {−1,+1}$，损失函数常表示为关于$yf(\boldsymbol{x})$的单调递减形式。$yf(\boldsymbol{x})$ 被称为$margin$，其作用类似于回归问题中的残差$y−f(\boldsymbol{x})$。</p>
+<h3 id="11-2-分类问题"><a href="#11-2-分类问题" class="headerlink" title="11.2 分类问题"></a>11.2 分类问题</h3><p>对于二分类问题，$y \in \{−1,+1\}$，损失函数常表示为关于$yf(\boldsymbol{x})$的单调递减形式。$yf(\boldsymbol{x})$ 被称为$margin$，其作用类似于回归问题中的残差$y−f(\boldsymbol{x})$。</p>
 <ul>
 <li>0-1损失</li>
 </ul>
@@ -4383,7 +4383,7 @@ f(x) = \max(x, 0) + \sum^S_{s=1}a_i^s\max(0, -x+b^s_i)</script><!--  -->
 <p><strong>语音识别过程：切除首尾端静音-&gt;声音划分为帧-&gt;对每一帧提取MFCC特征-&gt;若干帧对应一个状态-&gt;三个状态组成一个音素-&gt;若干音素组成单词</strong></p>
 <h2 id="1-受限玻尔兹曼机"><a href="#1-受限玻尔兹曼机" class="headerlink" title="1. 受限玻尔兹曼机"></a>1. 受限玻尔兹曼机</h2><p>在介绍受限玻尔兹曼机RBM之前，先了解一下玻尔兹曼机。</p>
 <h3 id="1-1-玻尔兹曼机"><a href="#1-1-玻尔兹曼机" class="headerlink" title="1.1 玻尔兹曼机"></a>1.1 玻尔兹曼机</h3><p>玻尔兹曼机最初作为一种广义的“联结主义”引入，用来学习二值向量上的任意概率分布。也就是说，我们的目标是计算一组二值向量数据（只包含0和1）的概率分布情况。</p>
-<p>首先在$d$维二值随机向量$\boldsymbol{x} \in {0,1 }^{d \times 1}$上定义玻尔兹曼机。玻尔兹曼机是一种基于能量的模型（玄学？），意味着我们可以使用能量函数定义联合概率分布：</p>
+<p>首先在$d$维二值随机向量$\boldsymbol{x} \in \{0,1 \}^{d \times 1}$上定义玻尔兹曼机。玻尔兹曼机是一种基于能量的模型（玄学？），意味着我们可以使用能量函数定义联合概率分布：</p>
 <script type="math/tex; mode=display">
 P(\boldsymbol{x}) = \frac{\exp (-E(\boldsymbol{x}))}{Z}</script><p>其中$E(\boldsymbol{x})$是能量函数，$Z$是确保概率和为1的配分函数。玻尔兹曼机的能量函数如下：</p>
 <script type="math/tex; mode=display">
@@ -4391,11 +4391,11 @@ E(\boldsymbol{x}) = -\boldsymbol{x}^T\boldsymbol{U}\boldsymbol{x} - \boldsymbol{
 <p>在一般情况下，根据观察到的样本的情况，我们可以很容易计算上面的表达式，但是它限制了观察到的变量和权重矩阵描述的变量之间相互作用的类型。具体来说，这意味着一个单元的概率由<br>其他单元值的线性模型（逻辑回归）给出。</p>
 <p>当不是所有变量都能被观察到时，玻尔兹曼机作用更强。我们将单元分为两个子集：可见单元$\boldsymbol{v}$和隐藏单元$\boldsymbol{h}$。则能量函数变为</p>
 <script type="math/tex; mode=display">
-E(\boldsymbol{v}, \boldsymbol{h}) = -\boldsymbol{v}^T\boldsymbol{R}\boldsymbol{v} - \boldsymbol{v}^T\boldsymbol{W}\boldsymbol{h}-\boldsymbol{h}^T\boldsymbol{S}\boldsymbol{h} - \boldsymbol{b}^T\boldsymbol{v} - \boldsymbol{c}^T\boldsymbol{h}</script><p>玻尔兹曼机的学习算法通常基于最大似然，当基于最大似然的学习规则训练时，连接两个单元的特定权重的更新仅取决于这两个单元在不同分布下收集的统计信息：$P<em>{model}(\boldsymbol{v})$和$\hat{P}</em>{data}(\boldsymbol{v})P_{model}(\boldsymbol{h}|\boldsymbol{v})$。网络的其余部分参与塑造这些统计信息，但权重可以在完全不知道网络其余部分的情况下更新。</p>
+E(\boldsymbol{v}, \boldsymbol{h}) = -\boldsymbol{v}^T\boldsymbol{R}\boldsymbol{v} - \boldsymbol{v}^T\boldsymbol{W}\boldsymbol{h}-\boldsymbol{h}^T\boldsymbol{S}\boldsymbol{h} - \boldsymbol{b}^T\boldsymbol{v} - \boldsymbol{c}^T\boldsymbol{h}</script><p>玻尔兹曼机的学习算法通常基于最大似然，当基于最大似然的学习规则训练时，连接两个单元的特定权重的更新仅取决于这两个单元在不同分布下收集的统计信息：$P_{model}(\boldsymbol{v})$和$\hat{P}_{data}(\boldsymbol{v})P_{model}(\boldsymbol{h}|\boldsymbol{v})$。网络的其余部分参与塑造这些统计信息，但权重可以在完全不知道网络其余部分的情况下更新。</p>
 <a id="more"></a>
 <h3 id="1-2-受限玻尔兹曼机"><a href="#1-2-受限玻尔兹曼机" class="headerlink" title="1.2 受限玻尔兹曼机"></a>1.2 受限玻尔兹曼机</h3><!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/rbm0.png" alt="rbm0.png"></p>
-<p>RBM是包含一层可观察变量和单层潜变量的无向概率图模型，它是一个二分图，观察层或潜层中的任何单元之间不允许存在连接。令观察层由一组$n_v$个二值随机变量组成，我们统称为向量$\boldsymbol{v} \in {0, 1}^{n_v \times 1}$。我们将$n_h$个二值随机变量的潜在或隐藏层记为$\boldsymbol{h} \in {0, 1}^{n_h \times 1}$，$\boldsymbol{b}\in {0, 1}^{n_v \times 1}$和$\boldsymbol{c} \in {0, 1}^{n_h \times 1}$分别是可见层和隐藏层的偏置向量。其能量函数为</p>
+<p>RBM是包含一层可观察变量和单层潜变量的无向概率图模型，它是一个二分图，观察层或潜层中的任何单元之间不允许存在连接。令观察层由一组$n_v$个二值随机变量组成，我们统称为向量$\boldsymbol{v} \in \{0, 1\}^{n_v \times 1}$。我们将$n_h$个二值随机变量的潜在或隐藏层记为$\boldsymbol{h} \in \{0, 1\}^{n_h \times 1}$，$\boldsymbol{b}\in \{0, 1\}^{n_v \times 1}$和$\boldsymbol{c} \in \{0, 1\}^{n_h \times 1}$分别是可见层和隐藏层的偏置向量。其能量函数为</p>
 <script type="math/tex; mode=display">
 E(\boldsymbol{v}, \boldsymbol{h}) = -\boldsymbol{b}^T\boldsymbol{v} - \boldsymbol{c}^T\boldsymbol{h} - \boldsymbol{v}^T\boldsymbol{W}\boldsymbol{h}</script><p>若$\boldsymbol{v} \in \mathbb{R}^{n_v \times1}$，即可见层取实值，则能量函数变为</p>
 <script type="math/tex; mode=display">
@@ -4453,7 +4453,7 @@ p_n(\boldsymbol{v}) = \frac{\sum_\boldsymbol{h}\exp(-E_n(\boldsymbol{v}, \boldsy
 \\
 = p_{n-1}(\boldsymbol{v})\frac{Z_{n-1}}{Z_n}(1+ \exp(c_n+ \boldsymbol{v}^T\boldsymbol{W}_{:,n}))
 \\
-= p_{n-1}(\boldsymbol{v})\frac{Z_{n-1}}{Z_n}+ p_{n-1}(\boldsymbol{v})\frac{Z_{n-1}}{Z_n}\exp(c_n+ \boldsymbol{v}^T\boldsymbol{W}_{:,n})</script><p>上式是一个递归式，假如我们加入新的隐层神经元为第$n$个。我们将$p<em>{n-1}(\boldsymbol{v})\frac{Z</em>{n-1}}{Z<em>n}+ p</em>{n-1}(\boldsymbol{v})\frac{Z<em>{n-1}}{Z_n}\exp(c_n+ \boldsymbol{v}^T\boldsymbol{W}</em>{:,n})$分为两部分，前一部分是$n-1$个隐层神经元的混合高斯分布缩放，后一部分是增加新的隐层神经元导致的$n-1$个隐层神经元的混合高斯分布偏移，偏移量由$\boldsymbol{W}_{:,n}$决定，因此可以将$p_n(\boldsymbol{v})$看作是两个混合高斯模型的叠加。<strong>由于此式是递归式</strong>，也就意味着最终概率分布包含的高斯成分数量$N_n$与隐层神经元个数$n$相比是指数形式增长的（大概是$N_n = 2^n$）。</p>
+= p_{n-1}(\boldsymbol{v})\frac{Z_{n-1}}{Z_n}+ p_{n-1}(\boldsymbol{v})\frac{Z_{n-1}}{Z_n}\exp(c_n+ \boldsymbol{v}^T\boldsymbol{W}_{:,n})</script><p>上式是一个递归式，假如我们加入新的隐层神经元为第$n$个。我们将$p_{n-1}(\boldsymbol{v})\frac{Z_{n-1}}{Z_n}+ p_{n-1}(\boldsymbol{v})\frac{Z_{n-1}}{Z_n}\exp(c_n+ \boldsymbol{v}^T\boldsymbol{W}_{:,n})$分为两部分，前一部分是$n-1$个隐层神经元的混合高斯分布缩放，后一部分是增加新的隐层神经元导致的$n-1$个隐层神经元的混合高斯分布偏移，偏移量由$\boldsymbol{W}_{:,n}$决定，因此可以将$p_n(\boldsymbol{v})$看作是两个混合高斯模型的叠加。<strong>由于此式是递归式</strong>，也就意味着最终概率分布包含的高斯成分数量$N_n$与隐层神经元个数$n$相比是指数形式增长的（大概是$N_n = 2^n$）。</p>
 <p>因此，RBM把可见层输入表示成了一个由多个方差为1的高斯分量组成的混合高斯模型，这些高斯分量的个数是指数级的。与GMM相比，RBM使用了更多的混合分量。然而，GMM可以为不同的高斯分量使用不同的方差来表示这个分布。结论就是高斯-伯努利RBM可以像混合高斯模型一样表示实值数据的分布，RBM可以替换GMM。</p>
 <p>由于RBM的隐层神经元为二值向量，因此很适合用在词袋模型的任务中，比如根据文章内容，判断文章主题，可见层为文章内容，隐层神经元表示主题。因此可以用于推荐系统。</p>
 <h3 id="1-5-训练受限玻尔兹曼机"><a href="#1-5-训练受限玻尔兹曼机" class="headerlink" title="1.5 训练受限玻尔兹曼机"></a>1.5 训练受限玻尔兹曼机</h3><p>训练RBM使用随机梯度下降SGD来极小化负对数似然NLL</p>
@@ -4465,14 +4465,14 @@ J_{NLL}(\boldsymbol{W}, \boldsymbol{b}, \boldsymbol{c};\boldsymbol{v}) = -\log P
 \bigtriangleup\boldsymbol{W}_t = \gamma\bigtriangleup\boldsymbol{W}_{t-1} + (1-\gamma)\frac{1}{M_b}\sum^{M_b}_{m=1}\bigtriangledown_{\boldsymbol{W}_t}J_{NLL}(\boldsymbol{W}, \boldsymbol{b}, \boldsymbol{c};\boldsymbol{v}^m)</script><p>这里$M_b$是batch大小，$\bigtriangledown J$是负对数似然对参数的梯度，其他两个参数$\boldsymbol{b},\boldsymbol{c}$与上式相同。</p>
 <p>与DNN不同，RBM的对数似然梯度不适合精确计算。负对数似然对于任意模型参数的导数的一般形式为</p>
 <script type="math/tex; mode=display">
-\bigtriangledown_\theta J_{NLL}(\boldsymbol{W, b, c;v}) = - [\left \langle \frac{\partial E(\boldsymbol{v, h})}{\partial\theta} \right \rangle_{data} - \left \langle \frac{\partial E(\boldsymbol{v, h})}{\partial\theta} \right \rangle_{model}]</script><p>$\left \langle x \right \rangle<em>{data}$和$\left \langle x \right \rangle</em>{model}$分别是从数据和最终模型中估计$x$的期望值。特别地，对于可见层神经元-隐层神经元的权重，有</p>
+\bigtriangledown_\theta J_{NLL}(\boldsymbol{W, b, c;v}) = - [\left \langle \frac{\partial E(\boldsymbol{v, h})}{\partial\theta} \right \rangle_{data} - \left \langle \frac{\partial E(\boldsymbol{v, h})}{\partial\theta} \right \rangle_{model}]</script><p>$\left \langle x \right \rangle_{data}$和$\left \langle x \right \rangle_{model}$分别是从数据和最终模型中估计$x$的期望值。特别地，对于可见层神经元-隐层神经元的权重，有</p>
 <script type="math/tex; mode=display">
 \bigtriangledown_{w_{ji}} J_{NLL}(\boldsymbol{W, b, c;v}) = - [\left \langle v_ih_j \right \rangle_{data} - \left \langle v_ih_j \right \rangle_{model}]</script><p>第一个期望是训练数据中可见层神经元$v_i$和隐层神经元$h_j$同时取1的频率，第二个期望是以最终模型定义的分布来求得的。当隐层神经元未知时，第二个期望的计算时间是与高斯成分的数量相关，也就是指数级的，因此需要换一种方法。</p>
 <p>最有效的是对比散度算法CD。对可见层神经元-隐藏层神经元权重的梯度的一步对比散度近似是</p>
 <script type="math/tex; mode=display">
 \bigtriangledown_{w_{ji}} J_{NLL}(\boldsymbol{W, b, c;v}) = - [\left \langle v_ih_j \right \rangle_{data} - \left \langle v_ih_j \right \rangle_{\infty}]
 \\
-\approx - [\left \langle v_ih_j \right \rangle_{data} - \left \langle v_ih_j \right \rangle_{1}]</script><p>这里$\left \langle \cdot \right \rangle<em>{\infty}$和$\left \langle \cdot \right \rangle</em>{1}$分别表示在吉布斯采样器运行了无穷次和一次之后得到的采样上估计的期望。</p>
+\approx - [\left \langle v_ih_j \right \rangle_{data} - \left \langle v_ih_j \right \rangle_{1}]</script><p>这里$\left \langle \cdot \right \rangle_{\infty}$和$\left \langle \cdot \right \rangle_{1}$分别表示在吉布斯采样器运行了无穷次和一次之后得到的采样上估计的期望。</p>
 <p>采样过程和对比散度算法：</p>
 <ul>
 <li>第一步，吉布斯采样器通过一个数据样本初始化；</li>
@@ -4480,10 +4480,10 @@ J_{NLL}(\boldsymbol{W}, \boldsymbol{b}, \boldsymbol{c};\boldsymbol{v}) = -\log P
 <li>根据RBM类型是伯努利-伯努利RBM还是高斯-伯努利RBM，使用不同的公式定义的后验概率$P(\boldsymbol{v}|\boldsymbol{h})$，基于隐藏层采样继续生成一个可见层采样；</li>
 <li>重复上述过程。</li>
 </ul>
-<p>如果吉布斯采样器运行无穷次，则真实期望$\left \langle v<em>ih_j \right \rangle</em>{model}$可以从老化阶段之后生成的采样中估计</p>
+<p>如果吉布斯采样器运行无穷次，则真实期望$\left \langle v_ih_j \right \rangle_{model}$可以从老化阶段之后生成的采样中估计</p>
 <script type="math/tex; mode=display">
-\left \langle v_ih_j \right \rangle_{model} \approx \frac{1}{N} \sum^{N_{burn}+N}_{n=N_{burn}+1} v_i^nh_j^n</script><p>这里$N<em>{burn}$是达到老化阶段所需的步数，$N$是老化之后的采样次数（可能是巨大的）。然而运行很多步吉布斯采样器是低效的。我们可以只运行一次，用一个非常粗略的近似$\left \langle v_ih_j \right \rangle</em>{1}$来估计$\left \langle v<em>ih_j \right \rangle</em>{model}$</p>
-<p>然而$\left \langle v<em>ih_j \right \rangle</em>{1}$具有很大的方差。为了减小方差，我们可以基于以下公式估计$\left \langle v<em>ih_j \right \rangle</em>{model}$，这里取等号是因为二值向量</p>
+\left \langle v_ih_j \right \rangle_{model} \approx \frac{1}{N} \sum^{N_{burn}+N}_{n=N_{burn}+1} v_i^nh_j^n</script><p>这里$N_{burn}$是达到老化阶段所需的步数，$N$是老化之后的采样次数（可能是巨大的）。然而运行很多步吉布斯采样器是低效的。我们可以只运行一次，用一个非常粗略的近似$\left \langle v_ih_j \right \rangle_{1}$来估计$\left \langle v_ih_j \right \rangle_{model}$</p>
+<p>然而$\left \langle v_ih_j \right \rangle_{1}$具有很大的方差。为了减小方差，我们可以基于以下公式估计$\left \langle v_ih_j \right \rangle_{model}$，这里取等号是因为二值向量</p>
 <script type="math/tex; mode=display">
 \boldsymbol{h}^0 \sim P(\boldsymbol{h}|\boldsymbol{v}^0)
 \\
@@ -4518,9 +4518,9 @@ J_{NLL}(\boldsymbol{W}, \boldsymbol{b}, \boldsymbol{c};\boldsymbol{v}) = -\log P
 <p>13.$\boldsymbol{H}^{n+1} \leftarrow P(\boldsymbol{H}|\boldsymbol{V}^{n+1})$</p>
 </blockquote>
 <p>14.$end$ $for$</p>
-<p>15.$\bigtriangledown<em>{\boldsymbol{W}}J \leftarrow \bigtriangledown</em>{\boldsymbol{W}}J - \boldsymbol{H}^N(\boldsymbol{V}^N)^T$</p>
-<p>16.$\bigtriangledown<em>{\boldsymbol{b}}J \leftarrow \bigtriangledown</em>{\boldsymbol{b}}J - sumrow(\boldsymbol{V}^0)$</p>
-<p>17.$\bigtriangledown<em>{\boldsymbol{c}}J \leftarrow \bigtriangledown</em>{\boldsymbol{c}}J - sumrow(\boldsymbol{H}^0)$</p>
+<p>15.$\bigtriangledown_{\boldsymbol{W}}J \leftarrow \bigtriangledown_{\boldsymbol{W}}J - \boldsymbol{H}^N(\boldsymbol{V}^N)^T$</p>
+<p>16.$\bigtriangledown_{\boldsymbol{b}}J \leftarrow \bigtriangledown_{\boldsymbol{b}}J - sumrow(\boldsymbol{V}^0)$</p>
+<p>17.$\bigtriangledown_{\boldsymbol{c}}J \leftarrow \bigtriangledown_{\boldsymbol{c}}J - sumrow(\boldsymbol{H}^0)$</p>
 <p>18.$\boldsymbol{W}_{t+1} \leftarrow \boldsymbol{W}_t + \frac{\eta}{M_b}\bigtriangleup\boldsymbol{W}_t$</p>
 <p>19.$\boldsymbol{b}_{t+1} \leftarrow \boldsymbol{b}_t + \frac{\eta}{M_b}\bigtriangleup\boldsymbol{b}_t$</p>
 <p>20.$\boldsymbol{c}_{t+1} \leftarrow \boldsymbol{c}_t + \frac{\eta}{M_b}\bigtriangleup\boldsymbol{c}_t$</p>
@@ -4546,8 +4546,8 @@ P(v_i = 1|\boldsymbol{h}^{(1)}) = \sigma(b_i^{(0)} + \boldsymbol{W}_{:,i}^{(1)^T
 \boldsymbol{v} \sim N(\boldsymbol{v};\boldsymbol{b}^{(0)} + \boldsymbol{W}^{(1)^T}\boldsymbol{h}^{(1)}, \boldsymbol{\beta}^{-1})</script><p>为了便于处理，$\boldsymbol{\beta}$为对角形式。</p>
 <p>训练过程表示：</p>
 <ul>
-<li>先使用对比散度CD训练第一层RBM（可见层+第一隐藏层）以最大化$\mathbb{E}<em>{\boldsymbol{v}\sim p</em>{data}}\log p(\boldsymbol{v})$；</li>
-<li>训练第二层RBM（第一隐藏层+第二隐藏层）为近似最大化$\mathbb{E}<em>{\boldsymbol{v}\sim p</em>{data}}\mathbb{E}_{\boldsymbol{h}^{(1)} \sim p^{(1)}(\boldsymbol{h}^{(1)}|\boldsymbol{v})}\log p^{(2)}(\boldsymbol{h}^{(1)})$，其中$p^{(1)}$是第一个RBM的概率分布，$p^{(2)}$是第二个RBM的概率分布。</li>
+<li>先使用对比散度CD训练第一层RBM（可见层+第一隐藏层）以最大化$\mathbb{E}_{\boldsymbol{v}\sim p_{data}}\log p(\boldsymbol{v})$；</li>
+<li>训练第二层RBM（第一隐藏层+第二隐藏层）为近似最大化$\mathbb{E}_{\boldsymbol{v}\sim p_{data}}\mathbb{E}_{\boldsymbol{h}^{(1)} \sim p^{(1)}(\boldsymbol{h}^{(1)}|\boldsymbol{v})}\log p^{(2)}(\boldsymbol{h}^{(1)})$，其中$p^{(1)}$是第一个RBM的概率分布，$p^{(2)}$是第二个RBM的概率分布。</li>
 </ul>
 <p>上述过程可以无限重复，从而向DBN添加任意多层，这个过程可被视为提高数据在DBN下似然概率的变分下界。</p>
 <p>我们会发现DBN计算过程中使用到了Sigmoid函数，十分类似由Sigmoid神经元构成的DNN。从这种视角看由Sigmoid神经元构成的DNN，我们发现DBN的权重可以用作DNN的初始权重。DBN和DNN之间的唯一区别实在DNN中使用了标注。基于此，在多分类DNN中，当预训练结束后，我们需要添加一个随机初始化的softmax输出层，并用反向传播算法鉴别性地精细调整网络中地所有权重。</p>
@@ -4564,7 +4564,7 @@ P(v_i = 1|\boldsymbol{h}^{(1)}) = \sigma(b_i^{(0)} + \boldsymbol{W}_{:,i}^{(1)^T
 <li>学习模型参数的时候使用了近似的对比散度算法。</li>
 </ol>
 <p>显然，若使用DBN初始化基于ReLU的DNN，效果将大打折扣，因为两者并无联系。</p>
-<h2 id="3-降噪自动编码器预训练"><a href="#3-降噪自动编码器预训练" class="headerlink" title="3. 降噪自动编码器预训练"></a>3. 降噪自动编码器预训练</h2><p>自动编码器是基于<strong>没有标注</strong>的训练数据集$\mathbb{S} = { (\boldsymbol{v}^m) | 1 \leqslant m \leqslant M }$，找到一个$N_h$维隐藏层表示$\boldsymbol{h} = f(\boldsymbol{v})\in \mathbb{R}^{N_h \times 1}$，通过它可以使用最小均方误差MSE把初始化的$N_v$维信号$\boldsymbol{v}$重建为$\tilde{\boldsymbol{v}} = g(\boldsymbol{h})$。</p>
+<h2 id="3-降噪自动编码器预训练"><a href="#3-降噪自动编码器预训练" class="headerlink" title="3. 降噪自动编码器预训练"></a>3. 降噪自动编码器预训练</h2><p>自动编码器是基于<strong>没有标注</strong>的训练数据集$\mathbb{S} = \{ (\boldsymbol{v}^m) | 1 \leqslant m \leqslant M \}$，找到一个$N_h$维隐藏层表示$\boldsymbol{h} = f(\boldsymbol{v})\in \mathbb{R}^{N_h \times 1}$，通过它可以使用最小均方误差MSE把初始化的$N_v$维信号$\boldsymbol{v}$重建为$\tilde{\boldsymbol{v}} = g(\boldsymbol{h})$。</p>
 <script type="math/tex; mode=display">
 J_{MSE}(\boldsymbol{W, b};\mathbb{S}) = \frac{1}{M}\sum^M_{m=1}\frac{1}{2}||\tilde{\boldsymbol{v}}^m - \boldsymbol{v}^m||^2</script><p>理论上$f$和$g$可以是任意函数。与主成分分析PCA不同的是，自动编码器有获取输入分布的多重模态属性的潜力。降噪自动编码器只有一个隐藏层。</p>
 <p>与DBN不同的是，DBN是主动获取训练数据的统计规律，自动编码器是让其自由发展，尽可能地减小重建误差，在这个过程中，编码器获得了从输入数据到隐藏层的统计特征，解码器获得了重建目标的能力。</p>
@@ -4748,7 +4748,7 @@ L(\{ \boldsymbol{x}^{(1)},...,\boldsymbol{x}^{(\tau)} \}, \{ \boldsymbol{y}^{(1)
 <li>编码器或输入RNN处理输入序列，编码器输出上下文$C$（通常是最终隐藏状态的简单函数）；</li>
 <li>解码器或输出RNN则以固定长度的向量为条件产生输出序列$\boldsymbol{Y} = (\boldsymbol{y}^{(1)},…,\boldsymbol{y}^{(n_y)})$。</li>
 </ol>
-<p>序列长度$n<em>x,n_y$可以彼此不同。两个RNN共同训练以最大化$\log P(\boldsymbol{y}^{(1)},…,\boldsymbol{y}^{(n_y)}|\boldsymbol{x}^{(1)},…,\boldsymbol{x}^{(n_x)})$（关于训练集中所有$\boldsymbol{x}$和$\boldsymbol{y}$对的平均）。编码器RNN的最后一个状态$\boldsymbol{h}</em>{n_x}$通常被当作输入的表示$C$并作为解码器RNN的输入。</p>
+<p>序列长度$n_x,n_y$可以彼此不同。两个RNN共同训练以最大化$\log P(\boldsymbol{y}^{(1)},…,\boldsymbol{y}^{(n_y)}|\boldsymbol{x}^{(1)},…,\boldsymbol{x}^{(n_x)})$（关于训练集中所有$\boldsymbol{x}$和$\boldsymbol{y}$对的平均）。编码器RNN的最后一个状态$\boldsymbol{h}_{n_x}$通常被当作输入的表示$C$并作为解码器RNN的输入。</p>
 <p>这里并不强制要求编码器与解码器的隐藏层具有相同的大小。</p>
 <p>此架构的一个明显不足是，编码器RNN输出的上下文$C$的维度太小而难以适当地概括一个长序列。<br>让$C$成为可变长度的序列，而不是一个固定大小的向量；<br>将序列$C$的元素和输出序列的元素相关联的<strong>注意力机制</strong>。</p>
 <h2 id="5-深度循环网络"><a href="#5-深度循环网络" class="headerlink" title="5. 深度循环网络"></a>5. 深度循环网络</h2><p>大多数RNN中的计算可以分解为三块参数及其相关的变换：</p>
@@ -4998,7 +4998,7 @@ S(i,j) = (K * I)(i, j) = \sum_m\sum_n I(i-m,j-n)K(m,n)</script><p>核矩阵$K$�
 <script type="math/tex; mode=display">
 \tilde{J}(\boldsymbol{w};\boldsymbol{X, y}) = \alpha||\boldsymbol{w}||_1 + J(\boldsymbol{w};\boldsymbol{X, y})</script><p>对于每一维$i$：</p>
 <script type="math/tex; mode=display">
-w_i = sign(w_i^*)\max \{ |w_i^*| - \frac{\alpha}{H_{i,i}}, 0 \}</script><p>显然，当$w<em>i^* \leqslant \frac{\alpha}{H</em>{i,i}}$的时候，正则化会使$w_i$变成0，也就是说$L^1$正则化会产生更加<strong>稀疏</strong>的解。因此可以使用$L^1$正则化实现降维或者特征选择。</p>
+w_i = sign(w_i^*)\max \{ |w_i^*| - \frac{\alpha}{H_{i,i}}, 0 \}</script><p>显然，当$w_i^<em> \leqslant \frac{\alpha}{H_{i,i}}$的时候，正则化会使$w_i$变成0，也就是说$L^1$正则化会产生更加<em>*稀疏</em></em>的解。因此可以使用$L^1$正则化实现降维或者特征选择。</p>
 <h2 id="2-作为约束的范数惩罚"><a href="#2-作为约束的范数惩罚" class="headerlink" title="2. 作为约束的范数惩罚"></a>2. 作为约束的范数惩罚</h2><p>上面介绍的参数范数惩罚未对正则项进行约束，如果我们想约束$\Omega$小于某个常数$k$，往往我们需要使用KKT条件（参考<code>支持向量机</code>）</p>
 <script type="math/tex; mode=display">
 L(\boldsymbol{\theta}, \alpha;\boldsymbol{X, y}) = J(\boldsymbol{\theta;X,y}) + \alpha(\Omega(\theta) - k)</script><p>这个约束问题的解由下式给出</p>
@@ -5082,7 +5082,7 @@ L(\boldsymbol{\theta}, \alpha;\boldsymbol{X, y}) = J(\boldsymbol{\theta;X,y}) + 
 <p>标准化的方式很多，对于稀疏矩阵，我们希望在标准化的同时保持矩阵稀疏性，这时的计算方式可能需要改变。具体参考<a href="http://sklearn.apachecn.org/cn/0.19.0/modules/preprocessing.html#preprocessing" target="_blank" rel="noopener">sklearn-preprocessing</a></p>
 <a id="more"></a>
 <h2 id="2-模型初始化"><a href="#2-模型初始化" class="headerlink" title="2. 模型初始化"></a>2. 模型初始化</h2><p>模型参数初始值需要足够小才能使sigmoid函数输出值在$(0,1)$，而不是接近0或1，那样会导致梯度很小，收敛很慢。</p>
-<p>推荐参数$b$初始为0，$w$初始值属于高斯分布$N(0, \sigma^2<em>{w^{l+1}})$，$\sigma</em>{w^{l+1}} = \frac{1}{\sqrt{N_l}}$，其中$N_l$为与权重连接的输出节点的个数。</p>
+<p>推荐参数$b$初始为0，$w$初始值属于高斯分布$N(0, \sigma^2_{w^{l+1}})$，$\sigma_{w^{l+1}} = \frac{1}{\sqrt{N_l}}$，其中$N_l$为与权重连接的输出节点的个数。</p>
 <h2 id="3-权重衰减"><a href="#3-权重衰减" class="headerlink" title="3. 权重衰减"></a>3. 权重衰减</h2><p>基于$L_1$范数和$L_2$范数的正则化，当DNN模型有超过1百万的参数，插值系数$\lambda$应该很小（通常在$10^{-4}$范围），当训练数据量较大时设置为0.</p>
 <h2 id="4-丢弃法"><a href="#4-丢弃法" class="headerlink" title="4. 丢弃法"></a>4. 丢弃法</h2><p>dropout基本思想时在训练过程中随机丢弃每一个隐层中一定比例（丢弃比例$\alpha$）的神经元。当一个隐层神经元被丢弃时，它的激活值被设置为0。分析一下流程就知道，在测试阶段只需要在与dropout训练有关的所有权重上乘以$(1-\alpha)$就可以直接使用。</p>
 <p>经验表明，在dropout比例为0.1 ~ 0.2时，识别率会有提升。与此同时，若将初始dropout比例设置为0.5，在训练过程中渐渐减小dropout比例会有更好的效果。</p>
@@ -5192,7 +5192,7 @@ v_t = \gamma v_{t-1} + \eta \bigtriangledown_\theta J(\theta - \gamma v_{t-1})
 \theta = \theta - v_t</script><p>$\gamma$一般设置为0.9或差不多的数值，这里可以理解为在Momentum的基础上，我们设置一个踩刹车的步骤，当前面累计的动量很多导致当前更新步伐很大时，下一步会由于$\theta - \gamma v_{t-1}$产生一个较小的梯度变化，从而实现平稳下降避免速度的太快。实验表明在RNNs上，NAG有着很好的表现。</p>
 <h3 id="4-3-Adagrad"><a href="#4-3-Adagrad" class="headerlink" title="4.3  Adagrad"></a>4.3  Adagrad</h3><p>Adagrad，核心思想是对低频的参数做较大的更新，对高频的做较小的更新，这个算法针对的是学习率，将学习率变成一种动态的自动调节的参数。其参数更新公式为</p>
 <script type="math/tex; mode=display">
-\theta_{t+1, i} = \theta_{t, i} - \frac{\eta}{\sqrt{G_{t, ii}+\epsilon}} \cdot g_{t,i}</script><p>$\eta$一般设置为0.01，$t$代表steps，$g<em>{t,i}$表示第$t$步第$i$个参数的$\bigtriangledown</em>{\theta<em>t} J(\theta</em>{t,i})$，$G<em>t$是对角线矩阵，每个对角线元素$G</em>{t, ii}$的值是在时间上累计的所有的$\theta<em>i$的梯度的平方和，即$G</em>{t, ii} = \sum^t<em>{k=0}g</em>{k, i}^2$，$\epsilon$是一个常数，避免分母为0。随着时间增加，分母越来越大，学习率逐渐下降，且低频的参数做较大的更新，对高频的做较小的更新。实验表明在稀疏输入的条件下，Adagrad有很好的表现。</p>
+\theta_{t+1, i} = \theta_{t, i} - \frac{\eta}{\sqrt{G_{t, ii}+\epsilon}} \cdot g_{t,i}</script><p>$\eta$一般设置为0.01，$t$代表steps，$g_{t,i}$表示第$t$步第$i$个参数的$\bigtriangledown_{\theta_t} J(\theta_{t,i})$，$G_t$是对角线矩阵，每个对角线元素$G_{t, ii}$的值是在时间上累计的所有的$\theta_i$的梯度的平方和，即$G_{t, ii} = \sum^t_{k=0}g_{k, i}^2$，$\epsilon$是一个常数，避免分母为0。随着时间增加，分母越来越大，学习率逐渐下降，且低频的参数做较大的更新，对高频的做较小的更新。实验表明在稀疏输入的条件下，Adagrad有很好的表现。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/adagrad.png" alt="adagrad.png"></p>
 <h3 id="4-4-Adadelta"><a href="#4-4-Adadelta" class="headerlink" title="4.4  Adadelta"></a>4.4  Adadelta</h3><p>Adadelta，是对Adagrad的进一步优化，由于Adagrad是对整个时间上的累加，必然会导致时间越长学习率逐渐趋向0，Adadelta将这种累计限制在一个区间$w$内，使得学习率下降速度减缓。在实际使用中并不会定义$w$，而是使用均值作为替换。其参数更新公式为</p>
@@ -5230,7 +5230,7 @@ v_t = \beta_2v_{t-1} + (1-\beta_2)g_t^2</script><p>如果$m_t$和$v_t$被初始�
 \theta_{t+1} = \theta_t - \frac{\eta}{\sqrt{\hat{v}_t}+\epsilon}\hat{m}_t</script><p>$\beta_1 = 0.9, \beta_2 = 0.999, \epsilon = 10^{-8}$为默认设置。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/adam.png" alt="adam.png"></p>
-<h3 id="4-7-AdaMax"><a href="#4-7-AdaMax" class="headerlink" title="4.7  AdaMax"></a>4.7  AdaMax</h3><p>AdaMax，修改了Adam的$v<em>t$，因为$v_t$可以看作是对$g_t$的$l_2$范数，AdaMax从$l</em>\infty$范数中选择最大的范数作为替换，以加速梯度下降，这里用$u_t$表示</p>
+<h3 id="4-7-AdaMax"><a href="#4-7-AdaMax" class="headerlink" title="4.7  AdaMax"></a>4.7  AdaMax</h3><p>AdaMax，修改了Adam的$v_t$，因为$v_t$可以看作是对$g_t$的$l_2$范数，AdaMax从$l_\infty$范数中选择最大的范数作为替换，以加速梯度下降，这里用$u_t$表示</p>
 <script type="math/tex; mode=display">
 u_t = \beta^\infty_2v_{t-1} + (1-\beta^\infty_2)|g_t|^\infty
 \\
@@ -5248,7 +5248,7 @@ m_t = \beta_1m_{t-1} + (1-\beta_1)g_t
 \\
 \theta_{t+1} = \theta_t - \frac{\eta}{\sqrt{\hat{v}_t}+\epsilon}\hat{m}_t</script><p>那么扩展一下更新公式</p>
 <script type="math/tex; mode=display">
-\theta_{t+1} = \theta_t - \frac{\eta}{\sqrt{\hat{v}_t}+\epsilon}(\frac{\beta_1m_{t-1}}{1-\beta^t_1} + \frac{(1-\beta_1)g_t}{1-\beta^t_1})</script><p>其中$\frac{\beta<em>1m</em>{t-1}}{1-\beta^t<em>1}$可以使用$\hat{m}</em>{t-1}$替换，与此同时，也可以根据NAG使用$\hat{m}<em>t$替换$\hat{m}</em>{t-1}$。最终参数更新公式为</p>
+\theta_{t+1} = \theta_t - \frac{\eta}{\sqrt{\hat{v}_t}+\epsilon}(\frac{\beta_1m_{t-1}}{1-\beta^t_1} + \frac{(1-\beta_1)g_t}{1-\beta^t_1})</script><p>其中$\frac{\beta_1m_{t-1}}{1-\beta^t_1}$可以使用$\hat{m}_{t-1}$替换，与此同时，也可以根据NAG使用$\hat{m}_t$替换$\hat{m}_{t-1}$。最终参数更新公式为</p>
 <script type="math/tex; mode=display">
 \theta_{t+1} = \theta_t - \frac{\eta}{\sqrt{\hat{v}_t}+\epsilon}(\beta_1\hat{m}_t + \frac{(1-\beta_1)g_t}{1-\beta^t_1})</script><h3 id="4-9-Proximal-Algorithm"><a href="#4-9-Proximal-Algorithm" class="headerlink" title="4.9 Proximal Algorithm"></a>4.9 Proximal Algorithm</h3><p>对应<code>tf.train.ProximalAdagradOptimizer</code>和<code>tf.train.ProximalGradientDescentOptimizer</code>，主要是针对稀疏矩阵，目的是为了更好地得到稀疏解。稀疏解一方面可以增强泛化性能，另一方面减小运算时内存压力。</p>
 <p>Proximal Algorithm是求解$l1$正则项的方法，为什么$l1$比$l2$更容易产生稀疏解？</p>
@@ -5545,7 +5545,7 @@ d\boldsymbol{b}^1 = \frac{1}{m} np.sum(d\boldsymbol{Z}^1, axis=1, keepdims=True)
 <p>《解析深度学习-语音识别实践》第3章 隐马尔可夫模型及其变体<br>西瓜书第7章 贝叶斯分类器<br><a href="https://www.cnblogs.com/Gabby/p/5344658.html" target="_blank" rel="noopener">机器学习系列之EM算法</a><br><a href="https://www.cnblogs.com/Denise-hzf/p/6612212.html" target="_blank" rel="noopener">HMM模型和Viterbi算法</a></p>
 </blockquote>
 <p><strong>语音识别过程：切除首尾端静音-&gt;声音划分为帧-&gt;对每一帧提取MFCC特征-&gt;若干帧对应一个状态-&gt;三个状态组成一个音素-&gt;若干音素组成单词</strong></p>
-<h2 id="1-马尔可夫链"><a href="#1-马尔可夫链" class="headerlink" title="1. 马尔可夫链"></a>1. 马尔可夫链</h2><p>马尔可夫链是一种离散状态的马尔可夫序列，也是一般性马尔可夫序列的特殊形式。<br>马尔可夫链的状态空间具有离散和有限性：$q_t \in { s^{(j)},j = 1,2,…,N}$。每一个离散值都与马尔可夫链中的一个状态相关。</p>
+<h2 id="1-马尔可夫链"><a href="#1-马尔可夫链" class="headerlink" title="1. 马尔可夫链"></a>1. 马尔可夫链</h2><p>马尔可夫链是一种离散状态的马尔可夫序列，也是一般性马尔可夫序列的特殊形式。<br>马尔可夫链的状态空间具有离散和有限性：$q_t \in \{ s^{(j)},j = 1,2,…,N\}$。每一个离散值都与马尔可夫链中的一个状态相关。</p>
 <p>一个马尔可夫链$\boldsymbol{q}_1^T = q_1, q_2,…,q_T$，可被转移概率完全表示，定义为</p>
 <script type="math/tex; mode=display">
 P(q_t=s^{(j)}|q_{t-1}=s^{(i)}) = a_{ij}(t) \quad i,j=1,2,...,N</script><p>以及初始状态分布概率。如果这些转移概率与时间$t$无关，则得到齐次马尔可夫链。</p>
@@ -5556,37 +5556,37 @@ P(q_t=s^{(j)}|q_{t-1}=s^{(i)}) = a_{ij}(t) \quad i,j=1,2,...,N</script><p>以及
 p_j(t) = P[q_t = s^{(j)}]</script><a id="more"></a>
 <p>很容易得到，递归计算</p>
 <script type="math/tex; mode=display">
-p_i(t+1) = \sum^N_{j=1} a_{ji}p_j(t), \quad \forall i</script><p>如果马尔可夫链的状态占有分布式渐进收敛：$p<em>i(t) \rightarrow \pi(q^{(i)})$，当$t \rightarrow \infty$，我们称$p(s^{(i)})$为马尔可夫链的一个稳态分布。对有稳态分布的马尔可夫链来说，他的转移概率$a</em>{ij}$必须满足：</p>
+p_i(t+1) = \sum^N_{j=1} a_{ji}p_j(t), \quad \forall i</script><p>如果马尔可夫链的状态占有分布式渐进收敛：$p_i(t) \rightarrow \pi(q^{(i)})$，当$t \rightarrow \infty$，我们称$p(s^{(i)})$为马尔可夫链的一个稳态分布。对有稳态分布的马尔可夫链来说，他的转移概率$a_{ij}$必须满足：</p>
 <script type="math/tex; mode=display">
 \bar{\pi}(s^{(i)}) = \sum^N_{j=1}a_{ji}\bar{\pi}(s^{(j)}), \quad \forall i</script><p>马尔可夫链的稳态分布在马尔可夫链蒙特卡洛（MCMC）方法中起着重要作用。这些方法用来模拟（即采样）任意复杂的分布函数，使其能执行很多复杂的统计推断和学习任务，否则这些任务运算困难。MCMC方法的理论基础是马尔可夫链到它的稳态分布$\bar{\pi}(s^{(i)})$的渐进收敛。也就是说，无论初始分布如何，马尔可夫链之于$\bar{\pi}(s^{(i)})$是渐进无偏的。因此，为了从任意的复合分布$p(s)$中采样，可以通过设计合适的转移概率构造一个马尔可夫链，使它的稳态分布为$\bar{\pi}(s) = p(s)$。</p>
 <p>三种马尔可夫链的性质：</p>
 <ul>
-<li>马尔可夫链的状态时长是一个指数或几何级分布：$p<em>i(d)=C(a</em>{ii})^{d-1}$，其中归一化常数为$C = 1 - a_{ii}$；</li>
+<li>马尔可夫链的状态时长是一个指数或几何级分布：$p_i(d)=C(a_{ii})^{d-1}$，其中归一化常数为$C = 1 - a_{ii}$；</li>
 <li>平均状态时长为</li>
 </ul>
 <script type="math/tex; mode=display">
 \bar{d}_i = \sum^{\infty}_{d=1}dp_i(d) = \sum^{\infty}_{d=1}(1-a_{ii})(a_{ii})^{d-1} = \frac{1}{1-a_{ii}}</script><ul>
-<li>对任意一个服从马尔可夫链的观察序列，若它对应有限长度状态序列$\boldsymbol{q}^T<em>1$，则其概率很容易计算，是所有马尔可夫链的转移概率的乘积：$P(\boldsymbol{q}^T_1) = \bar{\pi}</em>{q<em>1}\prod^{T-1}</em>{t=1}a<em>{q_tq</em>{t+1}}$，其中$\bar{\pi}_{s_1}$使当$t=1$时的初始状态输出概率。</li>
+<li>对任意一个服从马尔可夫链的观察序列，若它对应有限长度状态序列$\boldsymbol{q}^T_1$，则其概率很容易计算，是所有马尔可夫链的转移概率的乘积：$P(\boldsymbol{q}^T_1) = \bar{\pi}_{q_1}\prod^{T-1}_{t=1}a_{q_tq_{t+1}}$，其中$\bar{\pi}_{s_1}$使当$t=1$时的初始状态输出概率。</li>
 </ul>
 <h2 id="2-序列与模型"><a href="#2-序列与模型" class="headerlink" title="2. 序列与模型"></a>2. 序列与模型</h2><p>马尔可夫链的每一种状态与一种输出（观察值或事件）一一对应，没有随机性。</p>
 <p>隐马尔可夫序列在各个状态引入一种随机性，用一个观测的概率分布与每一个状态对应，而不是一个确定的事件或观察值。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/hmm.png" alt="hmm.png"></p>
-<p>即我们观察到的是$x<em>i$，而观测值仅由隐藏的状态$y_i$决定，而当前时刻的状态$y_i$仅由前一时刻的状态$y</em>{i-1}$决定。</p>
+<p>即我们观察到的是$x_i$，而观测值仅由隐藏的状态$y_i$决定，而当前时刻的状态$y_i$仅由前一时刻的状态$y_{i-1}$决定。</p>
 <h3 id="2-1-隐马尔可夫模型的性质"><a href="#2-1-隐马尔可夫模型的性质" class="headerlink" title="2.1 隐马尔可夫模型的性质"></a>2.1 隐马尔可夫模型的性质</h3><ul>
 <li>齐次马尔可夫链的转移概率矩阵$\boldsymbol{A}=[a_{ij}] \quad i,j = 1,2,…,N$，其中共有$N$个状态</li>
 </ul>
 <script type="math/tex; mode=display">
 a_{ij} = P(q_t = j | q_{t-1}=i) \quad i,j = 1,2,...,N</script><ul>
 <li>马尔可夫链的初始概率：$\pi = [\pi_i] \quad i= 1,2,…,N$，其中$\pi_i = P(q_1 = i)$；</li>
-<li>观察概率分布为$P(\boldsymbol{o}_t|s^{(i)}) \quad i=1,2,…,N$。若$\boldsymbol{o}_t$是离散的，每个状态对应的概率分布用来描述观察${ \boldsymbol{v}_1, \boldsymbol{v}_2,…,\boldsymbol{v}_K}$的概率：</li>
+<li>观察概率分布为$P(\boldsymbol{o}_t|s^{(i)}) \quad i=1,2,…,N$。若$\boldsymbol{o}_t$是离散的，每个状态对应的概率分布用来描述观察$\{ \boldsymbol{v}_1, \boldsymbol{v}_2,…,\boldsymbol{v}_K\}$的概率：</li>
 </ul>
 <script type="math/tex; mode=display">
 b_i(k) = P(\boldsymbol{o}_t = \boldsymbol{v}_k|q_t = i) \quad i=1,2,...,N</script><p>若观察概率分布是连续的，那么概率密度函数PDF中的参数$\Lambda_i$代表HMM状态$i$的特性</p>
 <hr>
 <p>在语音处理问题中，我们用HMM下的PDF来描述连续观察向量（$\boldsymbol{o}_t \in \mathbb{R}^D$）的概率分布，其中多元混合高斯分布是最成功、应用最广泛的PDF：</p>
 <script type="math/tex; mode=display">
-b_i(\boldsymbol{o}_t) = \sum^M_{m=1}\frac{c_{i,m}}{(2\pi)^{D/2}|\boldsymbol{\Sigma}_{i,m}|^{1/2}}\exp[-\frac{1}{2}(\boldsymbol{o}_t - \boldsymbol{\mu}_{i,m})^T\boldsymbol{\Sigma}^{-1}_{i,m}(\boldsymbol{o}_t - \boldsymbol{\mu}_{i,m})]</script><p>在混合高斯HMM中，参数集$\Lambda<em>i$包括混合权重成分$c</em>{i,m}$，高斯分布均值向量$\boldsymbol{\mu}<em>{i,m} \in \mathbb{R}^D$与协方差矩阵$\boldsymbol{\Sigma}</em>{i,m} \in \mathbb{R}^{D \times D}$。</p>
+b_i(\boldsymbol{o}_t) = \sum^M_{m=1}\frac{c_{i,m}}{(2\pi)^{D/2}|\boldsymbol{\Sigma}_{i,m}|^{1/2}}\exp[-\frac{1}{2}(\boldsymbol{o}_t - \boldsymbol{\mu}_{i,m})^T\boldsymbol{\Sigma}^{-1}_{i,m}(\boldsymbol{o}_t - \boldsymbol{\mu}_{i,m})]</script><p>在混合高斯HMM中，参数集$\Lambda_i$包括混合权重成分$c_{i,m}$，高斯分布均值向量$\boldsymbol{\mu}_{i,m} \in \mathbb{R}^D$与协方差矩阵$\boldsymbol{\Sigma}_{i,m} \in \mathbb{R}^{D \times D}$。</p>
 <p>有了模型参数后，高斯HMM可以看作是一个观察值序列$\boldsymbol{o}_t，t =1,2,…,T$的生成器。在$t$时刻，数据根据公式</p>
 <script type="math/tex; mode=display">
 \boldsymbol{o}_t = \boldsymbol{\mu}_i + \boldsymbol{r}_t(\boldsymbol{\Sigma}_i)</script><p>生成，其中时刻$t$的状态$i$取决于马尔可夫链的演变，受$a_{ij}$影响，且</p>
@@ -5709,7 +5709,7 @@ Q(\Theta|\Theta_0) = E[\log P(\boldsymbol{o}_1^T, \boldsymbol{q}_1^T|\Theta)|\bo
 \\
 = \sum_{\boldsymbol{q}_1^T}P(\boldsymbol{q}_1^T|\boldsymbol{o}_1^T, \Theta_0)\log P(\boldsymbol{o}_1^T, \boldsymbol{q}_1^T|\Theta)</script><p>由于我们假定隐藏序列的状态$i$属于一个高斯成分（多元高斯分布），则其对数似然$N_t(i)$为</p>
 <script type="math/tex; mode=display">
-N_t(i) = -\frac{D}{2}\log (2\pi) - \frac{1}{2}\log |\boldsymbol{\Sigma}_i|-\frac{1}{2}(\boldsymbol{o}_t-\boldsymbol{\mu}_i)^T\boldsymbol{\Sigma}_i^{-1}(\boldsymbol{o}_t-\boldsymbol{\mu}_i)</script><p>由$P(\boldsymbol{q}<em>1^T) = \prod</em>{t=1}^{T-1}a<em>{q_tq</em>{t+1}}$和$P(\boldsymbol{o}_1^T, \boldsymbol{q}_1^T) = P(\boldsymbol{o}_1^T|\boldsymbol{q}_1^T)P(\boldsymbol{q}_1^T)$，所以</p>
+N_t(i) = -\frac{D}{2}\log (2\pi) - \frac{1}{2}\log |\boldsymbol{\Sigma}_i|-\frac{1}{2}(\boldsymbol{o}_t-\boldsymbol{\mu}_i)^T\boldsymbol{\Sigma}_i^{-1}(\boldsymbol{o}_t-\boldsymbol{\mu}_i)</script><p>由$P(\boldsymbol{q}_1^T) = \prod_{t=1}^{T-1}a_{q_tq_{t+1}}$和$P(\boldsymbol{o}_1^T, \boldsymbol{q}_1^T) = P(\boldsymbol{o}_1^T|\boldsymbol{q}_1^T)P(\boldsymbol{q}_1^T)$，所以</p>
 <script type="math/tex; mode=display">
 \log P(\boldsymbol{o}_1^T, \boldsymbol{q}_1^T|\Theta) = \sum^T_{t=1}N_t(q_t) + \sum^{T-1}_{t=1}\log a_{q_tq_{t+1}}</script><p>于是$Q(\Theta|\Theta_0)$重写为</p>
 <script type="math/tex; mode=display">
@@ -5724,7 +5724,7 @@ Q_2(\Theta|\Theta_0) = \sum^N_{i=1}\sum^N_{j=1} \{ \sum_{\boldsymbol{q}_1^T}P(\b
 <script type="math/tex; mode=display">
 Q_1(\Theta|\Theta_0) =\sum^N_{i=1}\sum^T_{t=1}P(q_t=i|\boldsymbol{o}_1^T,\Theta_0)N_t(i)
 \\
-Q_2(\Theta|\Theta_0) = \sum^N_{i=1}\sum^N_{j=1}\sum^{T-1}_{t=1} P(q_t=i,q_{t+1}=j|\boldsymbol{o}_1^T,\Theta_0)\log a_{ij}</script><p>因为$Q<em>1(\Theta|\Theta_0)$只包含高斯参数，$Q_2(\Theta|\Theta_0)$只包含马尔科夫链参数，两个式子可以分别最大化。也就是说在最大化$Q(\Theta|\Theta_0)$时，公式中的权重，或者说$\gamma_t(i) = P(q_t=i|\boldsymbol{o}_1^T,\Theta_0)$和$\xi_t(i,j) = P(q_t=i,q</em>{t+1}=j|\boldsymbol{o}_1^T,\Theta_0)$，可以分别被认为是对方的已知常数。因此可以用前后向概率来计算。高斯HMM中的后验状态转移概率为</p>
+Q_2(\Theta|\Theta_0) = \sum^N_{i=1}\sum^N_{j=1}\sum^{T-1}_{t=1} P(q_t=i,q_{t+1}=j|\boldsymbol{o}_1^T,\Theta_0)\log a_{ij}</script><p>因为$Q_1(\Theta|\Theta_0)$只包含高斯参数，$Q_2(\Theta|\Theta_0)$只包含马尔科夫链参数，两个式子可以分别最大化。也就是说在最大化$Q(\Theta|\Theta_0)$时，公式中的权重，或者说$\gamma_t(i) = P(q_t=i|\boldsymbol{o}_1^T,\Theta_0)$和$\xi_t(i,j) = P(q_t=i,q_{t+1}=j|\boldsymbol{o}_1^T,\Theta_0)$，可以分别被认为是对方的已知常数。因此可以用前后向概率来计算。高斯HMM中的后验状态转移概率为</p>
 <script type="math/tex; mode=display">
 \xi_t(i,j) = \frac{\alpha_t(i)\beta_{t+1}(j)a_{ij}\exp(N_{t+1}(j))}{P(\boldsymbol{o}_1^T|\Theta_0)}
 \\
@@ -5738,7 +5738,7 @@ t = 1,2,...,T-1</script><p>$\gamma_T(i)$则可以通过它的特定定义得到�
 <script type="math/tex; mode=display">
 \gamma_T(i) = P(q_T=i|\boldsymbol{o}_1^T, \Theta_0) = \frac{P(q_T=i,\boldsymbol{o}_1^T| \Theta_0)}{P(\boldsymbol{o}_1^T| \Theta_0)} = \frac{\alpha_T(i)}{P(\boldsymbol{o}_1^T| \Theta_0)}</script><p>对从左到右传播的HMM，在$i=N$时，$\gamma_T(i)$只有一个值1，其余值为0。因为我们将状态序列转换成了在状态$i$或状态对$(i,j)$上，因此得到了极大的简化。</p>
 <p><strong>$\boldsymbol{M}$步骤</strong></p>
-<p>高斯HMM马尔可夫链转移概率的重估公式通过令$\frac{\partial Q<em>2}{\partial a</em>{ij}} = 0$得到，对$Q<em>2$以及对$i,j=1,2,…,N$，使其服从$\sum^N</em>{j=1}a_{ij}=1$的约束条件。标准拉格朗日乘子法使重估公式变为</p>
+<p>高斯HMM马尔可夫链转移概率的重估公式通过令$\frac{\partial Q_2}{\partial a_{ij}} = 0$得到，对$Q_2$以及对$i,j=1,2,…,N$，使其服从$\sum^N_{j=1}a_{ij}=1$的约束条件。标准拉格朗日乘子法使重估公式变为</p>
 <script type="math/tex; mode=display">
 \hat{a}_{ij} = \frac{\sum^{T-1}_{t=1}\xi_t(i,j)}{\sum^{T-1}_{t=1}\gamma_t(i)}
 \\
@@ -5746,7 +5746,7 @@ t = 1,2,...,T-1</script><p>$\gamma_T(i)$则可以通过它的特定定义得到�
 <script type="math/tex; mode=display">
 Q_1(\boldsymbol{\mu}_i, \boldsymbol{\Sigma}_i) = \sum^N_{i=1}\sum^{T}_{t=1}\gamma_t(i)(\boldsymbol{o}_t-\boldsymbol{\mu}_i)^T\boldsymbol{\Sigma}_i^{-1}(\boldsymbol{o}_t-\boldsymbol{\mu}_i) - \frac{1}{2}\log |\boldsymbol{\Sigma}_i|</script><p>所以协方差矩阵的重估公式通过令下式为0得到</p>
 <script type="math/tex; mode=display">
-\frac{\partial Q_1}{\partial \boldsymbol{\Sigma}_i} = 0 \quad i = 1,2,...,N</script><p>为了解上面的方程，令$\boldsymbol{K} = \boldsymbol{\Sigma}^{-1}$（为了简化，忽略状态角标$i$），之后将$Q<em>1$视为$\boldsymbol{K}$的一个方程。已知$\log|\boldsymbol{K}|$对$\boldsymbol{K}$的第$lm$项系数求导，其结果是方差矩阵$\boldsymbol{\Sigma}$的第$lm$项系数，即$\sigma</em>{lm}$，那么可以将$\frac{\partial Q<em>1}{\partial k</em>{lm}} = 0$化简为</p>
+\frac{\partial Q_1}{\partial \boldsymbol{\Sigma}_i} = 0 \quad i = 1,2,...,N</script><p>为了解上面的方程，令$\boldsymbol{K} = \boldsymbol{\Sigma}^{-1}$（为了简化，忽略状态角标$i$），之后将$Q_1$视为$\boldsymbol{K}$的一个方程。已知$\log|\boldsymbol{K}|$对$\boldsymbol{K}$的第$lm$项系数求导，其结果是方差矩阵$\boldsymbol{\Sigma}$的第$lm$项系数，即$\sigma_{lm}$，那么可以将$\frac{\partial Q_1}{\partial k_{lm}} = 0$化简为</p>
 <script type="math/tex; mode=display">
 \sum^T_{t=1}\gamma_t(i)\{ \frac{1}{2}\sigma_{lm} - \frac{1}{2}(\boldsymbol{o}_t-\boldsymbol{\mu}_i)_l(\boldsymbol{o}_t-\boldsymbol{\mu}_i)_m \} = 0
 \\
@@ -6065,7 +6065,7 @@ p(\boldsymbol{x}) = \sum^{M}_{m=1}\frac{c_m}{(2\pi)^{D/2}|\boldsymbol{\Sigma}_m|
 p(\boldsymbol{x}) = c_1N(\boldsymbol{\mu}_1, \boldsymbol{\sigma}_1) + c_2N(\boldsymbol{\mu}_2, \boldsymbol{\sigma}_2)</script><p>那么我们需要求解的参数为$(c_1, \boldsymbol{\mu}_1, \boldsymbol{\sigma}_1; c_2, \boldsymbol{\mu}_2, \boldsymbol{\sigma}_2)$</p>
 <h2 id="3-参数估计"><a href="#3-参数估计" class="headerlink" title="3. 参数估计"></a>3. 参数估计</h2><p>这里使用EM算法（EM算法必收敛）估计参数变量$\Theta = {c_m, \boldsymbol{\mu}_m, \boldsymbol{\sigma}_m}$，首先回顾一下，GMM表示形式</p>
 <script type="math/tex; mode=display">
-p(\boldsymbol{x}) = \sum^{M}_{m=1}c_mN(\boldsymbol{x};\boldsymbol{\mu}_m,\boldsymbol{\sigma}^2_m)</script><p>其中$c<em>m$可以看作第m个高斯成分被选中的概率。我们引入一个新的M维变量$\boldsymbol{z}$，$z_m$只能取0或1；$z_m = 1$表示第m类被选中的概率$c_m$，即$p(z_m = 1) = c_m，且\sum^M</em>{m=1} z_m = 1$，所以$\boldsymbol{z}$的联合概率分布：</p>
+p(\boldsymbol{x}) = \sum^{M}_{m=1}c_mN(\boldsymbol{x};\boldsymbol{\mu}_m,\boldsymbol{\sigma}^2_m)</script><p>其中$c_m$可以看作第m个高斯成分被选中的概率。我们引入一个新的M维变量$\boldsymbol{z}$，$z_m$只能取0或1；$z_m = 1$表示第m类被选中的概率$c_m$，即$p(z_m = 1) = c_m，且\sum^M_{m=1} z_m = 1$，所以$\boldsymbol{z}$的联合概率分布：</p>
 <script type="math/tex; mode=display">
 p(\boldsymbol{z}) = p(z_1)p(z_2)...p(z_M) = \prod_{m=1}^{M}c_m^{z_m}</script><p>又因为对于属于某一个高斯成分的数据来说（$z_m = 1$），其分布必定是高斯分布，所以</p>
 <script type="math/tex; mode=display">
@@ -6223,7 +6223,7 @@ c_m^{(j + 1)} = \frac{1}{N}\sum^N_{t=1}h_m^{(j)}(t)
 <p>西瓜书第7章 贝叶斯分类器</p>
 </blockquote>
 <h2 id="1-贝叶斯决策论"><a href="#1-贝叶斯决策论" class="headerlink" title="1. 贝叶斯决策论"></a>1. 贝叶斯决策论</h2><p>贝叶斯决策论是概率框架下实施决策的基本方法。对于分类任务来说，在所有相关概率都已知的理想情形下，贝叶斯决策论考虑如何基于这些概率和误判损失来选择最优的类别标记。</p>
-<p>以多分类任务为例，假设有$N$种可能的类别标记，即$Y ={ c<em>1, c_2,…,c_N }$，$\lambda</em>{ij}$是将一个真实标记为$c_j$的样本误分类为$c_i$所产生的损失。那么在样本$\boldsymbol{x}$上的条件风险为</p>
+<p>以多分类任务为例，假设有$N$种可能的类别标记，即$Y =\{ c_1, c_2,…,c_N \}$，$\lambda_{ij}$是将一个真实标记为$c_j$的样本误分类为$c_i$所产生的损失。那么在样本$\boldsymbol{x}$上的条件风险为</p>
 <script type="math/tex; mode=display">
 R(c_i|\boldsymbol{x}) = \sum^N_{j=1}\lambda_{ij}P(c_j|\boldsymbol{x})</script><p>我们的任务是寻找一个判定准则：$h:X \rightarrow Y$以最小化总体风险</p>
 <script type="math/tex; mode=display">
@@ -6301,7 +6301,7 @@ P(c|\boldsymbol{x}) \propto P(c)\prod^d_{i=1}P(x_i|c, pa_i)</script><p>其中$pa
 <hr>
 <p>TAN则是在最大带权生成树算法的基础上，通过以下步骤将属性间依赖关系约简</p>
 <ol>
-<li>计算任意两个属性之间的条件互信息$I(x<em>i,x_j|y) = \sum</em>{x_i,x_j|y}\log \frac{P(x_i,x_j|c)}{P(x_i|c)P(x_j|c)}$</li>
+<li>计算任意两个属性之间的条件互信息$I(x_i,x_j|y) = \sum_{x_i,x_j|y}\log \frac{P(x_i,x_j|c)}{P(x_i|c)P(x_j|c)}$</li>
 <li>以属性为结点构建完全图，任意两个结点之间边的权重设为$I(x_i, x_j|y)$；</li>
 <li>构建此完全图的最大带权生成树，挑选根变量，将边置为有向；</li>
 <li>加入类别结点$y$，增加从$y$到每个属性的有向边。</li>
@@ -6314,11 +6314,11 @@ P(c|\boldsymbol{x}) \propto \underset{|D_{x_i}|\geqslant m'}{\sum^d_{i=1}} P(c, 
 <script type="math/tex; mode=display">
 \hat{P}(c,x_i) = \frac{|D_{c, x_i}|+1}{|D|+N\times N_i}
 \\
-\hat{P}(x_j|c, x_i) = \frac{|D_{c, x_i, x_j}|+1}{|D_{c,x_i}|+N_j}</script><p>$D<em>{c,x_i}$是类别为$c$且在第$i$个属性上取值为$x_i$的样本集合，$D</em>{c, x_i,x_j}$是类别为$c$且在第$i$和$j$个属性上取值分别为$x_i$和$x_j$的样本集合。</p>
+\hat{P}(x_j|c, x_i) = \frac{|D_{c, x_i, x_j}|+1}{|D_{c,x_i}|+N_j}</script><p>$D_{c,x_i}$是类别为$c$且在第$i$个属性上取值为$x_i$的样本集合，$D_{c, x_i,x_j}$是类别为$c$且在第$i$和$j$个属性上取值分别为$x_i$和$x_j$的样本集合。</p>
 <hr>
 <p>同样的，假设父属性为$k$个，即高阶依赖，那么所需要的训练样本数将以指数级增加。</p>
 <h2 id="5-贝叶斯网"><a href="#5-贝叶斯网" class="headerlink" title="5. 贝叶斯网"></a>5. 贝叶斯网</h2><p>贝叶斯网亦称为信念网，它借助有向无环图DAG来刻画属性之间的依赖关系，并使用条件概率表CPT来描述属性的联合概率分布。</p>
-<p>一个贝叶斯网$B$由结构$G$和参数$\Theta$两部分构成，即$B=\left \langle G, \Theta \right \rangle$。网络结构$G$是一个有向无环图，其每个结点对应于一个属性，若两个属性之间有直接依赖关系，则它们由一条边连接起来；参数$\Theta$定量描述这种依赖关系，假设属性$x<em>i$在$G$中的父结点集为$\pi_i$，则$\Theta$包含了每个属性的条件概率表$\theta</em>{x_i|\pi_i} = P_B(x_i|\pi_i)$。</p>
+<p>一个贝叶斯网$B$由结构$G$和参数$\Theta$两部分构成，即$B=\left \langle G, \Theta \right \rangle$。网络结构$G$是一个有向无环图，其每个结点对应于一个属性，若两个属性之间有直接依赖关系，则它们由一条边连接起来；参数$\Theta$定量描述这种依赖关系，假设属性$x_i$在$G$中的父结点集为$\pi_i$，则$\Theta$包含了每个属性的条件概率表$\theta_{x_i|\pi_i} = P_B(x_i|\pi_i)$。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/18/bayes0.jpg" alt="bayes0.jpg"></p>
 <p>在上图中，我们可以知道$P(根蒂 = 硬挺|甜度 = 高) = 0.1$</p>
@@ -6341,7 +6341,7 @@ P(x_1, x_2, x_3,x_4,x_5) = P(x_1)P(x_2)P(x_3|x_1)P(x_4|x_1,x_2)P(x_5|x_2)</scrip
 <p><img src="http://114.116.9.65:7777/images/2020/01/18/bayes2.png" alt="bayes2.png"></p>
 <h3 id="5-2-学习"><a href="#5-2-学习" class="headerlink" title="5.2 学习"></a>5.2 学习</h3><p>若网络结构已知，则贝叶斯网的学习过程只需通过对训练样本计数，估计出每个结点的条件概率表即可。但在现实应用中我们往往并不知晓网络结构，于是，首要任务变成根据数据集找出结构最恰当的贝叶斯网。<br>评分搜索是求解这一问题的常用方法，通过一个评分函数评估贝叶斯网与训练数据的契合程度，基于评分函数来寻找结构最优的贝叶斯网。</p>
 <p>常用评分函数通常基于信息论准则，学习的目标是找到一个能以最短编码长度描述训练数据的模型，此时编码的长度包括了描述模型自身所需的字节长度和使用该模型描述数据所需的字节长度。<br>对贝叶斯网来说，模型就是一个贝叶斯网，根据条件概率表，我们的目标是用一套编码机制使那些经常出现的样本具有更短的编码。于是我们应选择那个综合编码长度最短的贝叶斯网，这就是最小描述长度MDL准则。</p>
-<p>给定训练集$D = { \boldsymbol{x}_1,\boldsymbol{x}_2,…,\boldsymbol{x}_m }$，贝叶斯网$B=\left \langle G, \Theta \right \rangle$在$D$上的评分函数可写为</p>
+<p>给定训练集$D = \{ \boldsymbol{x}_1,\boldsymbol{x}_2,…,\boldsymbol{x}_m \}$，贝叶斯网$B=\left \langle G, \Theta \right \rangle$在$D$上的评分函数可写为</p>
 <script type="math/tex; mode=display">
 s(B|D) = f(\theta)|B| - LL(B|D)</script><p>其中$|B|$是贝叶斯网的参数个数，$f(\theta)$表示描述每个参数$\theta$所需的字节数，而</p>
 <script type="math/tex; mode=display">
@@ -6363,7 +6363,7 @@ BIC(B|D) = \frac{\log m}{2}|B| - LL(B|D)</script><p>显然，若$f(\theta) = 0$�
 <p>最理想的是直接根据贝叶斯网定义的联合概率分布来精确计算后验概率，然而这是NP难问题；换言之，需要借助近似推断，通过降低精度要求，在有限时间内求得近似解。在现实应用中，贝叶斯网的近似推断常使用吉布斯采样来完成。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/18/bayes3.png" alt="bayes3.png"></p>
-<p>令$\boldsymbol{Q} = { Q_1,Q_2,…,Q_n }$表示待查询变量，$\boldsymbol{E} = { E_1,E_2,…,E_k }$为证据变量（观测属性），已知其取值为$\boldsymbol{e} = { e_1,e_2,…,e_k }$。目标是计算后验概率$P(\boldsymbol{Q} = \boldsymbol{q}|\boldsymbol{E} = \boldsymbol{e})$，其中$\boldsymbol{q} = { q_1,q_2,…,q_n }$是带查询变量的一组取值。以西瓜问题为例，待查询变量为$\boldsymbol{Q} = { 好瓜，甜度 }$，证据变量为$\boldsymbol{E} = { 色泽，敲声，根蒂 }$，且其取值为$\boldsymbol{e} = { 青绿，浊响，蜷缩 }$，查询的目标值是$\boldsymbol{q} = { 是，高 }$，即这是好瓜且甜度高的概率有多大。</p>
+<p>令$\boldsymbol{Q} = \{ Q_1,Q_2,…,Q_n \}$表示待查询变量，$\boldsymbol{E} = \{ E_1,E_2,…,E_k \}$为证据变量（观测属性），已知其取值为$\boldsymbol{e} = \{ e_1,e_2,…,e_k \}$。目标是计算后验概率$P(\boldsymbol{Q} = \boldsymbol{q}|\boldsymbol{E} = \boldsymbol{e})$，其中$\boldsymbol{q} = \{ q_1,q_2,…,q_n \}$是带查询变量的一组取值。以西瓜问题为例，待查询变量为$\boldsymbol{Q} = \{ 好瓜，甜度 \}$，证据变量为$\boldsymbol{E} = \{ 色泽，敲声，根蒂 \}$，且其取值为$\boldsymbol{e} = \{ 青绿，浊响，蜷缩 \}$，查询的目标值是$\boldsymbol{q} = \{ 是，高 \}$，即这是好瓜且甜度高的概率有多大。</p>
 <p>吉布斯采样算法：</p>
 <ol>
 <li>首先随机产生一个与证据样本$\boldsymbol{E} = \boldsymbol{e}$一致的样本$\boldsymbol{q}^0$作为初始点；</li>
@@ -6391,7 +6391,7 @@ BIC(B|D) = \frac{\log m}{2}|B| - LL(B|D)</script><p>显然，若$f(\theta) = 0$�
 <blockquote>
 <p>西瓜书第6章 支持向量机</p>
 </blockquote>
-<h2 id="1-间隔与支持向量"><a href="#1-间隔与支持向量" class="headerlink" title="1. 间隔与支持向量"></a>1. 间隔与支持向量</h2><p>给定训练样本集$D = { (\boldsymbol{x}_1, y_1), (\boldsymbol{x}_2, y_2),…,(\boldsymbol{x}_m, y_m) }, y_i \in { -1, +1 }$，显然这是一个二分类问题，支持向量机的设想是在训练集$D$的样本空间中找到一个划分超平面，将不同类别的样本分开。显然，在空间中这样的划分超平面有无穷多，我们需要寻找到最合适的那一个。</p>
+<h2 id="1-间隔与支持向量"><a href="#1-间隔与支持向量" class="headerlink" title="1. 间隔与支持向量"></a>1. 间隔与支持向量</h2><p>给定训练样本集$D = \{ (\boldsymbol{x}_1, y_1), (\boldsymbol{x}_2, y_2),…,(\boldsymbol{x}_m, y_m) \}, y_i \in \{ -1, +1 \}$，显然这是一个二分类问题，支持向量机的设想是在训练集$D$的样本空间中找到一个划分超平面，将不同类别的样本分开。显然，在空间中这样的划分超平面有无穷多，我们需要寻找到最合适的那一个。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/18/svm0.png" alt="svm0.png"></p>
 <p>从直觉上我们直到，“正中间”的划分超平面应该会是很合适的，因为处于正中间的划分超平面距离两种分类的样本的距离是最远的，因此用作预测时鲁棒性很好，泛化能力强。如何定义这样的超平面呢？</p>
@@ -6457,7 +6457,7 @@ y_if(\boldsymbol{x}_i)-1 \geqslant 0 \\
 \alpha_i(y_if(\boldsymbol{x}_i)-1) = 0
 \end{matrix}\right.</script><p>对KKT的简单认知为：不等式约束条件与拉格朗日乘子的乘积等于0，且这个条件决定了训练样本的分布位置，若$\alpha_i &gt; 0$，则必有$y_if(\boldsymbol{x}_i)=1$，这样的点是支持向量；若$\alpha_i = 0$，则该样本不会在模型表达式求和中出现，该点的位置属于正常分类，但是不在间隔边界上。</p>
 <p><strong>SVM性质：训练完成后，大部分的训练样本都不需要保留，最终模型仅与支持向量有关。</strong></p>
-<p>基于上述约束条件，为了求解，使用SMO算法，其基本思路是先固定$\alpha<em>i$之外的所有参数，然后求$\alpha_i$上的极值，由于存在约束条件$\sum^m</em>{i=1}\alpha_iy_i = 0$，一个参数可以由其他固定的参数导出，所以需要选择两个变量，固定其他的参数。</p>
+<p>基于上述约束条件，为了求解，使用SMO算法，其基本思路是先固定$\alpha_i$之外的所有参数，然后求$\alpha_i$上的极值，由于存在约束条件$\sum^m_{i=1}\alpha_iy_i = 0$，一个参数可以由其他固定的参数导出，所以需要选择两个变量，固定其他的参数。</p>
 <p>于是，SMO每次选择两个变量$\alpha_i$和$\alpha_j$，并固定其他参数。在参数初始化后，不断执行如下两个步骤直至收敛：</p>
 <ul>
 <li>选取一对需要更新的变量$\alpha_i$和$\alpha_j$；</li>
@@ -6493,7 +6493,7 @@ f(\boldsymbol{x}) = \boldsymbol{w}^T \phi(\boldsymbol{x}) + b
 = \sum^m_{i=1}\alpha_iy_i\phi(\boldsymbol{x}_i)^T\phi(\boldsymbol{x}) + b
 \\
 = \sum^m_{i=1}\alpha_iy_i\kappa(\boldsymbol{x},\boldsymbol{x}_i) + b</script><p>这里$\kappa(\cdot, \cdot)$就是核函数。显然，若已知映射$\phi(\cdot)$的具体形式，那么可以写出核函数$\kappa(\cdot, \cdot)$，但是实际问题中我们很难知道高维映射$\phi(\cdot)$的具体形式，如何寻找合适的核函数呢？有定理：</p>
-<p>$\kappa(\cdot, \cdot)$是定义在$\chi \times \chi$（$\chi$为输入空间）上的对称函数，则$\kappa$是核函数，且对于任意数据$D={ \boldsymbol{x}_1, \boldsymbol{x}_2,…,\boldsymbol{x}_m }$，核矩阵$\boldsymbol{K}$总是半正定：</p>
+<p>$\kappa(\cdot, \cdot)$是定义在$\chi \times \chi$（$\chi$为输入空间）上的对称函数，则$\kappa$是核函数，且对于任意数据$D=\{ \boldsymbol{x}_1, \boldsymbol{x}_2,…,\boldsymbol{x}_m \}$，核矩阵$\boldsymbol{K}$总是半正定：</p>
 <script type="math/tex; mode=display">
 \boldsymbol{K}_{i,j} = \kappa(\boldsymbol{x}_i, \boldsymbol{x}_j)</script><p><em>半正定：设$A$是$n$阶方阵，如果对任何非零向量$X$，都有$X^TAX \geqslant 0$，其中$X^T$表示$X$的转置，就称$A$为半正定矩阵。</em></p>
 <p><strong>所以只要一个对称函数所对应的核矩阵半正定，它就能作为核函数使用。</strong></p>
@@ -6520,7 +6520,7 @@ y_i(\boldsymbol{w}^T\boldsymbol{x}_i + b) \geqslant 1</script><p>那么优化目
 l_{0/1}(z) = \left\{\begin{matrix}
 1, \quad if \quad z < 0  \\ 
 0, \quad otherwise
-\end{matrix}\right.</script><p>然而$l<em>{0/1}$非凸、非连续，数学性质不太好，实际中常用其他函数替代，称为替代损失函数，它们通常是凸的连续函数且是$l</em>{0/1}$的上界。三种常用的替代损失函数：</p>
+\end{matrix}\right.</script><p>然而$l_{0/1}$非凸、非连续，数学性质不太好，实际中常用其他函数替代，称为替代损失函数，它们通常是凸的连续函数且是$l_{0/1}$的上界。三种常用的替代损失函数：</p>
 <ol>
 <li>hinge损失：$l_{hinge}(z) = max(0, 1-z)$</li>
 <li>指数损失：$l_{exp}(z) = exp(-z)$</li>
@@ -6647,7 +6647,7 @@ h^*(\boldsymbol{x}) = \sum^m_{i=1}\alpha_i \kappa(\boldsymbol{x}, \boldsymbol{x}
 <script type="math/tex; mode=display">
 h(\boldsymbol{x}) = \boldsymbol{w}^T\phi(\boldsymbol{x})</script><p>类似LDA的类内散度矩阵$\boldsymbol{S}^\phi_b$和类间散度矩阵$\boldsymbol{S}^\phi_w$，KLDA的学习目标是</p>
 <script type="math/tex; mode=display">
-\underset{\boldsymbol{w}}{\max} J(\boldsymbol{w}) = \frac{\boldsymbol{w}^T\boldsymbol{S}^{\phi}_b\boldsymbol{w}}{\boldsymbol{w}^T\boldsymbol{S}^{\phi}_w\boldsymbol{w}}</script><p>令$X_i$表示第$i \in { 0,1 }$类样本的集合，其样本数为$m_i$，样本总数为$m = m_0+m_1$。第$i$类样本在特征空间$\mathbb{F}$中的均值为</p>
+\underset{\boldsymbol{w}}{\max} J(\boldsymbol{w}) = \frac{\boldsymbol{w}^T\boldsymbol{S}^{\phi}_b\boldsymbol{w}}{\boldsymbol{w}^T\boldsymbol{S}^{\phi}_w\boldsymbol{w}}</script><p>令$X_i$表示第$i \in \{ 0,1 \}$类样本的集合，其样本数为$m_i$，样本总数为$m = m_0+m_1$。第$i$类样本在特征空间$\mathbb{F}$中的均值为</p>
 <script type="math/tex; mode=display">
 \boldsymbol{\mu}^\phi_i = \frac{1}{m_i}\sum_{\boldsymbol{x}\in X_i}\phi(\boldsymbol{x})</script><p>两个散度矩阵分别为</p>
 <script type="math/tex; mode=display">
@@ -6657,7 +6657,7 @@ h(\boldsymbol{x}) = \boldsymbol{w}^T\phi(\boldsymbol{x})</script><p>类似LDA的
 <script type="math/tex; mode=display">
 h(\boldsymbol{x}) = \sum^m_{i=1}\alpha_i \kappa(\boldsymbol{x}, \boldsymbol{x}_i)
 \\
-\boldsymbol{w} = \sum^m_{i=1}\alpha_i\phi(\boldsymbol{x}_i)</script><p>令$\boldsymbol{K} \in \mathbb{R}^{m \times m}$为核函数$\kappa$对应的核矩阵，$(\boldsymbol{K})_{ij} = \kappa(\boldsymbol{x}_i, \boldsymbol{x}_j)$。令$\boldsymbol{1}_i \in { 1,0 }^{m \times 1}$为第$i$类样本的指示向量，即$\boldsymbol{1}_i$的第$j$个分量为1当且仅当$\boldsymbol{x}_j \in X_i$，否则第$j$个分量为0。再令</p>
+\boldsymbol{w} = \sum^m_{i=1}\alpha_i\phi(\boldsymbol{x}_i)</script><p>令$\boldsymbol{K} \in \mathbb{R}^{m \times m}$为核函数$\kappa$对应的核矩阵，$(\boldsymbol{K})_{ij} = \kappa(\boldsymbol{x}_i, \boldsymbol{x}_j)$。令$\boldsymbol{1}_i \in \{ 1,0 \}^{m \times 1}$为第$i$类样本的指示向量，即$\boldsymbol{1}_i$的第$j$个分量为1当且仅当$\boldsymbol{x}_j \in X_i$，否则第$j$个分量为0。再令</p>
 <script type="math/tex; mode=display">
 \boldsymbol{\hat{\mu}}_0 = \frac{1}{m_0}\boldsymbol{K}\boldsymbol{1}_0
 \\
@@ -6705,15 +6705,15 @@ wi \leftarrow w_i + \Delta w_i
 <p>因此在输入层与输出层之间增加隐含层（至少为1），隐含层和输出层神经元都是拥有激活函数的功能神经元，这样就能对非线性问题进行拟合。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/18/nn.jpg" alt="nn.jpg"></p>
-<h2 id="3-误差逆传播算法BP"><a href="#3-误差逆传播算法BP" class="headerlink" title="3. 误差逆传播算法BP"></a>3. 误差逆传播算法BP</h2><p>给定训练集$D = { (\boldsymbol{x}_1, \boldsymbol{y}_1) , (\boldsymbol{x}_2, \boldsymbol{y}_2),…,(\boldsymbol{x}_m, \boldsymbol{y}_m)}$，$\boldsymbol{x}_i \in \mathbb{R}^d ，\boldsymbol{y}_i \in \mathbb{R}^l$，即输入示例由$d$个属性描述，输出$l$维实值变量。</p>
+<h2 id="3-误差逆传播算法BP"><a href="#3-误差逆传播算法BP" class="headerlink" title="3. 误差逆传播算法BP"></a>3. 误差逆传播算法BP</h2><p>给定训练集$D = \{ (\boldsymbol{x}_1, \boldsymbol{y}_1) , (\boldsymbol{x}_2, \boldsymbol{y}_2),…,(\boldsymbol{x}_m, \boldsymbol{y}_m)\}$，$\boldsymbol{x}_i \in \mathbb{R}^d ，\boldsymbol{y}_i \in \mathbb{R}^l$，即输入示例由$d$个属性描述，输出$l$维实值变量。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/18/bp.png" alt="bp.png"></p>
 <p>如图神经网络结构：</p>
 <ul>
 <li>$d$个输入神经元，$l$个输出神经元，$q$个隐层神经元；</li>
 <li>输出层第$j$个神经元的阈值用$\theta_j$表示，隐层第$h$个神经元的阈值用$\gamma_h$表示；</li>
-<li>输入层第$i$个神经元与隐层第$h$个神经元之间的连接权为$v<em>{ih}$，隐层第$h$个神经元与输出层第$j$个神经元之间的连接权为$w</em>{hj}$；</li>
-<li>隐层第$h$个神经元接收到的输入为$\alpha<em>h = \sum^d</em>{i=1}v<em>{ih}x_i$，输出层第$j$个神经元接收到的输入为$\beta_j = \sum^q</em>{h=1}w_{hj}b_h$，其中$b_h$为隐层第$h$个神经元的输出。假设激活函数均为Sigmoid。</li>
+<li>输入层第$i$个神经元与隐层第$h$个神经元之间的连接权为$v_{ih}$，隐层第$h$个神经元与输出层第$j$个神经元之间的连接权为$w_{hj}$；</li>
+<li>隐层第$h$个神经元接收到的输入为$\alpha_h = \sum^d_{i=1}v_{ih}x_i$，输出层第$j$个神经元接收到的输入为$\beta_j = \sum^q_{h=1}w_{hj}b_h$，其中$b_h$为隐层第$h$个神经元的输出。假设激活函数均为Sigmoid。</li>
 </ul>
 <hr>
 <p>对训练例$(\boldsymbol{x}_k, \boldsymbol{y}_k)$，假定神经网络的输出为$\hat{\boldsymbol{y}}_k = (\hat{y}^k_1,\hat{y}^k_2,…,\hat{y}^k_l)$，即</p>
@@ -6853,7 +6853,7 @@ E = \lambda \frac{1}{m} \sum^m_{k=1}E_k + (1-\lambda)\sum_i w_i^2</script><p>$\l
 <h3 id="5-6-Boltzmann机"><a href="#5-6-Boltzmann机" class="headerlink" title="5.6 Boltzmann机"></a>5.6 Boltzmann机</h3><p>Boltzmann机考虑神经网络具有某种状态，将这种状态定义为“能量”，通过训练使得能量函数最小化，最终网络达到理想状态。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/18/boltzmann.jpg" alt="boltzmann.jpg"></p>
-<p>常见的Boltzmann机神经元分类两层：显层和隐层。显层用于表示数据的输入与输出，隐层被理解为数据的内在表达。Boltzmann机中的神经元都是布尔型的（0/1），状态1表示激活，0表示抑制。令向量$\boldsymbol{s} \in { 0, 1 }^n$表示$n$个神经元的状态，$w_{ij}$表示神经元$i$与$j$之间的连接权，$\theta_i$表示神经元$i$的阈值，则状态向量$\boldsymbol{s}$所对应的Boltzmann机能量定义为</p>
+<p>常见的Boltzmann机神经元分类两层：显层和隐层。显层用于表示数据的输入与输出，隐层被理解为数据的内在表达。Boltzmann机中的神经元都是布尔型的（0/1），状态1表示激活，0表示抑制。令向量$\boldsymbol{s} \in \{ 0, 1 \}^n$表示$n$个神经元的状态，$w_{ij}$表示神经元$i$与$j$之间的连接权，$\theta_i$表示神经元$i$的阈值，则状态向量$\boldsymbol{s}$所对应的Boltzmann机能量定义为</p>
 <script type="math/tex; mode=display">
 E(\boldsymbol{s}) = -\sum^{n-1}_{i=1}\sum^n_{j=i+1}w_{ij}s_is_j - \sum^n_{i=1}\theta_is_i</script><p>若网络中的神经元以任意不依赖于输入值的顺序进行更新，则网络最终将达到Boltzmann分布，此时状态向量$\boldsymbol{s}$出现的概率将仅由其所有可能状态向量的能量确定：</p>
 <script type="math/tex; mode=display">
@@ -6904,7 +6904,7 @@ P(\boldsymbol{h}|\boldsymbol{v}) = \prod^q_{j=1}P(h_j|\boldsymbol{v})</script><p
 <a id="more"></a>
 <hr>
 <p><strong>决策树学习基本算法</strong></p>
-<p>输入：训练集$D = { (\boldsymbol{x}_1, y_1), (\boldsymbol{x}_2, y_2), …, (\boldsymbol{x}_m, y_m) }$；</p>
+<p>输入：训练集$D = \{ (\boldsymbol{x}_1, y_1), (\boldsymbol{x}_2, y_2), …, (\boldsymbol{x}_m, y_m) \}$；</p>
 <p>过程：函数$TreeGenerate(D, A)$</p>
 <p>01：生成结点$node$；</p>
 <p>02：$if$ $D$中样本全属于同一类别$C$ $then$</p>
@@ -6919,7 +6919,7 @@ P(\boldsymbol{h}|\boldsymbol{v}) = \prod^q_{j=1}P(h_j|\boldsymbol{v})</script><p
 <p>11：&emsp;$if$ $D_v$为空 $then$</p>
 <p>12：&emsp;&emsp;将分支结点标记为叶结点，其标记类别为$D$中样本最多的类；$return$</p>
 <p>13：&emsp;$else$</p>
-<p>14：&emsp;&emsp;以$TreeGenerate(D_v, A \setminus  {a_k })$为分支结点</p>
+<p>14：&emsp;&emsp;以$TreeGenerate(D_v, A \setminus  \{a_k \})$为分支结点</p>
 <p>15：&emsp;$end$ $if$</p>
 <p>16：$end$ $for$</p>
 <p>输出：以$node$为根结点的一棵决策树</p>
@@ -6934,7 +6934,7 @@ P(\boldsymbol{h}|\boldsymbol{v}) = \prod^q_{j=1}P(h_j|\boldsymbol{v})</script><p
 <h3 id="2-1-信息增益"><a href="#2-1-信息增益" class="headerlink" title="2.1 信息增益"></a>2.1 信息增益</h3><p>假定当前样本集合$D$中第$k$类样本所占的比例为$p_k(k = 1,2,…,|\mathbb{Y}|)$，则$D$的信息熵定义为</p>
 <script type="math/tex; mode=display">
 Ent(D) = -\sum^{|\mathbb{Y}|}_{k=1}p_k\log_2p_k</script><p>$Ent(D)$的值越小，则$D$的纯度越高。</p>
-<p>假定离散属性$a$有$V$个可能的取值${ a^1, a^2, …,a^V }$，若使用$a$来对样本集合$D$进行划分，则会产生$V$个分支结点，其中第$v$个分支结点包含了$D$中所有在属性$a$上取值为$a^v$的样本，记为$D^v$。则可以计算用属性$a$对$D$进行划分所获得的信息增益</p>
+<p>假定离散属性$a$有$V$个可能的取值$\{ a^1, a^2, …,a^V \}$，若使用$a$来对样本集合$D$进行划分，则会产生$V$个分支结点，其中第$v$个分支结点包含了$D$中所有在属性$a$上取值为$a^v$的样本，记为$D^v$。则可以计算用属性$a$对$D$进行划分所获得的信息增益</p>
 <script type="math/tex; mode=display">
 Gain(D, a) = Ent(D) - \sum^V_{v=1}\frac{|D^v|}{|D|}Ent(D^v)</script><p>一般而言，信息增益越大，则使用属性$a$来进行划分所获得的纯度提升越大。因此，在第8行使用属性$a_k = \underset{a \in A}{\arg \max Gain(D, a)}$。这就是$ID3$决策树学习算法的划分准则。</p>
 <h3 id="2-2-增益率"><a href="#2-2-增益率" class="headerlink" title="2.2 增益率"></a>2.2 增益率</h3><p>利用信息增益作为划分准则可能会带来另一问题，即对可取值数目较多的属性有所偏好，比如说若一个属性有10个属性值，而另一个属性只有3个属性值，此时经过计算很大程度上10个属性值的属性带来的信息增益会大于另一个。为减少这种偏好可能带来的不利影响，$C4.5$决策树算法使用增益率作为划分准则</p>
@@ -7000,13 +7000,13 @@ Gain(D, a) = \underset{t \in T_a}{\max} Gain(D, a, t)
 </ol>
 <p>比较简单的方式是根据数据集$D$中在属性$a$上没有缺失值的样本来对属性$a$进行划分。</p>
 <hr>
-<p>对问题（1），令$\tilde{D}$表示$D$在属性$a$上没有缺失值的样本子集，<br>假定属性$a$有$V$个可取值${ a^1, a^2,…,a^V }$，<br>令$\tilde{D}^v$表示$\tilde{D}$中在属性$a$上取值为$a^v$的样本子集，<br>$\tilde{D}<em>k$表示$\tilde{D}$中属于第$k$类（$k = 1, 2,…,|\mathbb{Y}|$）的样本子集，则显然有$\tilde{D} = \bigcup</em>{k=1}^{|\mathbb{Y}|}\tilde{D}<em>k = \bigcup</em>{v=1}^{|V|}\tilde{D}^v$。<br>假定为每个样本$\boldsymbol{x}$初始化一个权重$w_{\boldsymbol{x}}$（初始值全为1），并定义</p>
+<p>对问题（1），令$\tilde{D}$表示$D$在属性$a$上没有缺失值的样本子集，<br>假定属性$a$有$V$个可取值$\{ a^1, a^2,…,a^V \}$，<br>令$\tilde{D}^v$表示$\tilde{D}$中在属性$a$上取值为$a^v$的样本子集，<br>$\tilde{D}_k$表示$\tilde{D}$中属于第$k$类（$k = 1, 2,…,|\mathbb{Y}|$）的样本子集，则显然有$\tilde{D} = \bigcup_{k=1}^{|\mathbb{Y}|}\tilde{D}_k = \bigcup_{v=1}^{|V|}\tilde{D}^v$。<br>假定为每个样本$\boldsymbol{x}$初始化一个权重$w_{\boldsymbol{x}}$（初始值全为1），并定义</p>
 <script type="math/tex; mode=display">
 \rho = \frac{\sum_{\boldsymbol{x}\in \tilde{D}}w_{\boldsymbol{x}}}{\sum_{\boldsymbol{x}\in D}w_{\boldsymbol{x}}}
 \\
 \tilde{p}_k = \frac{\sum_{\boldsymbol{x}\in \tilde{D}_k}w_{\boldsymbol{x}}}{\sum_{\boldsymbol{x}\in \tilde{D}}w_{\boldsymbol{x}}}
 \\
-\tilde{r}_v = \frac{\sum_{\boldsymbol{x}\in \tilde{D}^v}w_{\boldsymbol{x}}}{\sum_{\boldsymbol{x}\in \tilde{D}}w_{\boldsymbol{x}}}</script><p>对属性$a$来说，$\rho$表示无缺失值样本所占的比例，$\tilde{p}<em>k$表示无缺失值样本中第$k$类所占的比例，$\tilde{r}_v$则表示无缺失值样本在属性$a$上取值$a^v$的样本所占的比例。显然$\sum^{|\mathbb{Y}|}</em>{k=1}\tilde{p}<em>k=1,\sum^V</em>{v=1}\tilde{r}_v=1$。</p>
+\tilde{r}_v = \frac{\sum_{\boldsymbol{x}\in \tilde{D}^v}w_{\boldsymbol{x}}}{\sum_{\boldsymbol{x}\in \tilde{D}}w_{\boldsymbol{x}}}</script><p>对属性$a$来说，$\rho$表示无缺失值样本所占的比例，$\tilde{p}_k$表示无缺失值样本中第$k$类所占的比例，$\tilde{r}_v$则表示无缺失值样本在属性$a$上取值$a^v$的样本所占的比例。显然$\sum^{|\mathbb{Y}|}_{k=1}\tilde{p}_k=1,\sum^V_{v=1}\tilde{r}_v=1$。</p>
 <p>基于上述定义，信息增益计算式可推广为</p>
 <script type="math/tex; mode=display">
 Gain(D, a) = \rho \times Gain(\tilde{D}, a)
@@ -7014,7 +7014,7 @@ Gain(D, a) = \rho \times Gain(\tilde{D}, a)
 = \rho \times \{ Ent(\tilde{D}) - \sum^V_{v=1}\tilde{r}_vEnt(\tilde{D}^v) \}</script><p>其中</p>
 <script type="math/tex; mode=display">
 Ent(\tilde{D}) = - \sum^{|\mathbb{Y}|}_{k=1}\tilde{p}_k\log_2\tilde{p}_k</script><hr>
-<p>对问题（2）,若样本$\boldsymbol{x}$在划分属性$a$上的取值已知，则将$\boldsymbol{x}$划入与其取值对应的子结点，且样本权值保持为$w<em>{\boldsymbol{x}}$。<br>若样本$\boldsymbol{x}$在划分属性$a$上的取值未知，则将$\boldsymbol{x}$同时划入所有子结点，且样本权值在与属性$a^v$对应的子结点中调整为$\tilde{r} \cdot w</em>{\boldsymbol{x}}$；<br>直观地看，这就是让同一个样本以不同的概率划入到不同的子结点中去。</p>
+<p>对问题（2）,若样本$\boldsymbol{x}$在划分属性$a$上的取值已知，则将$\boldsymbol{x}$划入与其取值对应的子结点，且样本权值保持为$w_{\boldsymbol{x}}$。<br>若样本$\boldsymbol{x}$在划分属性$a$上的取值未知，则将$\boldsymbol{x}$同时划入所有子结点，且样本权值在与属性$a^v$对应的子结点中调整为$\tilde{r} \cdot w_{\boldsymbol{x}}$；<br>直观地看，这就是让同一个样本以不同的概率划入到不同的子结点中去。</p>
 <h2 id="5-多变量决策树"><a href="#5-多变量决策树" class="headerlink" title="5. 多变量决策树"></a>5. 多变量决策树</h2><p>使用单属性作为划分结点，我们得到的决策树的分类边界是平行于该属性对应的轴。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/18/tree1.png" alt="tree1.png"></p>
@@ -7062,9 +7062,9 @@ f(\boldsymbol{x}) = w_1x_1 + w_2x_2 + ... + w_dx_d + b</script><p>一般用向�
 <script type="math/tex; mode=display">
 f(\boldsymbol{x}) = \boldsymbol{w}^T\boldsymbol{x} + b</script><p>其中$\boldsymbol{w} = (w_1; w_2;…; w_d)$，$\boldsymbol{w}$和$b$学得之后，模型就得以确定。</p>
 <a id="more"></a>
-<h2 id="2-线性回归"><a href="#2-线性回归" class="headerlink" title="2. 线性回归"></a>2. 线性回归</h2><h3 id="2-1-数学推导"><a href="#2-1-数学推导" class="headerlink" title="2.1 数学推导"></a>2.1 数学推导</h3><p>给定数据集$D = {(\boldsymbol{x}<em>1, y_1), (\boldsymbol{x}_2, y_2),…, (\boldsymbol{x}_m, y_m)}$，其中$\boldsymbol{x}_i = (x</em>{i1};x<em>{i2};…; x</em>{id})$，$y_i \in \mathbb{R}$，线性回归（linear regression）试图学得一个线性模型以尽可能准确地预测实值输出标记。</p>
+<h2 id="2-线性回归"><a href="#2-线性回归" class="headerlink" title="2. 线性回归"></a>2. 线性回归</h2><h3 id="2-1-数学推导"><a href="#2-1-数学推导" class="headerlink" title="2.1 数学推导"></a>2.1 数学推导</h3><p>给定数据集$D = \{(\boldsymbol{x}_1, y_1), (\boldsymbol{x}_2, y_2),…, (\boldsymbol{x}_m, y_m)\}$，其中$\boldsymbol{x}_i = (x_{i1};x_{i2};…; x_{id})$，$y_i \in \mathbb{R}$，线性回归（linear regression）试图学得一个线性模型以尽可能准确地预测实值输出标记。</p>
 <blockquote>
-<p>首先，从单属性出发考虑如何求解，即$D = {(x<em>i, y_i)}^m</em>{i=1}$，线性回归试图学得</p>
+<p>首先，从单属性出发考虑如何求解，即$D = \{(x_i, y_i)\}^m_{i=1}$，线性回归试图学得</p>
 </blockquote>
 <script type="math/tex; mode=display">
 f(x_i) = wx_i + b, 使得f(x_i) \simeq y_i</script><p>我们使用均方误差MSE衡量$f(x)$与$y$之间的差异，并使得均方误差最小化，即</p>
@@ -7072,7 +7072,7 @@ f(x_i) = wx_i + b, 使得f(x_i) \simeq y_i</script><p>我们使用均方误差MS
 (w^*, b^*) = \underset{(w, b)}{\arg \min}\sum^{m}_{i=1}(f(x_i) - y_i)^2
 \\
  = \underset{(w, b)}{\arg \min}\sum^{m}_{i=1}(y_i - wx_i - b)^2</script><p>基于均方误差最小化来进行模型求解的方法称为“最小二乘法”，即找到一条直线使得所有样本到直线的欧式距离之和最小。</p>
-<p>求解$w$和$b$使$E<em>{(w, b)} = \sum^m</em>{i=1}(y<em>i - wx_i - b)^2$最小化的过程，称为线性回归模型的最小二乘“参数估计”。将$E</em>{(w, b)}$分别对$w$和$b$求导，得到</p>
+<p>求解$w$和$b$使$E_{(w, b)} = \sum^m_{i=1}(y_i - wx_i - b)^2$最小化的过程，称为线性回归模型的最小二乘“参数估计”。将$E_{(w, b)}$分别对$w$和$b$求导，得到</p>
 <script type="math/tex; mode=display">
 \frac{\partial E_{(w, b)}}{\partial w} = 2(w\sum_{i=1}^{m}x^2_i - \sum_{i=1}^{m}(y_i - b)x_i)
 \\
@@ -7100,7 +7100,7 @@ f(\boldsymbol{x}_i) = \boldsymbol{w}^T\boldsymbol{x}_i + b, 使得f(\boldsymbol{
  \boldsymbol{x}^T_2& 1\\ 
  \vdots& \vdots\\ 
  \boldsymbol{x}^T_m& 1
-\end{pmatrix}</script><p>把标记也写成向量形式$\boldsymbol{y} = (y<em>1; y_2;…; y_m)$，令$E</em>{\hat{\boldsymbol{w}}} = (\boldsymbol{y} - \boldsymbol{x}\hat{\boldsymbol{w}})^T(\boldsymbol{y} - \boldsymbol{x}\hat{\boldsymbol{w}})$</p>
+\end{pmatrix}</script><p>把标记也写成向量形式$\boldsymbol{y} = (y_1; y_2;…; y_m)$，令$E_{\hat{\boldsymbol{w}}} = (\boldsymbol{y} - \boldsymbol{x}\hat{\boldsymbol{w}})^T(\boldsymbol{y} - \boldsymbol{x}\hat{\boldsymbol{w}})$</p>
 <script type="math/tex; mode=display">
 \hat{\boldsymbol{w}}^* = \underset{\hat{\boldsymbol{w}}}{\arg\min}E_{\hat{\boldsymbol{w}}}</script><p>对$\hat{\boldsymbol{w}}$求导得到</p>
 <script type="math/tex; mode=display">
@@ -7127,7 +7127,7 @@ y = g^{-1}(\boldsymbol{w}^T\boldsymbol{x} + b)</script><p>这样得到的模型�
 <li>由推广可知，线性回归也可以用于分类问题，将分类问题看做分类概率的近似求解，那么我们就将分类问题转换成回归问题了，此时我们训练模型的目标变成了分类概率，最后根据分类概率确定分类结果。</li>
 </ul>
 <h2 id="3-对数几率回归"><a href="#3-对数几率回归" class="headerlink" title="3. 对数几率回归"></a>3. 对数几率回归</h2><h3 id="3-1-说明"><a href="#3-1-说明" class="headerlink" title="3.1 说明"></a>3.1 说明</h3><p>从广义线性模型可知，对于二分类问题，我们需要找到一个单调可微的函数将分类任务的真实标记$y$与线性回归模型的预测值联系起来。</p>
-<p>二分类输出标记$y \in {0, 1}$，而线性回归模型产生的预测值$z = \boldsymbol{w}^T\boldsymbol{x} + b$是实值，需要将$z$转换成0/1值。单位阶跃函数与sigmoid函数</p>
+<p>二分类输出标记$y \in \{0, 1\}$，而线性回归模型产生的预测值$z = \boldsymbol{w}^T\boldsymbol{x} + b$是实值，需要将$z$转换成0/1值。单位阶跃函数与sigmoid函数</p>
 <!-- ![](images/sigmoid.jpg) -->
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/18/sigmoid.jpg" alt="sigmoid.jpg"></p>
@@ -7145,7 +7145,7 @@ y = \frac{1}{1 + e^{-(\boldsymbol{w}^T\boldsymbol{x} + b)}}</script><p>分类问
 <script type="math/tex; mode=display">
 p(y=1\mid\boldsymbol{x}) = \frac{e^{\boldsymbol{w}^T\boldsymbol{x} + b}}{1 + e^{\boldsymbol{w}^T\boldsymbol{x} + b}}
 \\
-p(y=0\mid\boldsymbol{x}) = \frac{1}{1 + e^{\boldsymbol{w}^T\boldsymbol{x} + b}}</script><p>通过“极大似然法”来估计$\boldsymbol{w}$和$b$，给定数据集${(\boldsymbol{x}<em>i, y_i)}^m</em>{i=1}$，对率回归模型最大化“对数似然”</p>
+p(y=0\mid\boldsymbol{x}) = \frac{1}{1 + e^{\boldsymbol{w}^T\boldsymbol{x} + b}}</script><p>通过“极大似然法”来估计$\boldsymbol{w}$和$b$，给定数据集$\{(\boldsymbol{x}_i, y_i)\}^m_{i=1}$，对率回归模型最大化“对数似然”</p>
 <script type="math/tex; mode=display">
 l (\boldsymbol{w}, b) = \sum^m_{i=1}\ln p(y_i \mid \boldsymbol{x}_i; \boldsymbol{w}, b)</script><p>即令每个样本属于其真实标记的概率越大越好。令$\beta = (\boldsymbol{w}; b)，\hat{\boldsymbol{x}} = (\boldsymbol{x}; 1)$，则$\boldsymbol{w}^T\boldsymbol{x} + b$可简写为$\beta^T\hat{\boldsymbol{x}}$，再令$p_1(\hat{\boldsymbol{x}}; \beta) = p(y=1 \mid\hat{\boldsymbol{x}};\beta)，p_0(\hat{\boldsymbol{x}}; \beta) = p(y=0 \mid\hat{\boldsymbol{x}};\beta) = 1-p_1(\hat{\boldsymbol{x}}; \beta)$，则似然项重写为</p>
 <script type="math/tex; mode=display">
@@ -7173,7 +7173,7 @@ l(\beta) = \sum^m_{i=1}(-y_i\beta^T\hat{\boldsymbol{x}_i} + \ln(1 + e^{\beta^T\h
 <!-- ![](images/lda.png) -->
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/18/lda.png" alt="lda.png"></p>
-<h3 id="4-2-数学推导"><a href="#4-2-数学推导" class="headerlink" title="4.2 数学推导"></a>4.2 数学推导</h3><p>给定数据集$D = {(\boldsymbol{x}<em>i, y_i)}^m</em>{i=1}，y_i \in {0, 1}$，令$X_i、\mu_i、\Sigma_i$分别表示第$i\in{0,1}$类示例的集和、均值向量、协方差矩阵。若将数据投影到直线$\boldsymbol{w}$上，则两类样本的中心在直线上的投影分别为$\boldsymbol{w}^T\mu_0$和$\boldsymbol{w}^T\mu_1$；若将所有样本点都投影到直线上，则两类样本的协方差分别为$\boldsymbol{w}^T\Sigma_0\boldsymbol{w}$和$\boldsymbol{w}^T\Sigma_1\boldsymbol{w}$，由于直线是一维空间，因此4个值均为实数。</p>
+<h3 id="4-2-数学推导"><a href="#4-2-数学推导" class="headerlink" title="4.2 数学推导"></a>4.2 数学推导</h3><p>给定数据集$D = \{(\boldsymbol{x}_i, y_i)\}^m_{i=1}，y_i \in \{0, 1\}$，令$X_i、\mu_i、\Sigma_i$分别表示第$i\in\{0,1\}$类示例的集和、均值向量、协方差矩阵。若将数据投影到直线$\boldsymbol{w}$上，则两类样本的中心在直线上的投影分别为$\boldsymbol{w}^T\mu_0$和$\boldsymbol{w}^T\mu_1$；若将所有样本点都投影到直线上，则两类样本的协方差分别为$\boldsymbol{w}^T\Sigma_0\boldsymbol{w}$和$\boldsymbol{w}^T\Sigma_1\boldsymbol{w}$，由于直线是一维空间，因此4个值均为实数。</p>
 <p>同类样例的投影点尽可能接近，即$\boldsymbol{w}^T\Sigma_0\boldsymbol{w} + \boldsymbol{w}^T\Sigma_1\boldsymbol{w}$尽可能小；异类样例的投影点尽可能远离，即${\parallel \boldsymbol{w}^T\mu_0 - \boldsymbol{w}^T\mu_1\parallel}^2_2$尽可能大。若同时考虑二者，则最大化目标为</p>
 <script type="math/tex; mode=display">
 J = \frac{\parallel \boldsymbol{w}^T\mu_0 - \boldsymbol{w}^T\mu_1 \parallel^2_2}{\boldsymbol{w}^T\Sigma_0\boldsymbol{w} + \boldsymbol{w}^T\Sigma_1\boldsymbol{w}}

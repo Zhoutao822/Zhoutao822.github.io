@@ -411,7 +411,7 @@
 <li>学习速度从0.1开始，当误差稳定时学习率除以10，并且模型训练高达$60 \times 10^4$次迭代。我们使用的权重衰减为0.0001，动量为0.9；</li>
 <li>不使用丢弃；</li>
 <li>在测试阶段，为了比较学习我们采用标准的10-crop测试；</li>
-<li>采用如$[40, 12]$中的全卷积形式，并在多尺度上对分数进行平均（图像归一化，短边位于${224, 256, 384, 480, 640}$中）；</li>
+<li>采用如$[40, 12]$中的全卷积形式，并在多尺度上对分数进行平均（图像归一化，短边位于$\{224, 256, 384, 480, 640\}$中）；</li>
 <li>更深的瓶颈结构，三层是1 $\times$ 1，3 $\times$ 3和1 $\times$ 1卷积，其中1 $\times$ 1层负责减小然后增加（恢复）维度，使3 $\times$ 3层成为具有较小输入/输出维度的瓶颈，两个设计具有相似的时间复杂度。</li>
 </ol>
 <p>ResNet模型总结：</p>
@@ -873,7 +873,7 @@ D_K \times D_K \times \alpha M \times \rho D_F \times \rho D_F + \alpha M \times
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:17</span>
+    <span title="站点阅读时长">13:18</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

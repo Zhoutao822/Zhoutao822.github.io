@@ -381,7 +381,7 @@ v_t = \gamma v_{t-1} + \eta \bigtriangledown_\theta J(\theta - \gamma v_{t-1})
 \theta = \theta - v_t</script><p>$\gamma$一般设置为0.9或差不多的数值，这里可以理解为在Momentum的基础上，我们设置一个踩刹车的步骤，当前面累计的动量很多导致当前更新步伐很大时，下一步会由于$\theta - \gamma v_{t-1}$产生一个较小的梯度变化，从而实现平稳下降避免速度的太快。实验表明在RNNs上，NAG有着很好的表现。</p>
 <h3 id="4-3-Adagrad"><a href="#4-3-Adagrad" class="headerlink" title="4.3  Adagrad"></a>4.3  Adagrad</h3><p>Adagrad，核心思想是对低频的参数做较大的更新，对高频的做较小的更新，这个算法针对的是学习率，将学习率变成一种动态的自动调节的参数。其参数更新公式为</p>
 <script type="math/tex; mode=display">
-\theta_{t+1, i} = \theta_{t, i} - \frac{\eta}{\sqrt{G_{t, ii}+\epsilon}} \cdot g_{t,i}</script><p>$\eta$一般设置为0.01，$t$代表steps，$g<em>{t,i}$表示第$t$步第$i$个参数的$\bigtriangledown</em>{\theta<em>t} J(\theta</em>{t,i})$，$G<em>t$是对角线矩阵，每个对角线元素$G</em>{t, ii}$的值是在时间上累计的所有的$\theta<em>i$的梯度的平方和，即$G</em>{t, ii} = \sum^t<em>{k=0}g</em>{k, i}^2$，$\epsilon$是一个常数，避免分母为0。随着时间增加，分母越来越大，学习率逐渐下降，且低频的参数做较大的更新，对高频的做较小的更新。实验表明在稀疏输入的条件下，Adagrad有很好的表现。</p>
+\theta_{t+1, i} = \theta_{t, i} - \frac{\eta}{\sqrt{G_{t, ii}+\epsilon}} \cdot g_{t,i}</script><p>$\eta$一般设置为0.01，$t$代表steps，$g_{t,i}$表示第$t$步第$i$个参数的$\bigtriangledown_{\theta_t} J(\theta_{t,i})$，$G_t$是对角线矩阵，每个对角线元素$G_{t, ii}$的值是在时间上累计的所有的$\theta_i$的梯度的平方和，即$G_{t, ii} = \sum^t_{k=0}g_{k, i}^2$，$\epsilon$是一个常数，避免分母为0。随着时间增加，分母越来越大，学习率逐渐下降，且低频的参数做较大的更新，对高频的做较小的更新。实验表明在稀疏输入的条件下，Adagrad有很好的表现。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/adagrad.png" alt="adagrad.png"></p>
 <h3 id="4-4-Adadelta"><a href="#4-4-Adadelta" class="headerlink" title="4.4  Adadelta"></a>4.4  Adadelta</h3><p>Adadelta，是对Adagrad的进一步优化，由于Adagrad是对整个时间上的累加，必然会导致时间越长学习率逐渐趋向0，Adadelta将这种累计限制在一个区间$w$内，使得学习率下降速度减缓。在实际使用中并不会定义$w$，而是使用均值作为替换。其参数更新公式为</p>
@@ -419,7 +419,7 @@ v_t = \beta_2v_{t-1} + (1-\beta_2)g_t^2</script><p>如果$m_t$和$v_t$被初始�
 \theta_{t+1} = \theta_t - \frac{\eta}{\sqrt{\hat{v}_t}+\epsilon}\hat{m}_t</script><p>$\beta_1 = 0.9, \beta_2 = 0.999, \epsilon = 10^{-8}$为默认设置。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/adam.png" alt="adam.png"></p>
-<h3 id="4-7-AdaMax"><a href="#4-7-AdaMax" class="headerlink" title="4.7  AdaMax"></a>4.7  AdaMax</h3><p>AdaMax，修改了Adam的$v<em>t$，因为$v_t$可以看作是对$g_t$的$l_2$范数，AdaMax从$l</em>\infty$范数中选择最大的范数作为替换，以加速梯度下降，这里用$u_t$表示</p>
+<h3 id="4-7-AdaMax"><a href="#4-7-AdaMax" class="headerlink" title="4.7  AdaMax"></a>4.7  AdaMax</h3><p>AdaMax，修改了Adam的$v_t$，因为$v_t$可以看作是对$g_t$的$l_2$范数，AdaMax从$l_\infty$范数中选择最大的范数作为替换，以加速梯度下降，这里用$u_t$表示</p>
 <script type="math/tex; mode=display">
 u_t = \beta^\infty_2v_{t-1} + (1-\beta^\infty_2)|g_t|^\infty
 \\
@@ -437,7 +437,7 @@ m_t = \beta_1m_{t-1} + (1-\beta_1)g_t
 \\
 \theta_{t+1} = \theta_t - \frac{\eta}{\sqrt{\hat{v}_t}+\epsilon}\hat{m}_t</script><p>那么扩展一下更新公式</p>
 <script type="math/tex; mode=display">
-\theta_{t+1} = \theta_t - \frac{\eta}{\sqrt{\hat{v}_t}+\epsilon}(\frac{\beta_1m_{t-1}}{1-\beta^t_1} + \frac{(1-\beta_1)g_t}{1-\beta^t_1})</script><p>其中$\frac{\beta<em>1m</em>{t-1}}{1-\beta^t<em>1}$可以使用$\hat{m}</em>{t-1}$替换，与此同时，也可以根据NAG使用$\hat{m}<em>t$替换$\hat{m}</em>{t-1}$。最终参数更新公式为</p>
+\theta_{t+1} = \theta_t - \frac{\eta}{\sqrt{\hat{v}_t}+\epsilon}(\frac{\beta_1m_{t-1}}{1-\beta^t_1} + \frac{(1-\beta_1)g_t}{1-\beta^t_1})</script><p>其中$\frac{\beta_1m_{t-1}}{1-\beta^t_1}$可以使用$\hat{m}_{t-1}$替换，与此同时，也可以根据NAG使用$\hat{m}_t$替换$\hat{m}_{t-1}$。最终参数更新公式为</p>
 <script type="math/tex; mode=display">
 \theta_{t+1} = \theta_t - \frac{\eta}{\sqrt{\hat{v}_t}+\epsilon}(\beta_1\hat{m}_t + \frac{(1-\beta_1)g_t}{1-\beta^t_1})</script><h3 id="4-9-Proximal-Algorithm"><a href="#4-9-Proximal-Algorithm" class="headerlink" title="4.9 Proximal Algorithm"></a>4.9 Proximal Algorithm</h3><p>对应<code>tf.train.ProximalAdagradOptimizer</code>和<code>tf.train.ProximalGradientDescentOptimizer</code>，主要是针对稀疏矩阵，目的是为了更好地得到稀疏解。稀疏解一方面可以增强泛化性能，另一方面减小运算时内存压力。</p>
 <p>Proximal Algorithm是求解$l1$正则项的方法，为什么$l1$比$l2$更容易产生稀疏解？</p>
@@ -562,7 +562,7 @@ g_{t,i} = g_{t, i} + N(0,\sigma_t^2)
       <div class="popular-posts-title"><a href="/archives/7ca31f7.html" rel="bookmark">神经网络</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/archives/c6767314.html" rel="bookmark">卷积神经网络</a></div>
+      <div class="popular-posts-title"><a href="/archives/3e5788ab.html" rel="bookmark">深度学习-实际问题</a></div>
     </li>
   </ul>
 
@@ -736,7 +736,7 @@ g_{t,i} = g_{t, i} + N(0,\sigma_t^2)
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:17</span>
+    <span title="站点阅读时长">13:18</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

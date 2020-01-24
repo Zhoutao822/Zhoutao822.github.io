@@ -437,7 +437,7 @@
 <p><strong>语音识别过程：切除首尾端静音-&gt;声音划分为帧-&gt;对每一帧提取MFCC特征-&gt;若干帧对应一个状态-&gt;三个状态组成一个音素-&gt;若干音素组成单词</strong></p>
 <h2 id="1-受限玻尔兹曼机"><a href="#1-受限玻尔兹曼机" class="headerlink" title="1. 受限玻尔兹曼机"></a>1. 受限玻尔兹曼机</h2><p>在介绍受限玻尔兹曼机RBM之前，先了解一下玻尔兹曼机。</p>
 <h3 id="1-1-玻尔兹曼机"><a href="#1-1-玻尔兹曼机" class="headerlink" title="1.1 玻尔兹曼机"></a>1.1 玻尔兹曼机</h3><p>玻尔兹曼机最初作为一种广义的“联结主义”引入，用来学习二值向量上的任意概率分布。也就是说，我们的目标是计算一组二值向量数据（只包含0和1）的概率分布情况。</p>
-<p>首先在$d$维二值随机向量$\boldsymbol{x} \in {0,1 }^{d \times 1}$上定义玻尔兹曼机。玻尔兹曼机是一种基于能量的模型（玄学？），意味着我们可以使用能量函数定义联合概率分布：</p>
+<p>首先在$d$维二值随机向量$\boldsymbol{x} \in \{0,1 \}^{d \times 1}$上定义玻尔兹曼机。玻尔兹曼机是一种基于能量的模型（玄学？），意味着我们可以使用能量函数定义联合概率分布：</p>
 <script type="math/tex; mode=display">
 P(\boldsymbol{x}) = \frac{\exp (-E(\boldsymbol{x}))}{Z}</script><p>其中$E(\boldsymbol{x})$是能量函数，$Z$是确保概率和为1的配分函数。玻尔兹曼机的能量函数如下：</p>
 <script type="math/tex; mode=display">
@@ -445,7 +445,7 @@ E(\boldsymbol{x}) = -\boldsymbol{x}^T\boldsymbol{U}\boldsymbol{x} - \boldsymbol{
 <p>在一般情况下，根据观察到的样本的情况，我们可以很容易计算上面的表达式，但是它限制了观察到的变量和权重矩阵描述的变量之间相互作用的类型。具体来说，这意味着一个单元的概率由<br>其他单元值的线性模型（逻辑回归）给出。</p>
 <p>当不是所有变量都能被观察到时，玻尔兹曼机作用更强。我们将单元分为两个子集：可见单元$\boldsymbol{v}$和隐藏单元$\boldsymbol{h}$。则能量函数变为</p>
 <script type="math/tex; mode=display">
-E(\boldsymbol{v}, \boldsymbol{h}) = -\boldsymbol{v}^T\boldsymbol{R}\boldsymbol{v} - \boldsymbol{v}^T\boldsymbol{W}\boldsymbol{h}-\boldsymbol{h}^T\boldsymbol{S}\boldsymbol{h} - \boldsymbol{b}^T\boldsymbol{v} - \boldsymbol{c}^T\boldsymbol{h}</script><p>玻尔兹曼机的学习算法通常基于最大似然，当基于最大似然的学习规则训练时，连接两个单元的特定权重的更新仅取决于这两个单元在不同分布下收集的统计信息：$P<em>{model}(\boldsymbol{v})$和$\hat{P}</em>{data}(\boldsymbol{v})P_{model}(\boldsymbol{h}|\boldsymbol{v})$。网络的其余部分参与塑造这些统计信息，但权重可以在完全不知道网络其余部分的情况下更新。</p>
+E(\boldsymbol{v}, \boldsymbol{h}) = -\boldsymbol{v}^T\boldsymbol{R}\boldsymbol{v} - \boldsymbol{v}^T\boldsymbol{W}\boldsymbol{h}-\boldsymbol{h}^T\boldsymbol{S}\boldsymbol{h} - \boldsymbol{b}^T\boldsymbol{v} - \boldsymbol{c}^T\boldsymbol{h}</script><p>玻尔兹曼机的学习算法通常基于最大似然，当基于最大似然的学习规则训练时，连接两个单元的特定权重的更新仅取决于这两个单元在不同分布下收集的统计信息：$P_{model}(\boldsymbol{v})$和$\hat{P}_{data}(\boldsymbol{v})P_{model}(\boldsymbol{h}|\boldsymbol{v})$。网络的其余部分参与塑造这些统计信息，但权重可以在完全不知道网络其余部分的情况下更新。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/archives/850721b0.html#more" rel="contents">
@@ -1361,7 +1361,7 @@ s(t) = (x * w)(t) = \sum^\infty_{a = -\infty} x(a)w(t-a)</script>
 <p>《解析深度学习-语音识别实践》第3章 隐马尔可夫模型及其变体<br>西瓜书第7章 贝叶斯分类器<br><a href="https://www.cnblogs.com/Gabby/p/5344658.html" target="_blank" rel="noopener">机器学习系列之EM算法</a><br><a href="https://www.cnblogs.com/Denise-hzf/p/6612212.html" target="_blank" rel="noopener">HMM模型和Viterbi算法</a></p>
 </blockquote>
 <p><strong>语音识别过程：切除首尾端静音-&gt;声音划分为帧-&gt;对每一帧提取MFCC特征-&gt;若干帧对应一个状态-&gt;三个状态组成一个音素-&gt;若干音素组成单词</strong></p>
-<h2 id="1-马尔可夫链"><a href="#1-马尔可夫链" class="headerlink" title="1. 马尔可夫链"></a>1. 马尔可夫链</h2><p>马尔可夫链是一种离散状态的马尔可夫序列，也是一般性马尔可夫序列的特殊形式。<br>马尔可夫链的状态空间具有离散和有限性：$q_t \in { s^{(j)},j = 1,2,…,N}$。每一个离散值都与马尔可夫链中的一个状态相关。</p>
+<h2 id="1-马尔可夫链"><a href="#1-马尔可夫链" class="headerlink" title="1. 马尔可夫链"></a>1. 马尔可夫链</h2><p>马尔可夫链是一种离散状态的马尔可夫序列，也是一般性马尔可夫序列的特殊形式。<br>马尔可夫链的状态空间具有离散和有限性：$q_t \in \{ s^{(j)},j = 1,2,…,N\}$。每一个离散值都与马尔可夫链中的一个状态相关。</p>
 <p>一个马尔可夫链$\boldsymbol{q}_1^T = q_1, q_2,…,q_T$，可被转移概率完全表示，定义为</p>
 <script type="math/tex; mode=display">
 P(q_t=s^{(j)}|q_{t-1}=s^{(i)}) = a_{ij}(t) \quad i,j=1,2,...,N</script><p>以及初始状态分布概率。如果这些转移概率与时间$t$无关，则得到齐次马尔可夫链。</p>
@@ -1651,7 +1651,7 @@ p_j(t) = P[q_t = s^{(j)}]</script>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:17</span>
+    <span title="站点阅读时长">13:18</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

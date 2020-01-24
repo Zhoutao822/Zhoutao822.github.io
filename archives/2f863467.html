@@ -306,7 +306,7 @@
 <p>《解析深度学习-语音识别实践》第3章 隐马尔可夫模型及其变体<br>西瓜书第7章 贝叶斯分类器<br><a href="https://www.cnblogs.com/Gabby/p/5344658.html" target="_blank" rel="noopener">机器学习系列之EM算法</a><br><a href="https://www.cnblogs.com/Denise-hzf/p/6612212.html" target="_blank" rel="noopener">HMM模型和Viterbi算法</a></p>
 </blockquote>
 <p><strong>语音识别过程：切除首尾端静音-&gt;声音划分为帧-&gt;对每一帧提取MFCC特征-&gt;若干帧对应一个状态-&gt;三个状态组成一个音素-&gt;若干音素组成单词</strong></p>
-<h2 id="1-马尔可夫链"><a href="#1-马尔可夫链" class="headerlink" title="1. 马尔可夫链"></a>1. 马尔可夫链</h2><p>马尔可夫链是一种离散状态的马尔可夫序列，也是一般性马尔可夫序列的特殊形式。<br>马尔可夫链的状态空间具有离散和有限性：$q_t \in { s^{(j)},j = 1,2,…,N}$。每一个离散值都与马尔可夫链中的一个状态相关。</p>
+<h2 id="1-马尔可夫链"><a href="#1-马尔可夫链" class="headerlink" title="1. 马尔可夫链"></a>1. 马尔可夫链</h2><p>马尔可夫链是一种离散状态的马尔可夫序列，也是一般性马尔可夫序列的特殊形式。<br>马尔可夫链的状态空间具有离散和有限性：$q_t \in \{ s^{(j)},j = 1,2,…,N\}$。每一个离散值都与马尔可夫链中的一个状态相关。</p>
 <p>一个马尔可夫链$\boldsymbol{q}_1^T = q_1, q_2,…,q_T$，可被转移概率完全表示，定义为</p>
 <script type="math/tex; mode=display">
 P(q_t=s^{(j)}|q_{t-1}=s^{(i)}) = a_{ij}(t) \quad i,j=1,2,...,N</script><p>以及初始状态分布概率。如果这些转移概率与时间$t$无关，则得到齐次马尔可夫链。</p>
@@ -317,37 +317,37 @@ P(q_t=s^{(j)}|q_{t-1}=s^{(i)}) = a_{ij}(t) \quad i,j=1,2,...,N</script><p>以及
 p_j(t) = P[q_t = s^{(j)}]</script><a id="more"></a>
 <p>很容易得到，递归计算</p>
 <script type="math/tex; mode=display">
-p_i(t+1) = \sum^N_{j=1} a_{ji}p_j(t), \quad \forall i</script><p>如果马尔可夫链的状态占有分布式渐进收敛：$p<em>i(t) \rightarrow \pi(q^{(i)})$，当$t \rightarrow \infty$，我们称$p(s^{(i)})$为马尔可夫链的一个稳态分布。对有稳态分布的马尔可夫链来说，他的转移概率$a</em>{ij}$必须满足：</p>
+p_i(t+1) = \sum^N_{j=1} a_{ji}p_j(t), \quad \forall i</script><p>如果马尔可夫链的状态占有分布式渐进收敛：$p_i(t) \rightarrow \pi(q^{(i)})$，当$t \rightarrow \infty$，我们称$p(s^{(i)})$为马尔可夫链的一个稳态分布。对有稳态分布的马尔可夫链来说，他的转移概率$a_{ij}$必须满足：</p>
 <script type="math/tex; mode=display">
 \bar{\pi}(s^{(i)}) = \sum^N_{j=1}a_{ji}\bar{\pi}(s^{(j)}), \quad \forall i</script><p>马尔可夫链的稳态分布在马尔可夫链蒙特卡洛（MCMC）方法中起着重要作用。这些方法用来模拟（即采样）任意复杂的分布函数，使其能执行很多复杂的统计推断和学习任务，否则这些任务运算困难。MCMC方法的理论基础是马尔可夫链到它的稳态分布$\bar{\pi}(s^{(i)})$的渐进收敛。也就是说，无论初始分布如何，马尔可夫链之于$\bar{\pi}(s^{(i)})$是渐进无偏的。因此，为了从任意的复合分布$p(s)$中采样，可以通过设计合适的转移概率构造一个马尔可夫链，使它的稳态分布为$\bar{\pi}(s) = p(s)$。</p>
 <p>三种马尔可夫链的性质：</p>
 <ul>
-<li>马尔可夫链的状态时长是一个指数或几何级分布：$p<em>i(d)=C(a</em>{ii})^{d-1}$，其中归一化常数为$C = 1 - a_{ii}$；</li>
+<li>马尔可夫链的状态时长是一个指数或几何级分布：$p_i(d)=C(a_{ii})^{d-1}$，其中归一化常数为$C = 1 - a_{ii}$；</li>
 <li>平均状态时长为</li>
 </ul>
 <script type="math/tex; mode=display">
 \bar{d}_i = \sum^{\infty}_{d=1}dp_i(d) = \sum^{\infty}_{d=1}(1-a_{ii})(a_{ii})^{d-1} = \frac{1}{1-a_{ii}}</script><ul>
-<li>对任意一个服从马尔可夫链的观察序列，若它对应有限长度状态序列$\boldsymbol{q}^T<em>1$，则其概率很容易计算，是所有马尔可夫链的转移概率的乘积：$P(\boldsymbol{q}^T_1) = \bar{\pi}</em>{q<em>1}\prod^{T-1}</em>{t=1}a<em>{q_tq</em>{t+1}}$，其中$\bar{\pi}_{s_1}$使当$t=1$时的初始状态输出概率。</li>
+<li>对任意一个服从马尔可夫链的观察序列，若它对应有限长度状态序列$\boldsymbol{q}^T_1$，则其概率很容易计算，是所有马尔可夫链的转移概率的乘积：$P(\boldsymbol{q}^T_1) = \bar{\pi}_{q_1}\prod^{T-1}_{t=1}a_{q_tq_{t+1}}$，其中$\bar{\pi}_{s_1}$使当$t=1$时的初始状态输出概率。</li>
 </ul>
 <h2 id="2-序列与模型"><a href="#2-序列与模型" class="headerlink" title="2. 序列与模型"></a>2. 序列与模型</h2><p>马尔可夫链的每一种状态与一种输出（观察值或事件）一一对应，没有随机性。</p>
 <p>隐马尔可夫序列在各个状态引入一种随机性，用一个观测的概率分布与每一个状态对应，而不是一个确定的事件或观察值。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/hmm.png" alt="hmm.png"></p>
-<p>即我们观察到的是$x<em>i$，而观测值仅由隐藏的状态$y_i$决定，而当前时刻的状态$y_i$仅由前一时刻的状态$y</em>{i-1}$决定。</p>
+<p>即我们观察到的是$x_i$，而观测值仅由隐藏的状态$y_i$决定，而当前时刻的状态$y_i$仅由前一时刻的状态$y_{i-1}$决定。</p>
 <h3 id="2-1-隐马尔可夫模型的性质"><a href="#2-1-隐马尔可夫模型的性质" class="headerlink" title="2.1 隐马尔可夫模型的性质"></a>2.1 隐马尔可夫模型的性质</h3><ul>
 <li>齐次马尔可夫链的转移概率矩阵$\boldsymbol{A}=[a_{ij}] \quad i,j = 1,2,…,N$，其中共有$N$个状态</li>
 </ul>
 <script type="math/tex; mode=display">
 a_{ij} = P(q_t = j | q_{t-1}=i) \quad i,j = 1,2,...,N</script><ul>
 <li>马尔可夫链的初始概率：$\pi = [\pi_i] \quad i= 1,2,…,N$，其中$\pi_i = P(q_1 = i)$；</li>
-<li>观察概率分布为$P(\boldsymbol{o}_t|s^{(i)}) \quad i=1,2,…,N$。若$\boldsymbol{o}_t$是离散的，每个状态对应的概率分布用来描述观察${ \boldsymbol{v}_1, \boldsymbol{v}_2,…,\boldsymbol{v}_K}$的概率：</li>
+<li>观察概率分布为$P(\boldsymbol{o}_t|s^{(i)}) \quad i=1,2,…,N$。若$\boldsymbol{o}_t$是离散的，每个状态对应的概率分布用来描述观察$\{ \boldsymbol{v}_1, \boldsymbol{v}_2,…,\boldsymbol{v}_K\}$的概率：</li>
 </ul>
 <script type="math/tex; mode=display">
 b_i(k) = P(\boldsymbol{o}_t = \boldsymbol{v}_k|q_t = i) \quad i=1,2,...,N</script><p>若观察概率分布是连续的，那么概率密度函数PDF中的参数$\Lambda_i$代表HMM状态$i$的特性</p>
 <hr>
 <p>在语音处理问题中，我们用HMM下的PDF来描述连续观察向量（$\boldsymbol{o}_t \in \mathbb{R}^D$）的概率分布，其中多元混合高斯分布是最成功、应用最广泛的PDF：</p>
 <script type="math/tex; mode=display">
-b_i(\boldsymbol{o}_t) = \sum^M_{m=1}\frac{c_{i,m}}{(2\pi)^{D/2}|\boldsymbol{\Sigma}_{i,m}|^{1/2}}\exp[-\frac{1}{2}(\boldsymbol{o}_t - \boldsymbol{\mu}_{i,m})^T\boldsymbol{\Sigma}^{-1}_{i,m}(\boldsymbol{o}_t - \boldsymbol{\mu}_{i,m})]</script><p>在混合高斯HMM中，参数集$\Lambda<em>i$包括混合权重成分$c</em>{i,m}$，高斯分布均值向量$\boldsymbol{\mu}<em>{i,m} \in \mathbb{R}^D$与协方差矩阵$\boldsymbol{\Sigma}</em>{i,m} \in \mathbb{R}^{D \times D}$。</p>
+b_i(\boldsymbol{o}_t) = \sum^M_{m=1}\frac{c_{i,m}}{(2\pi)^{D/2}|\boldsymbol{\Sigma}_{i,m}|^{1/2}}\exp[-\frac{1}{2}(\boldsymbol{o}_t - \boldsymbol{\mu}_{i,m})^T\boldsymbol{\Sigma}^{-1}_{i,m}(\boldsymbol{o}_t - \boldsymbol{\mu}_{i,m})]</script><p>在混合高斯HMM中，参数集$\Lambda_i$包括混合权重成分$c_{i,m}$，高斯分布均值向量$\boldsymbol{\mu}_{i,m} \in \mathbb{R}^D$与协方差矩阵$\boldsymbol{\Sigma}_{i,m} \in \mathbb{R}^{D \times D}$。</p>
 <p>有了模型参数后，高斯HMM可以看作是一个观察值序列$\boldsymbol{o}_t，t =1,2,…,T$的生成器。在$t$时刻，数据根据公式</p>
 <script type="math/tex; mode=display">
 \boldsymbol{o}_t = \boldsymbol{\mu}_i + \boldsymbol{r}_t(\boldsymbol{\Sigma}_i)</script><p>生成，其中时刻$t$的状态$i$取决于马尔可夫链的演变，受$a_{ij}$影响，且</p>
@@ -470,7 +470,7 @@ Q(\Theta|\Theta_0) = E[\log P(\boldsymbol{o}_1^T, \boldsymbol{q}_1^T|\Theta)|\bo
 \\
 = \sum_{\boldsymbol{q}_1^T}P(\boldsymbol{q}_1^T|\boldsymbol{o}_1^T, \Theta_0)\log P(\boldsymbol{o}_1^T, \boldsymbol{q}_1^T|\Theta)</script><p>由于我们假定隐藏序列的状态$i$属于一个高斯成分（多元高斯分布），则其对数似然$N_t(i)$为</p>
 <script type="math/tex; mode=display">
-N_t(i) = -\frac{D}{2}\log (2\pi) - \frac{1}{2}\log |\boldsymbol{\Sigma}_i|-\frac{1}{2}(\boldsymbol{o}_t-\boldsymbol{\mu}_i)^T\boldsymbol{\Sigma}_i^{-1}(\boldsymbol{o}_t-\boldsymbol{\mu}_i)</script><p>由$P(\boldsymbol{q}<em>1^T) = \prod</em>{t=1}^{T-1}a<em>{q_tq</em>{t+1}}$和$P(\boldsymbol{o}_1^T, \boldsymbol{q}_1^T) = P(\boldsymbol{o}_1^T|\boldsymbol{q}_1^T)P(\boldsymbol{q}_1^T)$，所以</p>
+N_t(i) = -\frac{D}{2}\log (2\pi) - \frac{1}{2}\log |\boldsymbol{\Sigma}_i|-\frac{1}{2}(\boldsymbol{o}_t-\boldsymbol{\mu}_i)^T\boldsymbol{\Sigma}_i^{-1}(\boldsymbol{o}_t-\boldsymbol{\mu}_i)</script><p>由$P(\boldsymbol{q}_1^T) = \prod_{t=1}^{T-1}a_{q_tq_{t+1}}$和$P(\boldsymbol{o}_1^T, \boldsymbol{q}_1^T) = P(\boldsymbol{o}_1^T|\boldsymbol{q}_1^T)P(\boldsymbol{q}_1^T)$，所以</p>
 <script type="math/tex; mode=display">
 \log P(\boldsymbol{o}_1^T, \boldsymbol{q}_1^T|\Theta) = \sum^T_{t=1}N_t(q_t) + \sum^{T-1}_{t=1}\log a_{q_tq_{t+1}}</script><p>于是$Q(\Theta|\Theta_0)$重写为</p>
 <script type="math/tex; mode=display">
@@ -485,7 +485,7 @@ Q_2(\Theta|\Theta_0) = \sum^N_{i=1}\sum^N_{j=1} \{ \sum_{\boldsymbol{q}_1^T}P(\b
 <script type="math/tex; mode=display">
 Q_1(\Theta|\Theta_0) =\sum^N_{i=1}\sum^T_{t=1}P(q_t=i|\boldsymbol{o}_1^T,\Theta_0)N_t(i)
 \\
-Q_2(\Theta|\Theta_0) = \sum^N_{i=1}\sum^N_{j=1}\sum^{T-1}_{t=1} P(q_t=i,q_{t+1}=j|\boldsymbol{o}_1^T,\Theta_0)\log a_{ij}</script><p>因为$Q<em>1(\Theta|\Theta_0)$只包含高斯参数，$Q_2(\Theta|\Theta_0)$只包含马尔科夫链参数，两个式子可以分别最大化。也就是说在最大化$Q(\Theta|\Theta_0)$时，公式中的权重，或者说$\gamma_t(i) = P(q_t=i|\boldsymbol{o}_1^T,\Theta_0)$和$\xi_t(i,j) = P(q_t=i,q</em>{t+1}=j|\boldsymbol{o}_1^T,\Theta_0)$，可以分别被认为是对方的已知常数。因此可以用前后向概率来计算。高斯HMM中的后验状态转移概率为</p>
+Q_2(\Theta|\Theta_0) = \sum^N_{i=1}\sum^N_{j=1}\sum^{T-1}_{t=1} P(q_t=i,q_{t+1}=j|\boldsymbol{o}_1^T,\Theta_0)\log a_{ij}</script><p>因为$Q_1(\Theta|\Theta_0)$只包含高斯参数，$Q_2(\Theta|\Theta_0)$只包含马尔科夫链参数，两个式子可以分别最大化。也就是说在最大化$Q(\Theta|\Theta_0)$时，公式中的权重，或者说$\gamma_t(i) = P(q_t=i|\boldsymbol{o}_1^T,\Theta_0)$和$\xi_t(i,j) = P(q_t=i,q_{t+1}=j|\boldsymbol{o}_1^T,\Theta_0)$，可以分别被认为是对方的已知常数。因此可以用前后向概率来计算。高斯HMM中的后验状态转移概率为</p>
 <script type="math/tex; mode=display">
 \xi_t(i,j) = \frac{\alpha_t(i)\beta_{t+1}(j)a_{ij}\exp(N_{t+1}(j))}{P(\boldsymbol{o}_1^T|\Theta_0)}
 \\
@@ -499,7 +499,7 @@ t = 1,2,...,T-1</script><p>$\gamma_T(i)$则可以通过它的特定定义得到�
 <script type="math/tex; mode=display">
 \gamma_T(i) = P(q_T=i|\boldsymbol{o}_1^T, \Theta_0) = \frac{P(q_T=i,\boldsymbol{o}_1^T| \Theta_0)}{P(\boldsymbol{o}_1^T| \Theta_0)} = \frac{\alpha_T(i)}{P(\boldsymbol{o}_1^T| \Theta_0)}</script><p>对从左到右传播的HMM，在$i=N$时，$\gamma_T(i)$只有一个值1，其余值为0。因为我们将状态序列转换成了在状态$i$或状态对$(i,j)$上，因此得到了极大的简化。</p>
 <p><strong>$\boldsymbol{M}$步骤</strong></p>
-<p>高斯HMM马尔可夫链转移概率的重估公式通过令$\frac{\partial Q<em>2}{\partial a</em>{ij}} = 0$得到，对$Q<em>2$以及对$i,j=1,2,…,N$，使其服从$\sum^N</em>{j=1}a_{ij}=1$的约束条件。标准拉格朗日乘子法使重估公式变为</p>
+<p>高斯HMM马尔可夫链转移概率的重估公式通过令$\frac{\partial Q_2}{\partial a_{ij}} = 0$得到，对$Q_2$以及对$i,j=1,2,…,N$，使其服从$\sum^N_{j=1}a_{ij}=1$的约束条件。标准拉格朗日乘子法使重估公式变为</p>
 <script type="math/tex; mode=display">
 \hat{a}_{ij} = \frac{\sum^{T-1}_{t=1}\xi_t(i,j)}{\sum^{T-1}_{t=1}\gamma_t(i)}
 \\
@@ -507,7 +507,7 @@ t = 1,2,...,T-1</script><p>$\gamma_T(i)$则可以通过它的特定定义得到�
 <script type="math/tex; mode=display">
 Q_1(\boldsymbol{\mu}_i, \boldsymbol{\Sigma}_i) = \sum^N_{i=1}\sum^{T}_{t=1}\gamma_t(i)(\boldsymbol{o}_t-\boldsymbol{\mu}_i)^T\boldsymbol{\Sigma}_i^{-1}(\boldsymbol{o}_t-\boldsymbol{\mu}_i) - \frac{1}{2}\log |\boldsymbol{\Sigma}_i|</script><p>所以协方差矩阵的重估公式通过令下式为0得到</p>
 <script type="math/tex; mode=display">
-\frac{\partial Q_1}{\partial \boldsymbol{\Sigma}_i} = 0 \quad i = 1,2,...,N</script><p>为了解上面的方程，令$\boldsymbol{K} = \boldsymbol{\Sigma}^{-1}$（为了简化，忽略状态角标$i$），之后将$Q<em>1$视为$\boldsymbol{K}$的一个方程。已知$\log|\boldsymbol{K}|$对$\boldsymbol{K}$的第$lm$项系数求导，其结果是方差矩阵$\boldsymbol{\Sigma}$的第$lm$项系数，即$\sigma</em>{lm}$，那么可以将$\frac{\partial Q<em>1}{\partial k</em>{lm}} = 0$化简为</p>
+\frac{\partial Q_1}{\partial \boldsymbol{\Sigma}_i} = 0 \quad i = 1,2,...,N</script><p>为了解上面的方程，令$\boldsymbol{K} = \boldsymbol{\Sigma}^{-1}$（为了简化，忽略状态角标$i$），之后将$Q_1$视为$\boldsymbol{K}$的一个方程。已知$\log|\boldsymbol{K}|$对$\boldsymbol{K}$的第$lm$项系数求导，其结果是方差矩阵$\boldsymbol{\Sigma}$的第$lm$项系数，即$\sigma_{lm}$，那么可以将$\frac{\partial Q_1}{\partial k_{lm}} = 0$化简为</p>
 <script type="math/tex; mode=display">
 \sum^T_{t=1}\gamma_t(i)\{ \frac{1}{2}\sigma_{lm} - \frac{1}{2}(\boldsymbol{o}_t-\boldsymbol{\mu}_i)_l(\boldsymbol{o}_t-\boldsymbol{\mu}_i)_m \} = 0
 \\
@@ -732,7 +732,7 @@ F(N,i) = \underset{k}{\max} R^k_i(n)</script><p>最优决策序列可以在最�
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:17</span>
+    <span title="站点阅读时长">13:18</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

@@ -310,7 +310,7 @@
 <p><strong>语音识别过程：切除首尾端静音-&gt;声音划分为帧-&gt;对每一帧提取MFCC特征-&gt;若干帧对应一个状态-&gt;三个状态组成一个音素-&gt;若干音素组成单词</strong></p>
 <h2 id="1-受限玻尔兹曼机"><a href="#1-受限玻尔兹曼机" class="headerlink" title="1. 受限玻尔兹曼机"></a>1. 受限玻尔兹曼机</h2><p>在介绍受限玻尔兹曼机RBM之前，先了解一下玻尔兹曼机。</p>
 <h3 id="1-1-玻尔兹曼机"><a href="#1-1-玻尔兹曼机" class="headerlink" title="1.1 玻尔兹曼机"></a>1.1 玻尔兹曼机</h3><p>玻尔兹曼机最初作为一种广义的“联结主义”引入，用来学习二值向量上的任意概率分布。也就是说，我们的目标是计算一组二值向量数据（只包含0和1）的概率分布情况。</p>
-<p>首先在$d$维二值随机向量$\boldsymbol{x} \in {0,1 }^{d \times 1}$上定义玻尔兹曼机。玻尔兹曼机是一种基于能量的模型（玄学？），意味着我们可以使用能量函数定义联合概率分布：</p>
+<p>首先在$d$维二值随机向量$\boldsymbol{x} \in \{0,1 \}^{d \times 1}$上定义玻尔兹曼机。玻尔兹曼机是一种基于能量的模型（玄学？），意味着我们可以使用能量函数定义联合概率分布：</p>
 <script type="math/tex; mode=display">
 P(\boldsymbol{x}) = \frac{\exp (-E(\boldsymbol{x}))}{Z}</script><p>其中$E(\boldsymbol{x})$是能量函数，$Z$是确保概率和为1的配分函数。玻尔兹曼机的能量函数如下：</p>
 <script type="math/tex; mode=display">
@@ -318,11 +318,11 @@ E(\boldsymbol{x}) = -\boldsymbol{x}^T\boldsymbol{U}\boldsymbol{x} - \boldsymbol{
 <p>在一般情况下，根据观察到的样本的情况，我们可以很容易计算上面的表达式，但是它限制了观察到的变量和权重矩阵描述的变量之间相互作用的类型。具体来说，这意味着一个单元的概率由<br>其他单元值的线性模型（逻辑回归）给出。</p>
 <p>当不是所有变量都能被观察到时，玻尔兹曼机作用更强。我们将单元分为两个子集：可见单元$\boldsymbol{v}$和隐藏单元$\boldsymbol{h}$。则能量函数变为</p>
 <script type="math/tex; mode=display">
-E(\boldsymbol{v}, \boldsymbol{h}) = -\boldsymbol{v}^T\boldsymbol{R}\boldsymbol{v} - \boldsymbol{v}^T\boldsymbol{W}\boldsymbol{h}-\boldsymbol{h}^T\boldsymbol{S}\boldsymbol{h} - \boldsymbol{b}^T\boldsymbol{v} - \boldsymbol{c}^T\boldsymbol{h}</script><p>玻尔兹曼机的学习算法通常基于最大似然，当基于最大似然的学习规则训练时，连接两个单元的特定权重的更新仅取决于这两个单元在不同分布下收集的统计信息：$P<em>{model}(\boldsymbol{v})$和$\hat{P}</em>{data}(\boldsymbol{v})P_{model}(\boldsymbol{h}|\boldsymbol{v})$。网络的其余部分参与塑造这些统计信息，但权重可以在完全不知道网络其余部分的情况下更新。</p>
+E(\boldsymbol{v}, \boldsymbol{h}) = -\boldsymbol{v}^T\boldsymbol{R}\boldsymbol{v} - \boldsymbol{v}^T\boldsymbol{W}\boldsymbol{h}-\boldsymbol{h}^T\boldsymbol{S}\boldsymbol{h} - \boldsymbol{b}^T\boldsymbol{v} - \boldsymbol{c}^T\boldsymbol{h}</script><p>玻尔兹曼机的学习算法通常基于最大似然，当基于最大似然的学习规则训练时，连接两个单元的特定权重的更新仅取决于这两个单元在不同分布下收集的统计信息：$P_{model}(\boldsymbol{v})$和$\hat{P}_{data}(\boldsymbol{v})P_{model}(\boldsymbol{h}|\boldsymbol{v})$。网络的其余部分参与塑造这些统计信息，但权重可以在完全不知道网络其余部分的情况下更新。</p>
 <a id="more"></a>
 <h3 id="1-2-受限玻尔兹曼机"><a href="#1-2-受限玻尔兹曼机" class="headerlink" title="1.2 受限玻尔兹曼机"></a>1.2 受限玻尔兹曼机</h3><!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/rbm0.png" alt="rbm0.png"></p>
-<p>RBM是包含一层可观察变量和单层潜变量的无向概率图模型，它是一个二分图，观察层或潜层中的任何单元之间不允许存在连接。令观察层由一组$n_v$个二值随机变量组成，我们统称为向量$\boldsymbol{v} \in {0, 1}^{n_v \times 1}$。我们将$n_h$个二值随机变量的潜在或隐藏层记为$\boldsymbol{h} \in {0, 1}^{n_h \times 1}$，$\boldsymbol{b}\in {0, 1}^{n_v \times 1}$和$\boldsymbol{c} \in {0, 1}^{n_h \times 1}$分别是可见层和隐藏层的偏置向量。其能量函数为</p>
+<p>RBM是包含一层可观察变量和单层潜变量的无向概率图模型，它是一个二分图，观察层或潜层中的任何单元之间不允许存在连接。令观察层由一组$n_v$个二值随机变量组成，我们统称为向量$\boldsymbol{v} \in \{0, 1\}^{n_v \times 1}$。我们将$n_h$个二值随机变量的潜在或隐藏层记为$\boldsymbol{h} \in \{0, 1\}^{n_h \times 1}$，$\boldsymbol{b}\in \{0, 1\}^{n_v \times 1}$和$\boldsymbol{c} \in \{0, 1\}^{n_h \times 1}$分别是可见层和隐藏层的偏置向量。其能量函数为</p>
 <script type="math/tex; mode=display">
 E(\boldsymbol{v}, \boldsymbol{h}) = -\boldsymbol{b}^T\boldsymbol{v} - \boldsymbol{c}^T\boldsymbol{h} - \boldsymbol{v}^T\boldsymbol{W}\boldsymbol{h}</script><p>若$\boldsymbol{v} \in \mathbb{R}^{n_v \times1}$，即可见层取实值，则能量函数变为</p>
 <script type="math/tex; mode=display">
@@ -380,7 +380,7 @@ p_n(\boldsymbol{v}) = \frac{\sum_\boldsymbol{h}\exp(-E_n(\boldsymbol{v}, \boldsy
 \\
 = p_{n-1}(\boldsymbol{v})\frac{Z_{n-1}}{Z_n}(1+ \exp(c_n+ \boldsymbol{v}^T\boldsymbol{W}_{:,n}))
 \\
-= p_{n-1}(\boldsymbol{v})\frac{Z_{n-1}}{Z_n}+ p_{n-1}(\boldsymbol{v})\frac{Z_{n-1}}{Z_n}\exp(c_n+ \boldsymbol{v}^T\boldsymbol{W}_{:,n})</script><p>上式是一个递归式，假如我们加入新的隐层神经元为第$n$个。我们将$p<em>{n-1}(\boldsymbol{v})\frac{Z</em>{n-1}}{Z<em>n}+ p</em>{n-1}(\boldsymbol{v})\frac{Z<em>{n-1}}{Z_n}\exp(c_n+ \boldsymbol{v}^T\boldsymbol{W}</em>{:,n})$分为两部分，前一部分是$n-1$个隐层神经元的混合高斯分布缩放，后一部分是增加新的隐层神经元导致的$n-1$个隐层神经元的混合高斯分布偏移，偏移量由$\boldsymbol{W}_{:,n}$决定，因此可以将$p_n(\boldsymbol{v})$看作是两个混合高斯模型的叠加。<strong>由于此式是递归式</strong>，也就意味着最终概率分布包含的高斯成分数量$N_n$与隐层神经元个数$n$相比是指数形式增长的（大概是$N_n = 2^n$）。</p>
+= p_{n-1}(\boldsymbol{v})\frac{Z_{n-1}}{Z_n}+ p_{n-1}(\boldsymbol{v})\frac{Z_{n-1}}{Z_n}\exp(c_n+ \boldsymbol{v}^T\boldsymbol{W}_{:,n})</script><p>上式是一个递归式，假如我们加入新的隐层神经元为第$n$个。我们将$p_{n-1}(\boldsymbol{v})\frac{Z_{n-1}}{Z_n}+ p_{n-1}(\boldsymbol{v})\frac{Z_{n-1}}{Z_n}\exp(c_n+ \boldsymbol{v}^T\boldsymbol{W}_{:,n})$分为两部分，前一部分是$n-1$个隐层神经元的混合高斯分布缩放，后一部分是增加新的隐层神经元导致的$n-1$个隐层神经元的混合高斯分布偏移，偏移量由$\boldsymbol{W}_{:,n}$决定，因此可以将$p_n(\boldsymbol{v})$看作是两个混合高斯模型的叠加。<strong>由于此式是递归式</strong>，也就意味着最终概率分布包含的高斯成分数量$N_n$与隐层神经元个数$n$相比是指数形式增长的（大概是$N_n = 2^n$）。</p>
 <p>因此，RBM把可见层输入表示成了一个由多个方差为1的高斯分量组成的混合高斯模型，这些高斯分量的个数是指数级的。与GMM相比，RBM使用了更多的混合分量。然而，GMM可以为不同的高斯分量使用不同的方差来表示这个分布。结论就是高斯-伯努利RBM可以像混合高斯模型一样表示实值数据的分布，RBM可以替换GMM。</p>
 <p>由于RBM的隐层神经元为二值向量，因此很适合用在词袋模型的任务中，比如根据文章内容，判断文章主题，可见层为文章内容，隐层神经元表示主题。因此可以用于推荐系统。</p>
 <h3 id="1-5-训练受限玻尔兹曼机"><a href="#1-5-训练受限玻尔兹曼机" class="headerlink" title="1.5 训练受限玻尔兹曼机"></a>1.5 训练受限玻尔兹曼机</h3><p>训练RBM使用随机梯度下降SGD来极小化负对数似然NLL</p>
@@ -392,14 +392,14 @@ J_{NLL}(\boldsymbol{W}, \boldsymbol{b}, \boldsymbol{c};\boldsymbol{v}) = -\log P
 \bigtriangleup\boldsymbol{W}_t = \gamma\bigtriangleup\boldsymbol{W}_{t-1} + (1-\gamma)\frac{1}{M_b}\sum^{M_b}_{m=1}\bigtriangledown_{\boldsymbol{W}_t}J_{NLL}(\boldsymbol{W}, \boldsymbol{b}, \boldsymbol{c};\boldsymbol{v}^m)</script><p>这里$M_b$是batch大小，$\bigtriangledown J$是负对数似然对参数的梯度，其他两个参数$\boldsymbol{b},\boldsymbol{c}$与上式相同。</p>
 <p>与DNN不同，RBM的对数似然梯度不适合精确计算。负对数似然对于任意模型参数的导数的一般形式为</p>
 <script type="math/tex; mode=display">
-\bigtriangledown_\theta J_{NLL}(\boldsymbol{W, b, c;v}) = - [\left \langle \frac{\partial E(\boldsymbol{v, h})}{\partial\theta} \right \rangle_{data} - \left \langle \frac{\partial E(\boldsymbol{v, h})}{\partial\theta} \right \rangle_{model}]</script><p>$\left \langle x \right \rangle<em>{data}$和$\left \langle x \right \rangle</em>{model}$分别是从数据和最终模型中估计$x$的期望值。特别地，对于可见层神经元-隐层神经元的权重，有</p>
+\bigtriangledown_\theta J_{NLL}(\boldsymbol{W, b, c;v}) = - [\left \langle \frac{\partial E(\boldsymbol{v, h})}{\partial\theta} \right \rangle_{data} - \left \langle \frac{\partial E(\boldsymbol{v, h})}{\partial\theta} \right \rangle_{model}]</script><p>$\left \langle x \right \rangle_{data}$和$\left \langle x \right \rangle_{model}$分别是从数据和最终模型中估计$x$的期望值。特别地，对于可见层神经元-隐层神经元的权重，有</p>
 <script type="math/tex; mode=display">
 \bigtriangledown_{w_{ji}} J_{NLL}(\boldsymbol{W, b, c;v}) = - [\left \langle v_ih_j \right \rangle_{data} - \left \langle v_ih_j \right \rangle_{model}]</script><p>第一个期望是训练数据中可见层神经元$v_i$和隐层神经元$h_j$同时取1的频率，第二个期望是以最终模型定义的分布来求得的。当隐层神经元未知时，第二个期望的计算时间是与高斯成分的数量相关，也就是指数级的，因此需要换一种方法。</p>
 <p>最有效的是对比散度算法CD。对可见层神经元-隐藏层神经元权重的梯度的一步对比散度近似是</p>
 <script type="math/tex; mode=display">
 \bigtriangledown_{w_{ji}} J_{NLL}(\boldsymbol{W, b, c;v}) = - [\left \langle v_ih_j \right \rangle_{data} - \left \langle v_ih_j \right \rangle_{\infty}]
 \\
-\approx - [\left \langle v_ih_j \right \rangle_{data} - \left \langle v_ih_j \right \rangle_{1}]</script><p>这里$\left \langle \cdot \right \rangle<em>{\infty}$和$\left \langle \cdot \right \rangle</em>{1}$分别表示在吉布斯采样器运行了无穷次和一次之后得到的采样上估计的期望。</p>
+\approx - [\left \langle v_ih_j \right \rangle_{data} - \left \langle v_ih_j \right \rangle_{1}]</script><p>这里$\left \langle \cdot \right \rangle_{\infty}$和$\left \langle \cdot \right \rangle_{1}$分别表示在吉布斯采样器运行了无穷次和一次之后得到的采样上估计的期望。</p>
 <p>采样过程和对比散度算法：</p>
 <ul>
 <li>第一步，吉布斯采样器通过一个数据样本初始化；</li>
@@ -407,10 +407,10 @@ J_{NLL}(\boldsymbol{W}, \boldsymbol{b}, \boldsymbol{c};\boldsymbol{v}) = -\log P
 <li>根据RBM类型是伯努利-伯努利RBM还是高斯-伯努利RBM，使用不同的公式定义的后验概率$P(\boldsymbol{v}|\boldsymbol{h})$，基于隐藏层采样继续生成一个可见层采样；</li>
 <li>重复上述过程。</li>
 </ul>
-<p>如果吉布斯采样器运行无穷次，则真实期望$\left \langle v<em>ih_j \right \rangle</em>{model}$可以从老化阶段之后生成的采样中估计</p>
+<p>如果吉布斯采样器运行无穷次，则真实期望$\left \langle v_ih_j \right \rangle_{model}$可以从老化阶段之后生成的采样中估计</p>
 <script type="math/tex; mode=display">
-\left \langle v_ih_j \right \rangle_{model} \approx \frac{1}{N} \sum^{N_{burn}+N}_{n=N_{burn}+1} v_i^nh_j^n</script><p>这里$N<em>{burn}$是达到老化阶段所需的步数，$N$是老化之后的采样次数（可能是巨大的）。然而运行很多步吉布斯采样器是低效的。我们可以只运行一次，用一个非常粗略的近似$\left \langle v_ih_j \right \rangle</em>{1}$来估计$\left \langle v<em>ih_j \right \rangle</em>{model}$</p>
-<p>然而$\left \langle v<em>ih_j \right \rangle</em>{1}$具有很大的方差。为了减小方差，我们可以基于以下公式估计$\left \langle v<em>ih_j \right \rangle</em>{model}$，这里取等号是因为二值向量</p>
+\left \langle v_ih_j \right \rangle_{model} \approx \frac{1}{N} \sum^{N_{burn}+N}_{n=N_{burn}+1} v_i^nh_j^n</script><p>这里$N_{burn}$是达到老化阶段所需的步数，$N$是老化之后的采样次数（可能是巨大的）。然而运行很多步吉布斯采样器是低效的。我们可以只运行一次，用一个非常粗略的近似$\left \langle v_ih_j \right \rangle_{1}$来估计$\left \langle v_ih_j \right \rangle_{model}$</p>
+<p>然而$\left \langle v_ih_j \right \rangle_{1}$具有很大的方差。为了减小方差，我们可以基于以下公式估计$\left \langle v_ih_j \right \rangle_{model}$，这里取等号是因为二值向量</p>
 <script type="math/tex; mode=display">
 \boldsymbol{h}^0 \sim P(\boldsymbol{h}|\boldsymbol{v}^0)
 \\
@@ -445,9 +445,9 @@ J_{NLL}(\boldsymbol{W}, \boldsymbol{b}, \boldsymbol{c};\boldsymbol{v}) = -\log P
 <p>13.$\boldsymbol{H}^{n+1} \leftarrow P(\boldsymbol{H}|\boldsymbol{V}^{n+1})$</p>
 </blockquote>
 <p>14.$end$ $for$</p>
-<p>15.$\bigtriangledown<em>{\boldsymbol{W}}J \leftarrow \bigtriangledown</em>{\boldsymbol{W}}J - \boldsymbol{H}^N(\boldsymbol{V}^N)^T$</p>
-<p>16.$\bigtriangledown<em>{\boldsymbol{b}}J \leftarrow \bigtriangledown</em>{\boldsymbol{b}}J - sumrow(\boldsymbol{V}^0)$</p>
-<p>17.$\bigtriangledown<em>{\boldsymbol{c}}J \leftarrow \bigtriangledown</em>{\boldsymbol{c}}J - sumrow(\boldsymbol{H}^0)$</p>
+<p>15.$\bigtriangledown_{\boldsymbol{W}}J \leftarrow \bigtriangledown_{\boldsymbol{W}}J - \boldsymbol{H}^N(\boldsymbol{V}^N)^T$</p>
+<p>16.$\bigtriangledown_{\boldsymbol{b}}J \leftarrow \bigtriangledown_{\boldsymbol{b}}J - sumrow(\boldsymbol{V}^0)$</p>
+<p>17.$\bigtriangledown_{\boldsymbol{c}}J \leftarrow \bigtriangledown_{\boldsymbol{c}}J - sumrow(\boldsymbol{H}^0)$</p>
 <p>18.$\boldsymbol{W}_{t+1} \leftarrow \boldsymbol{W}_t + \frac{\eta}{M_b}\bigtriangleup\boldsymbol{W}_t$</p>
 <p>19.$\boldsymbol{b}_{t+1} \leftarrow \boldsymbol{b}_t + \frac{\eta}{M_b}\bigtriangleup\boldsymbol{b}_t$</p>
 <p>20.$\boldsymbol{c}_{t+1} \leftarrow \boldsymbol{c}_t + \frac{\eta}{M_b}\bigtriangleup\boldsymbol{c}_t$</p>
@@ -473,8 +473,8 @@ P(v_i = 1|\boldsymbol{h}^{(1)}) = \sigma(b_i^{(0)} + \boldsymbol{W}_{:,i}^{(1)^T
 \boldsymbol{v} \sim N(\boldsymbol{v};\boldsymbol{b}^{(0)} + \boldsymbol{W}^{(1)^T}\boldsymbol{h}^{(1)}, \boldsymbol{\beta}^{-1})</script><p>为了便于处理，$\boldsymbol{\beta}$为对角形式。</p>
 <p>训练过程表示：</p>
 <ul>
-<li>先使用对比散度CD训练第一层RBM（可见层+第一隐藏层）以最大化$\mathbb{E}<em>{\boldsymbol{v}\sim p</em>{data}}\log p(\boldsymbol{v})$；</li>
-<li>训练第二层RBM（第一隐藏层+第二隐藏层）为近似最大化$\mathbb{E}<em>{\boldsymbol{v}\sim p</em>{data}}\mathbb{E}_{\boldsymbol{h}^{(1)} \sim p^{(1)}(\boldsymbol{h}^{(1)}|\boldsymbol{v})}\log p^{(2)}(\boldsymbol{h}^{(1)})$，其中$p^{(1)}$是第一个RBM的概率分布，$p^{(2)}$是第二个RBM的概率分布。</li>
+<li>先使用对比散度CD训练第一层RBM（可见层+第一隐藏层）以最大化$\mathbb{E}_{\boldsymbol{v}\sim p_{data}}\log p(\boldsymbol{v})$；</li>
+<li>训练第二层RBM（第一隐藏层+第二隐藏层）为近似最大化$\mathbb{E}_{\boldsymbol{v}\sim p_{data}}\mathbb{E}_{\boldsymbol{h}^{(1)} \sim p^{(1)}(\boldsymbol{h}^{(1)}|\boldsymbol{v})}\log p^{(2)}(\boldsymbol{h}^{(1)})$，其中$p^{(1)}$是第一个RBM的概率分布，$p^{(2)}$是第二个RBM的概率分布。</li>
 </ul>
 <p>上述过程可以无限重复，从而向DBN添加任意多层，这个过程可被视为提高数据在DBN下似然概率的变分下界。</p>
 <p>我们会发现DBN计算过程中使用到了Sigmoid函数，十分类似由Sigmoid神经元构成的DNN。从这种视角看由Sigmoid神经元构成的DNN，我们发现DBN的权重可以用作DNN的初始权重。DBN和DNN之间的唯一区别实在DNN中使用了标注。基于此，在多分类DNN中，当预训练结束后，我们需要添加一个随机初始化的softmax输出层，并用反向传播算法鉴别性地精细调整网络中地所有权重。</p>
@@ -491,7 +491,7 @@ P(v_i = 1|\boldsymbol{h}^{(1)}) = \sigma(b_i^{(0)} + \boldsymbol{W}_{:,i}^{(1)^T
 <li>学习模型参数的时候使用了近似的对比散度算法。</li>
 </ol>
 <p>显然，若使用DBN初始化基于ReLU的DNN，效果将大打折扣，因为两者并无联系。</p>
-<h2 id="3-降噪自动编码器预训练"><a href="#3-降噪自动编码器预训练" class="headerlink" title="3. 降噪自动编码器预训练"></a>3. 降噪自动编码器预训练</h2><p>自动编码器是基于<strong>没有标注</strong>的训练数据集$\mathbb{S} = { (\boldsymbol{v}^m) | 1 \leqslant m \leqslant M }$，找到一个$N_h$维隐藏层表示$\boldsymbol{h} = f(\boldsymbol{v})\in \mathbb{R}^{N_h \times 1}$，通过它可以使用最小均方误差MSE把初始化的$N_v$维信号$\boldsymbol{v}$重建为$\tilde{\boldsymbol{v}} = g(\boldsymbol{h})$。</p>
+<h2 id="3-降噪自动编码器预训练"><a href="#3-降噪自动编码器预训练" class="headerlink" title="3. 降噪自动编码器预训练"></a>3. 降噪自动编码器预训练</h2><p>自动编码器是基于<strong>没有标注</strong>的训练数据集$\mathbb{S} = \{ (\boldsymbol{v}^m) | 1 \leqslant m \leqslant M \}$，找到一个$N_h$维隐藏层表示$\boldsymbol{h} = f(\boldsymbol{v})\in \mathbb{R}^{N_h \times 1}$，通过它可以使用最小均方误差MSE把初始化的$N_v$维信号$\boldsymbol{v}$重建为$\tilde{\boldsymbol{v}} = g(\boldsymbol{h})$。</p>
 <script type="math/tex; mode=display">
 J_{MSE}(\boldsymbol{W, b};\mathbb{S}) = \frac{1}{M}\sum^M_{m=1}\frac{1}{2}||\tilde{\boldsymbol{v}}^m - \boldsymbol{v}^m||^2</script><p>理论上$f$和$g$可以是任意函数。与主成分分析PCA不同的是，自动编码器有获取输入分布的多重模态属性的潜力。降噪自动编码器只有一个隐藏层。</p>
 <p>与DBN不同的是，DBN是主动获取训练数据的统计规律，自动编码器是让其自由发展，尽可能地减小重建误差，在这个过程中，编码器获得了从输入数据到隐藏层的统计特征，解码器获得了重建目标的能力。</p>
@@ -707,7 +707,7 @@ J_{HYB}(\boldsymbol{W, b};\mathbb{S}) = J_{DISC}(\boldsymbol{W, b};\mathbb{S}) +
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:17</span>
+    <span title="站点阅读时长">13:18</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

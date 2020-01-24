@@ -444,7 +444,7 @@
 <p>在 a 图中是刚开始训练的时候，D 的分类能力还不是最好，因此有所波动，而生成数据的分布也自然和真实数据分布不同，毕竟 G 网络输入是随机生成的噪声；到了 b 图的时候，D 网络的分类能力就比较好了，可以看到对于真实数据和生成数据，它是明显可以区分出来，也就是给出的概率是不同的；</p>
 <p>而绿色的曲线，即 G 网络的目标是学习真实数据的分布，所以它会往蓝色曲线方向移动，也就是 c 图了，并且因为 G 和 D 是相互对抗的，当 G 网络提升，也会影响 D 网络的分辨能力。论文中，Ian Goodfellow 做出了证明，当假设 G 网络不变，训练 D 网络，最优的情况会是：</p>
 <script type="math/tex; mode=display">
-D_G^*(\boldsymbol{x}) = \frac{p_{data}(\boldsymbol{x})}{p_{data}(\boldsymbol{x}) + p_g(\boldsymbol{x})}</script><p>也就是当生成数据的分布$p<em>g(x)$趋近于真实数据分布$p</em>{data}(x)$的时候，D 网络输出的概率$D_G^*(x)$会趋近于 0.5，也就是 d 图的结果，这也是最终希望达到的训练结果，这时候 G 和 D 网络也就达到一个平衡状态。</p>
+D_G^*(\boldsymbol{x}) = \frac{p_{data}(\boldsymbol{x})}{p_{data}(\boldsymbol{x}) + p_g(\boldsymbol{x})}</script><p>也就是当生成数据的分布$p_g(x)$趋近于真实数据分布$p_{data}(x)$的时候，D 网络输出的概率$D_G^*(x)$会趋近于 0.5，也就是 d 图的结果，这也是最终希望达到的训练结果，这时候 G 和 D 网络也就达到一个平衡状态。</p>
 <h2 id="6-算法"><a href="#6-算法" class="headerlink" title="6. 算法"></a>6. 算法</h2><p>论文给出的算法实现过程如下所示</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/5f601eac50c9eb3e3.png" alt="5f601eac50c9eb3e3.png"></p>
@@ -648,7 +648,7 @@ D_G^*(\boldsymbol{x}) = \frac{p_{data}(\boldsymbol{x})}{p_{data}(\boldsymbol{x})
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:17</span>
+    <span title="站点阅读时长">13:18</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

@@ -468,7 +468,7 @@ L(\{ \boldsymbol{x}^{(1)},...,\boldsymbol{x}^{(\tau)} \}, \{ \boldsymbol{y}^{(1)
 <li>编码器或输入RNN处理输入序列，编码器输出上下文$C$（通常是最终隐藏状态的简单函数）；</li>
 <li>解码器或输出RNN则以固定长度的向量为条件产生输出序列$\boldsymbol{Y} = (\boldsymbol{y}^{(1)},…,\boldsymbol{y}^{(n_y)})$。</li>
 </ol>
-<p>序列长度$n<em>x,n_y$可以彼此不同。两个RNN共同训练以最大化$\log P(\boldsymbol{y}^{(1)},…,\boldsymbol{y}^{(n_y)}|\boldsymbol{x}^{(1)},…,\boldsymbol{x}^{(n_x)})$（关于训练集中所有$\boldsymbol{x}$和$\boldsymbol{y}$对的平均）。编码器RNN的最后一个状态$\boldsymbol{h}</em>{n_x}$通常被当作输入的表示$C$并作为解码器RNN的输入。</p>
+<p>序列长度$n_x,n_y$可以彼此不同。两个RNN共同训练以最大化$\log P(\boldsymbol{y}^{(1)},…,\boldsymbol{y}^{(n_y)}|\boldsymbol{x}^{(1)},…,\boldsymbol{x}^{(n_x)})$（关于训练集中所有$\boldsymbol{x}$和$\boldsymbol{y}$对的平均）。编码器RNN的最后一个状态$\boldsymbol{h}_{n_x}$通常被当作输入的表示$C$并作为解码器RNN的输入。</p>
 <p>这里并不强制要求编码器与解码器的隐藏层具有相同的大小。</p>
 <p>此架构的一个明显不足是，编码器RNN输出的上下文$C$的维度太小而难以适当地概括一个长序列。<br>让$C$成为可变长度的序列，而不是一个固定大小的向量；<br>将序列$C$的元素和输出序列的元素相关联的<strong>注意力机制</strong>。</p>
 <h2 id="5-深度循环网络"><a href="#5-深度循环网络" class="headerlink" title="5. 深度循环网络"></a>5. 深度循环网络</h2><p>大多数RNN中的计算可以分解为三块参数及其相关的变换：</p>
@@ -784,7 +784,7 @@ if \quad ||\boldsymbol{g}|| > v
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:17</span>
+    <span title="站点阅读时长">13:18</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

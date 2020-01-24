@@ -334,15 +334,15 @@ wi \leftarrow w_i + \Delta w_i
 <p>因此在输入层与输出层之间增加隐含层（至少为1），隐含层和输出层神经元都是拥有激活函数的功能神经元，这样就能对非线性问题进行拟合。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/18/nn.jpg" alt="nn.jpg"></p>
-<h2 id="3-误差逆传播算法BP"><a href="#3-误差逆传播算法BP" class="headerlink" title="3. 误差逆传播算法BP"></a>3. 误差逆传播算法BP</h2><p>给定训练集$D = { (\boldsymbol{x}_1, \boldsymbol{y}_1) , (\boldsymbol{x}_2, \boldsymbol{y}_2),…,(\boldsymbol{x}_m, \boldsymbol{y}_m)}$，$\boldsymbol{x}_i \in \mathbb{R}^d ，\boldsymbol{y}_i \in \mathbb{R}^l$，即输入示例由$d$个属性描述，输出$l$维实值变量。</p>
+<h2 id="3-误差逆传播算法BP"><a href="#3-误差逆传播算法BP" class="headerlink" title="3. 误差逆传播算法BP"></a>3. 误差逆传播算法BP</h2><p>给定训练集$D = \{ (\boldsymbol{x}_1, \boldsymbol{y}_1) , (\boldsymbol{x}_2, \boldsymbol{y}_2),…,(\boldsymbol{x}_m, \boldsymbol{y}_m)\}$，$\boldsymbol{x}_i \in \mathbb{R}^d ，\boldsymbol{y}_i \in \mathbb{R}^l$，即输入示例由$d$个属性描述，输出$l$维实值变量。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/18/bp.png" alt="bp.png"></p>
 <p>如图神经网络结构：</p>
 <ul>
 <li>$d$个输入神经元，$l$个输出神经元，$q$个隐层神经元；</li>
 <li>输出层第$j$个神经元的阈值用$\theta_j$表示，隐层第$h$个神经元的阈值用$\gamma_h$表示；</li>
-<li>输入层第$i$个神经元与隐层第$h$个神经元之间的连接权为$v<em>{ih}$，隐层第$h$个神经元与输出层第$j$个神经元之间的连接权为$w</em>{hj}$；</li>
-<li>隐层第$h$个神经元接收到的输入为$\alpha<em>h = \sum^d</em>{i=1}v<em>{ih}x_i$，输出层第$j$个神经元接收到的输入为$\beta_j = \sum^q</em>{h=1}w_{hj}b_h$，其中$b_h$为隐层第$h$个神经元的输出。假设激活函数均为Sigmoid。</li>
+<li>输入层第$i$个神经元与隐层第$h$个神经元之间的连接权为$v_{ih}$，隐层第$h$个神经元与输出层第$j$个神经元之间的连接权为$w_{hj}$；</li>
+<li>隐层第$h$个神经元接收到的输入为$\alpha_h = \sum^d_{i=1}v_{ih}x_i$，输出层第$j$个神经元接收到的输入为$\beta_j = \sum^q_{h=1}w_{hj}b_h$，其中$b_h$为隐层第$h$个神经元的输出。假设激活函数均为Sigmoid。</li>
 </ul>
 <hr>
 <p>对训练例$(\boldsymbol{x}_k, \boldsymbol{y}_k)$，假定神经网络的输出为$\hat{\boldsymbol{y}}_k = (\hat{y}^k_1,\hat{y}^k_2,…,\hat{y}^k_l)$，即</p>
@@ -482,7 +482,7 @@ E = \lambda \frac{1}{m} \sum^m_{k=1}E_k + (1-\lambda)\sum_i w_i^2</script><p>$\l
 <h3 id="5-6-Boltzmann机"><a href="#5-6-Boltzmann机" class="headerlink" title="5.6 Boltzmann机"></a>5.6 Boltzmann机</h3><p>Boltzmann机考虑神经网络具有某种状态，将这种状态定义为“能量”，通过训练使得能量函数最小化，最终网络达到理想状态。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/18/boltzmann.jpg" alt="boltzmann.jpg"></p>
-<p>常见的Boltzmann机神经元分类两层：显层和隐层。显层用于表示数据的输入与输出，隐层被理解为数据的内在表达。Boltzmann机中的神经元都是布尔型的（0/1），状态1表示激活，0表示抑制。令向量$\boldsymbol{s} \in { 0, 1 }^n$表示$n$个神经元的状态，$w_{ij}$表示神经元$i$与$j$之间的连接权，$\theta_i$表示神经元$i$的阈值，则状态向量$\boldsymbol{s}$所对应的Boltzmann机能量定义为</p>
+<p>常见的Boltzmann机神经元分类两层：显层和隐层。显层用于表示数据的输入与输出，隐层被理解为数据的内在表达。Boltzmann机中的神经元都是布尔型的（0/1），状态1表示激活，0表示抑制。令向量$\boldsymbol{s} \in \{ 0, 1 \}^n$表示$n$个神经元的状态，$w_{ij}$表示神经元$i$与$j$之间的连接权，$\theta_i$表示神经元$i$的阈值，则状态向量$\boldsymbol{s}$所对应的Boltzmann机能量定义为</p>
 <script type="math/tex; mode=display">
 E(\boldsymbol{s}) = -\sum^{n-1}_{i=1}\sum^n_{j=i+1}w_{ij}s_is_j - \sum^n_{i=1}\theta_is_i</script><p>若网络中的神经元以任意不依赖于输入值的顺序进行更新，则网络最终将达到Boltzmann分布，此时状态向量$\boldsymbol{s}$出现的概率将仅由其所有可能状态向量的能量确定：</p>
 <script type="math/tex; mode=display">
@@ -530,7 +530,7 @@ P(\boldsymbol{h}|\boldsymbol{v}) = \prod^q_{j=1}P(h_j|\boldsymbol{v})</script><p
       <div class="popular-posts-title"><a href="/archives/8f45a2c4.html" rel="bookmark">深度学习-优化器</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/archives/c6767314.html" rel="bookmark">卷积神经网络</a></div>
+      <div class="popular-posts-title"><a href="/archives/3e5788ab.html" rel="bookmark">深度学习-实际问题</a></div>
     </li>
   </ul>
 
@@ -703,7 +703,7 @@ P(\boldsymbol{h}|\boldsymbol{v}) = \prod^q_{j=1}P(h_j|\boldsymbol{v})</script><p
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:17</span>
+    <span title="站点阅读时长">13:18</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

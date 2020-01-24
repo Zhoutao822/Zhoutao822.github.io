@@ -298,7 +298,7 @@
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>12 分钟</span>
+              <span>13 分钟</span>
             </span>
 
         </div>
@@ -326,7 +326,7 @@
 <a id="more"></a>
 <hr>
 <p><em>集成学习性能证明</em></p>
-<p>考虑二分类问题$y \in { -1, +1 }$和真实函数$f$，假定基学习器的错误率为$\epsilon$，即对每个基学习器$h_i$有</p>
+<p>考虑二分类问题$y \in \{ -1, +1 \}$和真实函数$f$，假定基学习器的错误率为$\epsilon$，即对每个基学习器$h_i$有</p>
 <script type="math/tex; mode=display">
 P(h_i(\boldsymbol{x}) \neq f(\boldsymbol{x})) = \epsilon</script><p>假设集成策略为简单投票法结合$T$个基学习器，超过半数原则</p>
 <script type="math/tex; mode=display">
@@ -348,14 +348,14 @@ P(H(\boldsymbol{x}) \neq f(\boldsymbol{x})) = \sum^{\left \lfloor T/2 \right \rf
 <li>基于调整后的样本分布来训练下一个基学习器</li>
 <li>判断基学习器数目是否达到指定的值$T$，未达到则返回第2步，否则将这$T$个基学习器进行加权结合</li>
 </ol>
-<p>Boosting族算法中最著名的是AdaBoost，其中$y_i \in { -1, +1 }$，$f$是真实函数。</p>
+<p>Boosting族算法中最著名的是AdaBoost，其中$y_i \in \{ -1, +1 \}$，$f$是真实函数。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/288ec896965340bb4.png" alt="288ec896965340bb4.png"></p>
 <p>AdaBoost算法有多种推导方式，比较容易理解的是基于“加性模型”</p>
 <script type="math/tex; mode=display">
 H(\boldsymbol{x}) = \sum^T_{t=1}\alpha_th_t(\boldsymbol{x})</script><p>来最小化指数损失函数</p>
 <script type="math/tex; mode=display">
-l_{\exp}(H|\mathcal{D}) = \mathbb{E}_{\boldsymbol{x} \sim \mathcal{D}}[e^{-f(\boldsymbol{x})H(\boldsymbol{x})}]</script><p>对于二分类$y_i \in { -1, +1 }$来说，损失函数可以有<code>0-1损失</code>、<code>Logistic loss</code>、<code>Hinge loss</code>、<code>指数损失(Exponential loss)</code>、<code>modified Huber loss</code>，这里选择指数损失的原因推导如下：</p>
+l_{\exp}(H|\mathcal{D}) = \mathbb{E}_{\boldsymbol{x} \sim \mathcal{D}}[e^{-f(\boldsymbol{x})H(\boldsymbol{x})}]</script><p>对于二分类$y_i \in \{ -1, +1 \}$来说，损失函数可以有<code>0-1损失</code>、<code>Logistic loss</code>、<code>Hinge loss</code>、<code>指数损失(Exponential loss)</code>、<code>modified Huber loss</code>，这里选择指数损失的原因推导如下：</p>
 <p>若$H(\boldsymbol{x})$能令指数损失最小化，则考虑上式对$H(\boldsymbol{x})$的偏导数</p>
 <script type="math/tex; mode=display">
 \frac{\partial l_{\exp}(H|\mathcal{D})}{\partial H(\boldsymbol{x})} = -e^{-H(\boldsymbol{x})} P(f(\boldsymbol{x}) = 1|\boldsymbol{x}) + e^{H(\boldsymbol{x})} P(f(\boldsymbol{x}) = -1|\boldsymbol{x})</script><p>令上式为0，解得</p>
@@ -389,14 +389,14 @@ l_{\exp}(\alpha_th_t|\mathcal{D}_t) = \mathbb{E}_{\boldsymbol{x} \sim \mathcal{D
 \\
 = e^{-\alpha_t}(1-\epsilon_t) + e^{\alpha_t}\epsilon_t
 \\
-\mathbb{I}指示函数，真取1，假取0</script><p>其中$\epsilon<em>t = P</em>{\boldsymbol{x}\sim \mathcal{D}_t}(h_t(\boldsymbol{x}) \neq f(\boldsymbol{x}))$，考虑指数损失函数的导数</p>
+\mathbb{I}指示函数，真取1，假取0</script><p>其中$\epsilon_t = P_{\boldsymbol{x}\sim \mathcal{D}_t}(h_t(\boldsymbol{x}) \neq f(\boldsymbol{x}))$，考虑指数损失函数的导数</p>
 <script type="math/tex; mode=display">
 \frac{\partial l_{\exp}(\alpha_th_t|\mathcal{D}_t)}{\partial \alpha_t} = -e^{-\alpha_t}(1-\epsilon_t) + e^{\alpha_t}\epsilon_t</script><p>令上式为0，解得</p>
 <script type="math/tex; mode=display">
 \alpha_t = \frac{1}{2} \ln (\frac{1-\epsilon_t}{\epsilon_t})</script><p>证毕</p>
 <hr>
 <p>样本权重更新公式证明</p>
-<p>AdaBoost算法在获得$H<em>{t-1}$之后样本分布将进行调整，使得下一轮的基学习器$h_t$能纠正$H</em>{t-1}$的一些错误，即最小化</p>
+<p>AdaBoost算法在获得$H_{t-1}$之后样本分布将进行调整，使得下一轮的基学习器$h_t$能纠正$H_{t-1}$的一些错误，即最小化</p>
 <script type="math/tex; mode=display">
 l_{\exp}(H_{t-1} + h_t|\mathcal{D}) = \mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})(H_{t-1}(\boldsymbol{x})+h_t(\boldsymbol{x}))}]
 \\
@@ -413,23 +413,23 @@ h_t(\boldsymbol{x}) = \underset{h}{\arg \min} l_{\exp}(H_{t-1} + h|\mathcal{D})
 \\
 = \underset{h}{\arg \max} \mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})} f(\boldsymbol{x})h(\boldsymbol{x})]
 \\
-= \underset{h}{\arg \max} \mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[\frac{e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})}}{\mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})}]} f(\boldsymbol{x})h(\boldsymbol{x})]</script><p>注意到$\mathbb{E}<em>{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H</em>{t-1}(\boldsymbol{x})}]$是一个常数，所以被除也不影响结果。令$\mathcal{D}_t$表示一个分布</p>
+= \underset{h}{\arg \max} \mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[\frac{e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})}}{\mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})}]} f(\boldsymbol{x})h(\boldsymbol{x})]</script><p>注意到$\mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})}]$是一个常数，所以被除也不影响结果。令$\mathcal{D}_t$表示一个分布</p>
 <script type="math/tex; mode=display">
 \mathcal{D}_t(\boldsymbol{x}) = \frac{\mathcal{D}(\boldsymbol{x})e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})}}{\mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})}]}</script><p>根据数学期望的定义，这等价于令</p>
 <script type="math/tex; mode=display">
 h_t(\boldsymbol{x}) = \underset{h}{\arg \max} \mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[\frac{e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})}}{\mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})}]} f(\boldsymbol{x})h(\boldsymbol{x})]
 \\
-= \underset{h}{\arg \max} \mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}_t}[f(\boldsymbol{x})h(\boldsymbol{x})]</script><p>由$f(\boldsymbol{x})h(\boldsymbol{x}) \in {-1, 1}$，有</p>
+= \underset{h}{\arg \max} \mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}_t}[f(\boldsymbol{x})h(\boldsymbol{x})]</script><p>由$f(\boldsymbol{x})h(\boldsymbol{x}) \in \{-1, 1\}$，有</p>
 <script type="math/tex; mode=display">
 f(\boldsymbol{x})h(\boldsymbol{x}) = 1- 2\mathbb{I}(f(\boldsymbol{x}) \neq h(\boldsymbol{x}))</script><p>则理想的基学习器</p>
 <script type="math/tex; mode=display">
-h_t(\boldsymbol{x}) = \underset{h}{\arg \max} \mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}_t} [\mathbb{I}(f(\boldsymbol{x}) \neq h(\boldsymbol{x}))]</script><p>由此可见，理想的$h<em>t$将在分布$\mathcal{D}_t$下最小化分类误差。因此弱分类器将基于分布$\mathcal{D}_t$来训练，且分类误差应小于0.5。考虑到$\mathcal{D}_t$和$\mathcal{D}</em>{t+1}$的关系，有</p>
+h_t(\boldsymbol{x}) = \underset{h}{\arg \max} \mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}_t} [\mathbb{I}(f(\boldsymbol{x}) \neq h(\boldsymbol{x}))]</script><p>由此可见，理想的$h_t$将在分布$\mathcal{D}_t$下最小化分类误差。因此弱分类器将基于分布$\mathcal{D}_t$来训练，且分类误差应小于0.5。考虑到$\mathcal{D}_t$和$\mathcal{D}_{t+1}$的关系，有</p>
 <script type="math/tex; mode=display">
 \mathcal{D}_{t+1}(\boldsymbol{x}) = \frac{\mathcal{D}(\boldsymbol{x})e^{-f(\boldsymbol{x})H_t(\boldsymbol{x})}}{\mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H_t(\boldsymbol{x})}]}
 \\
 = \frac{\mathcal{D}(\boldsymbol{x})e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})}e^{-f(\boldsymbol{x})\alpha_th_t(\boldsymbol{x})}}{\mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H_t(\boldsymbol{x})}]}
 \\
-= \mathcal{D}_t(\boldsymbol{x}) \cdot e^{-f(\boldsymbol{x})\alpha_th_t(\boldsymbol{x})} \frac{\mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})}]}{\mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H_t(\boldsymbol{x})}]}</script><p><em>注意这里将$H<em>t$分解为$H</em>{t-1}$和$\alpha_th_t$，是因为递归式已经将$H_t$作为最优解，即输出模型，所以需要加上基学习器权重</em></p>
+= \mathcal{D}_t(\boldsymbol{x}) \cdot e^{-f(\boldsymbol{x})\alpha_th_t(\boldsymbol{x})} \frac{\mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H_{t-1}(\boldsymbol{x})}]}{\mathbb{E}_{\boldsymbol{x}\sim \mathcal{D}}[e^{-f(\boldsymbol{x})H_t(\boldsymbol{x})}]}</script><p><em>注意这里将$H_t$分解为$H_{t-1}$和$\alpha_th_t$，是因为递归式已经将$H_t$作为最优解，即输出模型，所以需要加上基学习器权重</em></p>
 <p>证毕</p>
 <hr>
 <p>通过上面的证明，我们会发现Boosting算法的关键是更新样本权重然后生成新的基学习器，在上面的算法中使用的是“重赋权法”；在某些任务中，基学习算法不支持带权样本，则需要通过“重采样法”来处理，根据样本分布对训练集进行重新采样，再用重采样得到的样本集对基学习器进行训练。一般而言，这两种方式没有显著的优劣区别。</p>
@@ -473,7 +473,7 @@ H^{oob}(\boldsymbol{x}) = \underset{y \in \mathcal{Y}}{\arg \max} \sum^T_{t=1}\m
 </ol>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/5ba1d67313047c5a2.png" alt="5ba1d67313047c5a2.png"></p>
-<p>假定集成包含$T$个基学习器${ h_1, h_2,…,h_T }$，其中$h_i$在示例$\boldsymbol{x}$上的输出为$h_i(\boldsymbol{x})$</p>
+<p>假定集成包含$T$个基学习器$\{ h_1, h_2,…,h_T \}$，其中$h_i$在示例$\boldsymbol{x}$上的输出为$h_i(\boldsymbol{x})$</p>
 <h3 id="4-1-平均法"><a href="#4-1-平均法" class="headerlink" title="4.1 平均法"></a>4.1 平均法</h3><p>对数值型输出$h_i(\boldsymbol{x}) \in \mathbb{R}$</p>
 <ul>
 <li>简单平均法</li>
@@ -483,8 +483,8 @@ H(\boldsymbol{x}) = \frac{1}{T} \sum^T_{i=1}h_i(\boldsymbol{x})</script><ul>
 <li>加权平均法</li>
 </ul>
 <script type="math/tex; mode=display">
-H(\boldsymbol{x}) =  \sum^T_{i=1}w_ih_i(\boldsymbol{x})</script><p>其中$w<em>i$是个体学习器$h_i$的权重，通常要求$w_i \geqslant 0, \sum^T</em>{i=1}w_i = 1$，权重一般从训练数据中学习而得（比如权重大小与个体学习器误差大小成反比），实验和应用显示，加权并不一定优于简单平均法。一般而言，在个体学习器性能差异较大时宜使用加权平均法，否则简单平均法。</p>
-<h3 id="4-2-投票法"><a href="#4-2-投票法" class="headerlink" title="4.2 投票法"></a>4.2 投票法</h3><p>对分类任务来说，总计$N$个类别${ c_1,c_2,…,c_N }$，$h_i$在样本$\boldsymbol{x}$上的预测输出表示为一个$N$维向量$(h_i^1(\boldsymbol{x});h_i^2(\boldsymbol{x});…;h_i^N(\boldsymbol{x}))$</p>
+H(\boldsymbol{x}) =  \sum^T_{i=1}w_ih_i(\boldsymbol{x})</script><p>其中$w_i$是个体学习器$h_i$的权重，通常要求$w_i \geqslant 0, \sum^T_{i=1}w_i = 1$，权重一般从训练数据中学习而得（比如权重大小与个体学习器误差大小成反比），实验和应用显示，加权并不一定优于简单平均法。一般而言，在个体学习器性能差异较大时宜使用加权平均法，否则简单平均法。</p>
+<h3 id="4-2-投票法"><a href="#4-2-投票法" class="headerlink" title="4.2 投票法"></a>4.2 投票法</h3><p>对分类任务来说，总计$N$个类别$\{ c_1,c_2,…,c_N \}$，$h_i$在样本$\boldsymbol{x}$上的预测输出表示为一个$N$维向量$(h_i^1(\boldsymbol{x});h_i^2(\boldsymbol{x});…;h_i^N(\boldsymbol{x}))$</p>
 <ul>
 <li>绝对多数投票法，超过半数</li>
 </ul>
@@ -502,7 +502,7 @@ H(\boldsymbol{x}) = c_{\underset{j}{\arg \max}\sum^T_{i=1}h_i^j(\boldsymbol{x})}
 <script type="math/tex; mode=display">
 H(\boldsymbol{x}) = c_{\underset{j}{\arg \max}\sum^T_{i=1}w_ih_i^j(\boldsymbol{x})}</script><p>在现实任务中，个体学习器产生的结果$h_i^j(\boldsymbol{x})$可能是不同类型的：</p>
 <ul>
-<li>类标记：$h_i^j(\boldsymbol{x}) \in {0, 1}$，类似于onehot变量；</li>
+<li>类标记：$h_i^j(\boldsymbol{x}) \in \{0, 1\}$，类似于onehot变量；</li>
 <li>类概率：$h_i^j(\boldsymbol{x}) \in [0, 1]$，类似于softmax输出。</li>
 </ul>
 <p>不同类型的输出不可混用，若使用类概率需要规范化，使用类概率往往性能优于类标记；不同类型的基学习器输出的概率不能直接进行比较，需要转换为类标记然后再投票。</p>
@@ -541,12 +541,12 @@ E_i = \int E(h_i|\boldsymbol{x})p(\boldsymbol{x})d\boldsymbol{x}
 \\
 A_i = \int A(h_i|\boldsymbol{x})p(\boldsymbol{x})d\boldsymbol{x}</script><p>集成的泛化误差为</p>
 <script type="math/tex; mode=display">
-E = \int E(H|\boldsymbol{x})p(\boldsymbol{x})d\boldsymbol{x}</script><p>将上式代入，再令$\bar{E} = \sum^T<em>{i=1}w_iE_i$表示个体学习器泛化误差的加权值，$\bar{A} = \sum^T</em>{i=1}w_iA_i$表示个体学习器的加权分歧值，有</p>
+E = \int E(H|\boldsymbol{x})p(\boldsymbol{x})d\boldsymbol{x}</script><p>将上式代入，再令$\bar{E} = \sum^T_{i=1}w_iE_i$表示个体学习器泛化误差的加权值，$\bar{A} = \sum^T_{i=1}w_iA_i$表示个体学习器的加权分歧值，有</p>
 <script type="math/tex; mode=display">
 E = \bar{E} - \bar{A}</script><p>这个式子表明：个体学习器准确性越高、多样性越大，则集成越好。</p>
 <p>现实任务中很难将$\bar{E} - \bar{A}$作为优化目标求解，而且上式推导只适用于回归学习，难以推广到分类学习任务上去。</p>
 <h3 id="5-2-多样性度量"><a href="#5-2-多样性度量" class="headerlink" title="5.2 多样性度量"></a>5.2 多样性度量</h3><p>个体学习器之间的多样性的度量方式，典型做法是考虑个体学习器的两两相似/不相似性。</p>
-<p>给定数据集$D = { (\boldsymbol{x}_1, y_1),(\boldsymbol{x}_2, y_2),…,(\boldsymbol{x}_m, y_m) }$，对二分类任务，$y_i \in {-1, +1}$，分类器$h_i$与$h_j$的预测结果列联表为</p>
+<p>给定数据集$D = \{ (\boldsymbol{x}_1, y_1),(\boldsymbol{x}_2, y_2),…,(\boldsymbol{x}_m, y_m) \}$，对二分类任务，$y_i \in \{-1, +1\}$，分类器$h_i$与$h_j$的预测结果列联表为</p>
 <div class="table-container">
 <table>
 <thead>
@@ -585,7 +585,7 @@ dis_{ij} = \frac{b+c}{m}</script><p>&emsp;值域$[0, 1]$，值越大多样性越
 <li>$Q$-统计量</li>
 </ul>
 <script type="math/tex; mode=display">
-Q_{ij} = \frac{ad-bc}{ad+bc}</script><p>&emsp;与$\rho<em>{ij}$符号相同，且$|Q</em>{ij}| \geqslant |\rho_{ij}|$</p>
+Q_{ij} = \frac{ad-bc}{ad+bc}</script><p>&emsp;与$\rho_{ij}$符号相同，且$|Q_{ij}| \geqslant |\rho_{ij}|$</p>
 <ul>
 <li>$\kappa$-统计量</li>
 </ul>
@@ -812,7 +812,7 @@ p_2 = \frac{(a+b)(a+c) + (c+d)(b+d)}{m^2}</script><p>&emsp;$p_1$是两个分类�
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:17</span>
+    <span title="站点阅读时长">13:18</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

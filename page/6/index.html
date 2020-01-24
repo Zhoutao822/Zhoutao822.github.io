@@ -700,7 +700,7 @@ p(x) = \frac{1}{(2\pi)^{1/2}\sigma} \exp[-\frac{1}{2}(\frac{x - \mu}{\sigma})^2]
 <p>西瓜书第7章 贝叶斯分类器</p>
 </blockquote>
 <h2 id="1-贝叶斯决策论"><a href="#1-贝叶斯决策论" class="headerlink" title="1. 贝叶斯决策论"></a>1. 贝叶斯决策论</h2><p>贝叶斯决策论是概率框架下实施决策的基本方法。对于分类任务来说，在所有相关概率都已知的理想情形下，贝叶斯决策论考虑如何基于这些概率和误判损失来选择最优的类别标记。</p>
-<p>以多分类任务为例，假设有$N$种可能的类别标记，即$Y ={ c<em>1, c_2,…,c_N }$，$\lambda</em>{ij}$是将一个真实标记为$c_j$的样本误分类为$c_i$所产生的损失。那么在样本$\boldsymbol{x}$上的条件风险为</p>
+<p>以多分类任务为例，假设有$N$种可能的类别标记，即$Y =\{ c_1, c_2,…,c_N \}$，$\lambda_{ij}$是将一个真实标记为$c_j$的样本误分类为$c_i$所产生的损失。那么在样本$\boldsymbol{x}$上的条件风险为</p>
 <script type="math/tex; mode=display">
 R(c_i|\boldsymbol{x}) = \sum^N_{j=1}\lambda_{ij}P(c_j|\boldsymbol{x})</script><p>我们的任务是寻找一个判定准则：$h:X \rightarrow Y$以最小化总体风险</p>
 <script type="math/tex; mode=display">
@@ -827,7 +827,7 @@ R(h) = \mathbb{E}_\boldsymbol{x}[R(h(\boldsymbol{x})|\boldsymbol{x})]</script>
 <blockquote>
 <p>西瓜书第6章 支持向量机</p>
 </blockquote>
-<h2 id="1-间隔与支持向量"><a href="#1-间隔与支持向量" class="headerlink" title="1. 间隔与支持向量"></a>1. 间隔与支持向量</h2><p>给定训练样本集$D = { (\boldsymbol{x}_1, y_1), (\boldsymbol{x}_2, y_2),…,(\boldsymbol{x}_m, y_m) }, y_i \in { -1, +1 }$，显然这是一个二分类问题，支持向量机的设想是在训练集$D$的样本空间中找到一个划分超平面，将不同类别的样本分开。显然，在空间中这样的划分超平面有无穷多，我们需要寻找到最合适的那一个。</p>
+<h2 id="1-间隔与支持向量"><a href="#1-间隔与支持向量" class="headerlink" title="1. 间隔与支持向量"></a>1. 间隔与支持向量</h2><p>给定训练样本集$D = \{ (\boldsymbol{x}_1, y_1), (\boldsymbol{x}_2, y_2),…,(\boldsymbol{x}_m, y_m) \}, y_i \in \{ -1, +1 \}$，显然这是一个二分类问题，支持向量机的设想是在训练集$D$的样本空间中找到一个划分超平面，将不同类别的样本分开。显然，在空间中这样的划分超平面有无穷多，我们需要寻找到最合适的那一个。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/18/svm0.png" alt="svm0.png"></p>
 <p>从直觉上我们直到，“正中间”的划分超平面应该会是很合适的，因为处于正中间的划分超平面距离两种分类的样本的距离是最远的，因此用作预测时鲁棒性很好，泛化能力强。如何定义这样的超平面呢？</p>
@@ -1637,7 +1637,7 @@ f(\boldsymbol{x}) = \boldsymbol{w}^T\boldsymbol{x} + b</script><p>其中$\boldsy
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:17</span>
+    <span title="站点阅读时长">13:18</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

@@ -333,7 +333,7 @@
 <script type="math/tex; mode=display">
 \tilde{J}(\boldsymbol{w};\boldsymbol{X, y}) = \alpha||\boldsymbol{w}||_1 + J(\boldsymbol{w};\boldsymbol{X, y})</script><p>对于每一维$i$：</p>
 <script type="math/tex; mode=display">
-w_i = sign(w_i^*)\max \{ |w_i^*| - \frac{\alpha}{H_{i,i}}, 0 \}</script><p>显然，当$w<em>i^* \leqslant \frac{\alpha}{H</em>{i,i}}$的时候，正则化会使$w_i$变成0，也就是说$L^1$正则化会产生更加<strong>稀疏</strong>的解。因此可以使用$L^1$正则化实现降维或者特征选择。</p>
+w_i = sign(w_i^*)\max \{ |w_i^*| - \frac{\alpha}{H_{i,i}}, 0 \}</script><p>显然，当$w_i^<em> \leqslant \frac{\alpha}{H_{i,i}}$的时候，正则化会使$w_i$变成0，也就是说$L^1$正则化会产生更加<em>*稀疏</em></em>的解。因此可以使用$L^1$正则化实现降维或者特征选择。</p>
 <h2 id="2-作为约束的范数惩罚"><a href="#2-作为约束的范数惩罚" class="headerlink" title="2. 作为约束的范数惩罚"></a>2. 作为约束的范数惩罚</h2><p>上面介绍的参数范数惩罚未对正则项进行约束，如果我们想约束$\Omega$小于某个常数$k$，往往我们需要使用KKT条件（参考<code>支持向量机</code>）</p>
 <script type="math/tex; mode=display">
 L(\boldsymbol{\theta}, \alpha;\boldsymbol{X, y}) = J(\boldsymbol{\theta;X,y}) + \alpha(\Omega(\theta) - k)</script><p>这个约束问题的解由下式给出</p>
@@ -583,7 +583,7 @@ L(\boldsymbol{\theta}, \alpha;\boldsymbol{X, y}) = J(\boldsymbol{\theta;X,y}) + 
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:17</span>
+    <span title="站点阅读时长">13:18</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>
