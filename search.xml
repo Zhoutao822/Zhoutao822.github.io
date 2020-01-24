@@ -1584,11 +1584,11 @@ D^*(\boldsymbol{x}) = \frac{bp_{data}(\boldsymbol{x}) + ap_g(\boldsymbol{x})}{p_
       <tags>
         <tag>Android</tag>
         <tag>Material</tag>
-        <tag>ViewPager</tag>
-        <tag>RecyclerView</tag>
         <tag>ToolBar</tag>
         <tag>ContextMenu</tag>
         <tag>PopupMenu</tag>
+        <tag>RecyclerView</tag>
+        <tag>ViewPager</tag>
         <tag>onClick</tag>
         <tag>onLongClick</tag>
         <tag>onTouchEvent</tag>
@@ -2002,9 +2002,9 @@ D^*(\boldsymbol{x}) = \frac{bp_{data}(\boldsymbol{x}) + ap_g(\boldsymbol{x})}{p_
       <tags>
         <tag>Android</tag>
         <tag>Material</tag>
-        <tag>BottomSheetDialog</tag>
-        <tag>ViewPager</tag>
         <tag>RecyclerView</tag>
+        <tag>ViewPager</tag>
+        <tag>BottomSheetDialog</tag>
       </tags>
   </entry>
   <entry>
@@ -5358,8 +5358,8 @@ g_{t,i} = g_{t, i} + N(0,\sigma_t^2)
       </categories>
       <tags>
         <tag>Theory</tag>
-        <tag>Keras</tag>
         <tag>Tensorflow</tag>
+        <tag>Keras</tag>
         <tag>Optimizer</tag>
       </tags>
   </entry>
@@ -5529,13 +5529,13 @@ d\boldsymbol{b}^1 = \frac{1}{m} np.sum(d\boldsymbol{Z}^1, axis=1, keepdims=True)
         <category>Coding</category>
       </categories>
       <tags>
-        <tag>Neural Network</tag>
         <tag>Code</tag>
         <tag>Estimator</tag>
+        <tag>Neural Network</tag>
+        <tag>Keras</tag>
         <tag>DNNClassifier</tag>
         <tag>DNNRegressor</tag>
         <tag>DNNLinearCombinedRegressor</tag>
-        <tag>Keras</tag>
       </tags>
   </entry>
   <entry>
