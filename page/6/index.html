@@ -435,10 +435,13 @@
 <blockquote>
 <p>《解析深度学习-语音识别实践》第2章 混合高斯模型</p>
 </blockquote>
-<p><strong>语音识别过程：切除首尾端静音—声音划分为帧—对每一帧提取MFCC特征—若干帧对应一个状态—三个状态组成一个音素—若干音素组成单词</strong></p>
+<p><strong>语音识别过程：切除首尾端静音—-声音划分为帧—-对每一帧提取MFCC特征—-若干帧对应一个状态—-三个状态组成一个音素—-若干音素组成单词</strong></p>
 <h2 id="1-高斯分布"><a href="#1-高斯分布" class="headerlink" title="1. 高斯分布"></a>1. 高斯分布</h2><p>高斯分布又叫正态分布，在现实生活中充满了高斯分布，比如考试的分数、人的身高是一维高斯分布，图像处理领域的高斯模糊是二维高斯分布等等，通过高斯分布，我们可以很好的描述一类随机变量。</p>
 <p>对于连续型标量随机变量$x$来说，若$x$服从正态分布，则其概率密度函数是</p>
-<p>$$<br>p(x) = \frac{1}{(2\pi)^{1/2}\sigma} \exp[-\frac{1}{2}(\frac{x - \mu}{\sigma})^2] = N(x; \mu, \sigma^2)<br>\<br>(-\infty &lt; x &lt; \infty; \sigma &gt; 0)<br>$$</p>
+<script type="math/tex; mode=display">
+p(x) = \frac{1}{(2\pi)^{1/2}\sigma} \exp[-\frac{1}{2}(\frac{x - \mu}{\sigma})^2] = N(x; \mu, \sigma^2)
+\\
+(-\infty < x < \infty; \sigma > 0)</script><h2 id=""><a href="#" class="headerlink" title=""></a>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/archives/24da735a.html#more" rel="contents">
@@ -672,7 +675,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>8.1k</span>
+              <span>8k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -697,10 +700,11 @@
 <p>西瓜书第7章 贝叶斯分类器</p>
 </blockquote>
 <h2 id="1-贝叶斯决策论"><a href="#1-贝叶斯决策论" class="headerlink" title="1. 贝叶斯决策论"></a>1. 贝叶斯决策论</h2><p>贝叶斯决策论是概率框架下实施决策的基本方法。对于分类任务来说，在所有相关概率都已知的理想情形下，贝叶斯决策论考虑如何基于这些概率和误判损失来选择最优的类别标记。</p>
-<p>以多分类任务为例，假设有$N$种可能的类别标记，即$Y ={ c_1, c_2,…,c_N }$，$\lambda_{ij}$是将一个真实标记为$c_j$的样本误分类为$c_i$所产生的损失。那么在样本$\boldsymbol{x}$上的条件风险为</p>
-<p>$$<br>R(c_i|\boldsymbol{x}) = \sum^N_{j=1}\lambda_{ij}P(c_j|\boldsymbol{x})<br>$$</p>
-<p>我们的任务是寻找一个判定准则：$h:X \rightarrow Y$以最小化总体风险</p>
-<p>$$<br>R(h) = \mathbb{E}_\boldsymbol{x}[R(h(\boldsymbol{x})|\boldsymbol{x})]<br>$$</p>
+<p>以多分类任务为例，假设有$N$种可能的类别标记，即$Y ={ c<em>1, c_2,…,c_N }$，$\lambda</em>{ij}$是将一个真实标记为$c_j$的样本误分类为$c_i$所产生的损失。那么在样本$\boldsymbol{x}$上的条件风险为</p>
+<script type="math/tex; mode=display">
+R(c_i|\boldsymbol{x}) = \sum^N_{j=1}\lambda_{ij}P(c_j|\boldsymbol{x})</script><p>我们的任务是寻找一个判定准则：$h:X \rightarrow Y$以最小化总体风险</p>
+<script type="math/tex; mode=display">
+R(h) = \mathbb{E}_\boldsymbol{x}[R(h(\boldsymbol{x})|\boldsymbol{x})]</script>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/archives/79f15ca6.html#more" rel="contents">
@@ -806,7 +810,7 @@
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>14 分钟</span>
+              <span>13 分钟</span>
             </span>
 
         </div>
@@ -925,7 +929,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>8.6k</span>
+              <span>8.5k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -1180,7 +1184,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>9.2k</span>
+              <span>9k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -1209,10 +1213,10 @@
 <li>label/target：样本的标签，训练结果</li>
 </ul>
 <p>给定由d个属性描述的示例$\boldsymbol{x} = (x_1; x_2;…; x_d)$（通常情况下在数据集中，一个样本的表示形式为$\boldsymbol{x} = (x_1, x_2,…,x_d)$，区别在于数组的方向），其中$x_i$是$\boldsymbol{x}$在第i个属性上的取值，线性模型（linear model）试图学得一个通过属性的线性组合来进行预测的函数，即</p>
-<p>$$<br>f(\boldsymbol{x}) = w_1x_1 + w_2x_2 + … + w_dx_d + b<br>$$</p>
-<p>一般用向量形式写成</p>
-<p>$$<br>f(\boldsymbol{x}) = \boldsymbol{w}^T\boldsymbol{x} + b<br>$$</p>
-<p>其中$\boldsymbol{w} = (w_1; w_2;…; w_d)$，$\boldsymbol{w}$和$b$学得之后，模型就得以确定。</p>
+<script type="math/tex; mode=display">
+f(\boldsymbol{x}) = w_1x_1 + w_2x_2 + ... + w_dx_d + b</script><p>一般用向量形式写成</p>
+<script type="math/tex; mode=display">
+f(\boldsymbol{x}) = \boldsymbol{w}^T\boldsymbol{x} + b</script><p>其中$\boldsymbol{w} = (w_1; w_2;…; w_d)$，$\boldsymbol{w}$和$b$学得之后，模型就得以确定。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/archives/5206f73f.html#more" rel="contents">
@@ -1330,7 +1334,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><strong>没有数据集，机器学个锤子<del>~</del></strong></p>
+          <p><strong>没有数据集，机器学个锤子~~~</strong></p>
 <blockquote>
 <p>转载自雷锋网</p>
 </blockquote>
@@ -1444,7 +1448,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>4.9k</span>
+              <span>4.8k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -1469,20 +1473,15 @@
 <p>西瓜书第2章 模型评估与选择</p>
 </blockquote>
 <h2 id="1-经验误差与过拟合"><a href="#1-经验误差与过拟合" class="headerlink" title="1. 经验误差与过拟合"></a>1. 经验误差与过拟合</h2><ul>
-<li><p>错误率（error rate）：在m个样本中有a个样本分类错误，即错误率<code>E = a/m</code>；</p>
-</li>
-<li><p>精度（accuracy）：<code>1 - a/m</code>；</p>
-</li>
-<li><p>误差（error）：模型的预测输出与样本的真实输出之间的差异；</p>
-</li>
-<li><p>训练误差（training error）：训练集上的误差；</p>
-</li>
+<li>错误率（error rate）：在m个样本中有a个样本分类错误，即错误率<code>E = a/m</code>；</li>
+<li>精度（accuracy）：<code>1 - a/m</code>；</li>
+<li>误差（error）：模型的预测输出与样本的真实输出之间的差异；</li>
+<li>训练误差（training error）：训练集上的误差；</li>
 <li><p>泛化误差（generalization error）：新样本上的误差，或者说测试集上的误差；</p>
 </li>
 <li><p>过拟合（overfitting）：学习器把训练集中的某些特征当作一般特征，导致泛化性能下降，表现为模型在训练集上表现非常好，在测试集上表现不好；</p>
 </li>
-<li><p>欠拟合（underfitting）：学习器尚未习得样本数据集的特性，导致无法正确的预测，表现为模型在训练集和测试集上表现都不好；</p>
-</li>
+<li>欠拟合（underfitting）：学习器尚未习得样本数据集的特性，导致无法正确的预测，表现为模型在训练集和测试集上表现都不好；</li>
 </ul>
 <p><strong>解决方法：</strong></p>
 <ul>
@@ -1633,12 +1632,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">897k</span>
+    <span title="站点总字数">877k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:36</span>
+    <span title="站点阅读时长">13:17</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

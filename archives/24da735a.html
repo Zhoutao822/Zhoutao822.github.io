@@ -46,12 +46,12 @@
   };
 </script>
 
-  <meta name="description" content="参考：  《解析深度学习-语音识别实践》第2章 混合高斯模型  语音识别过程：切除首尾端静音—声音划分为帧—对每一帧提取MFCC特征—若干帧对应一个状态—三个状态组成一个音素—若干音素组成单词 1. 高斯分布高斯分布又叫正态分布，在现实生活中充满了高斯分布，比如考试的分数、人的身高是一维高斯分布，图像处理领域的高斯模糊是二维高斯分布等等，通过高斯分布，我们可以很好的描述一类随机变量。 对于连续型标">
+  <meta name="description" content="参考：  《解析深度学习-语音识别实践》第2章 混合高斯模型  语音识别过程：切除首尾端静音—-声音划分为帧—-对每一帧提取MFCC特征—-若干帧对应一个状态—-三个状态组成一个音素—-若干音素组成单词 1. 高斯分布高斯分布又叫正态分布，在现实生活中充满了高斯分布，比如考试的分数、人的身高是一维高斯分布，图像处理领域的高斯模糊是二维高斯分布等等，通过高斯分布，我们可以很好的描述一类随机变量。 对">
 <meta property="og:type" content="article">
 <meta property="og:title" content="语音识别-GMM">
 <meta property="og:url" content="http://zhoutao822.coding.me/archives/24da735a.html">
 <meta property="og:site_name" content="Tao">
-<meta property="og:description" content="参考：  《解析深度学习-语音识别实践》第2章 混合高斯模型  语音识别过程：切除首尾端静音—声音划分为帧—对每一帧提取MFCC特征—若干帧对应一个状态—三个状态组成一个音素—若干音素组成单词 1. 高斯分布高斯分布又叫正态分布，在现实生活中充满了高斯分布，比如考试的分数、人的身高是一维高斯分布，图像处理领域的高斯模糊是二维高斯分布等等，通过高斯分布，我们可以很好的描述一类随机变量。 对于连续型标">
+<meta property="og:description" content="参考：  《解析深度学习-语音识别实践》第2章 混合高斯模型  语音识别过程：切除首尾端静音—-声音划分为帧—-对每一帧提取MFCC特征—-若干帧对应一个状态—-三个状态组成一个音素—-若干音素组成单词 1. 高斯分布高斯分布又叫正态分布，在现实生活中充满了高斯分布，比如考试的分数、人的身高是一维高斯分布，图像处理领域的高斯模糊是二维高斯分布等等，通过高斯分布，我们可以很好的描述一类随机变量。 对">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/gmm01.png">
 <meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/gmm0243a11433bb97d251.png">
@@ -305,21 +305,27 @@
 <blockquote>
 <p>《解析深度学习-语音识别实践》第2章 混合高斯模型</p>
 </blockquote>
-<p><strong>语音识别过程：切除首尾端静音—声音划分为帧—对每一帧提取MFCC特征—若干帧对应一个状态—三个状态组成一个音素—若干音素组成单词</strong></p>
+<p><strong>语音识别过程：切除首尾端静音—-声音划分为帧—-对每一帧提取MFCC特征—-若干帧对应一个状态—-三个状态组成一个音素—-若干音素组成单词</strong></p>
 <h2 id="1-高斯分布"><a href="#1-高斯分布" class="headerlink" title="1. 高斯分布"></a>1. 高斯分布</h2><p>高斯分布又叫正态分布，在现实生活中充满了高斯分布，比如考试的分数、人的身高是一维高斯分布，图像处理领域的高斯模糊是二维高斯分布等等，通过高斯分布，我们可以很好的描述一类随机变量。</p>
 <p>对于连续型标量随机变量$x$来说，若$x$服从正态分布，则其概率密度函数是</p>
-<p>$$<br>p(x) = \frac{1}{(2\pi)^{1/2}\sigma} \exp[-\frac{1}{2}(\frac{x - \mu}{\sigma})^2] = N(x; \mu, \sigma^2)<br>\<br>(-\infty &lt; x &lt; \infty; \sigma &gt; 0)<br>$$</p>
-<a id="more"></a>
-<hr>
-<p>对于多元正态随机变量$\boldsymbol{x} = (x_1, x_2,…,x_D)^T$，其联合概率密度</p>
-<p>$$<br>p(\boldsymbol{x}) = \frac{1}{(2\pi)^{D/2}|\boldsymbol{\Sigma}|^{1/2}} \exp[-\frac{1}{2}(\boldsymbol{x} - \boldsymbol{\mu})^T\boldsymbol{\Sigma}^{-1}(\boldsymbol{x}-\boldsymbol{\mu})] = N(\boldsymbol{x};\boldsymbol{\mu}, \boldsymbol{\Sigma})<br>\<br>其中 \boldsymbol{\mu} = E(\boldsymbol{x}) \in \mathbb{R}^D; \boldsymbol{\Sigma} = E[(\boldsymbol{x} - \bar{\boldsymbol{x}})(\boldsymbol{x} - \bar{\boldsymbol{x}})^T] \in \mathbb{R}^{D \times D}<br>$$</p>
-<hr>
+<script type="math/tex; mode=display">
+p(x) = \frac{1}{(2\pi)^{1/2}\sigma} \exp[-\frac{1}{2}(\frac{x - \mu}{\sigma})^2] = N(x; \mu, \sigma^2)
+\\
+(-\infty < x < \infty; \sigma > 0)</script><h2 id=""><a href="#" class="headerlink" title=""></a><a id="more"></a></h2><p>对于多元正态随机变量$\boldsymbol{x} = (x_1, x_2,…,x_D)^T$，其联合概率密度</p>
+<script type="math/tex; mode=display">
+p(\boldsymbol{x}) = \frac{1}{(2\pi)^{D/2}|\boldsymbol{\Sigma}|^{1/2}} \exp[-\frac{1}{2}(\boldsymbol{x} - \boldsymbol{\mu})^T\boldsymbol{\Sigma}^{-1}(\boldsymbol{x}-\boldsymbol{\mu})] = N(\boldsymbol{x};\boldsymbol{\mu}, \boldsymbol{\Sigma})
+\\
+其中 \boldsymbol{\mu} = E(\boldsymbol{x}) \in \mathbb{R}^D; \boldsymbol{\Sigma} = E[(\boldsymbol{x} - \bar{\boldsymbol{x}})(\boldsymbol{x} - \bar{\boldsymbol{x}})^T] \in \mathbb{R}^{D \times D}</script><hr>
 <p>对于一个标量连续随机变量x，若其服从混合高斯分布，其概率密度函数</p>
-<p>$$<br>p(x) = \sum^{M}<em>{m=1}\frac{c_m}{(2\pi)^{1/2}\sigma_m}\exp[-\frac{1}{2}(\frac{x-\mu_m}{\sigma_m})^2]<br>\<br>= \sum^{M}</em>{m=1}c_mN(x;\mu_m,\sigma^2_m)，其中\sum^M_{m=1}c_m = 1，E(x) = \sum^{M}_{m=1}c_m\mu_m<br>$$</p>
-<hr>
+<script type="math/tex; mode=display">
+p(x) = \sum^{M}_{m=1}\frac{c_m}{(2\pi)^{1/2}\sigma_m}\exp[-\frac{1}{2}(\frac{x-\mu_m}{\sigma_m})^2]
+\\
+= \sum^{M}_{m=1}c_mN(x;\mu_m,\sigma^2_m)，其中\sum^M_{m=1}c_m = 1，E(x) = \sum^{M}_{m=1}c_m\mu_m</script><hr>
 <p>推广到多变量的多元混合高斯分布，其联合概率密度函数为</p>
-<p>$$<br>p(\boldsymbol{x}) = \sum^{M}<em>{m=1}\frac{c_m}{(2\pi)^{D/2}|\boldsymbol{\Sigma}_m|^{1/2}}\exp[-\frac{1}{2}(\boldsymbol{x} - \boldsymbol{\mu}_m)^T\boldsymbol{\Sigma}^{-1}_m(\boldsymbol{x} - \boldsymbol{\mu}_m)]<br>\<br>= \sum^{M}</em>{m=1}c_mN(\boldsymbol{x};\boldsymbol{\mu}_m,\boldsymbol{\Sigma}_m)<br>$$</p>
-<p>在多元混合高斯分布中，如果变量x的维度D很大（比如40），那么使用全协方差矩阵（非对角）（$\Sigma_m$）将引入大量参数（大约为$M \times D^2$）。为了减少这个数量，可以使用对角协方差矩阵。当M很大时，也可以限制所有的协方差为相同矩阵，对所有的混合成分m，将参数$\Sigma_m$绑定在一起。</p>
+<script type="math/tex; mode=display">
+p(\boldsymbol{x}) = \sum^{M}_{m=1}\frac{c_m}{(2\pi)^{D/2}|\boldsymbol{\Sigma}_m|^{1/2}}\exp[-\frac{1}{2}(\boldsymbol{x} - \boldsymbol{\mu}_m)^T\boldsymbol{\Sigma}^{-1}_m(\boldsymbol{x} - \boldsymbol{\mu}_m)]
+\\
+= \sum^{M}_{m=1}c_mN(\boldsymbol{x};\boldsymbol{\mu}_m,\boldsymbol{\Sigma}_m)</script><p>在多元混合高斯分布中，如果变量x的维度D很大（比如40），那么使用全协方差矩阵（非对角）（$\Sigma_m$）将引入大量参数（大约为$M \times D^2$）。为了减少这个数量，可以使用对角协方差矩阵。当M很大时，也可以限制所有的协方差为相同矩阵，对所有的混合成分m，将参数$\Sigma_m$绑定在一起。</p>
 <h2 id="2-GMM示例"><a href="#2-GMM示例" class="headerlink" title="2. GMM示例"></a>2. GMM示例</h2><p>对于这样的二维数据分布，如何进行分类，若使用单个高斯成分，那么一个椭圆可以描述整体，但是根据观察，实际上这些数据应该属于两个不同的高斯成分，也就是说可以分为两类。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/18/gmm01.png" alt="gmm01.png"></p>
@@ -327,28 +333,40 @@
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/18/gmm0243a11433bb97d251.png" alt="gmm0243a11433bb97d251.png"></p>
 <p>对于上例，我们定义$\boldsymbol{x} = (x_1, x_2)^T，M = 2$，则其GMM形式为</p>
-<p>$$<br>p(\boldsymbol{x}) = c_1N(\boldsymbol{\mu}_1, \boldsymbol{\sigma}_1) + c_2N(\boldsymbol{\mu}_2, \boldsymbol{\sigma}_2)<br>$$</p>
-<p>那么我们需要求解的参数为$(c_1, \boldsymbol{\mu}_1, \boldsymbol{\sigma}_1; c_2, \boldsymbol{\mu}_2, \boldsymbol{\sigma}_2)$</p>
+<script type="math/tex; mode=display">
+p(\boldsymbol{x}) = c_1N(\boldsymbol{\mu}_1, \boldsymbol{\sigma}_1) + c_2N(\boldsymbol{\mu}_2, \boldsymbol{\sigma}_2)</script><p>那么我们需要求解的参数为$(c_1, \boldsymbol{\mu}_1, \boldsymbol{\sigma}_1; c_2, \boldsymbol{\mu}_2, \boldsymbol{\sigma}_2)$</p>
 <h2 id="3-参数估计"><a href="#3-参数估计" class="headerlink" title="3. 参数估计"></a>3. 参数估计</h2><p>这里使用EM算法（EM算法必收敛）估计参数变量$\Theta = {c_m, \boldsymbol{\mu}_m, \boldsymbol{\sigma}_m}$，首先回顾一下，GMM表示形式</p>
-<p>$$<br>p(\boldsymbol{x}) = \sum^{M}_{m=1}c_mN(\boldsymbol{x};\boldsymbol{\mu}_m,\boldsymbol{\sigma}^2_m)<br>$$</p>
-<p>其中$c_m$可以看作第m个高斯成分被选中的概率。我们引入一个新的M维变量$\boldsymbol{z}$，$z_m$只能取0或1；$z_m = 1$表示第m类被选中的概率$c_m$，即$p(z_m = 1) = c_m，且\sum^M_{m=1} z_m = 1$，所以$\boldsymbol{z}$的联合概率分布：</p>
-<p>$$<br>p(\boldsymbol{z}) = p(z_1)p(z_2)…p(z_M) = \prod_{m=1}^{M}c_m^{z_m}<br>$$</p>
-<p>又因为对于属于某一个高斯成分的数据来说（$z_m = 1$），其分布必定是高斯分布，所以</p>
-<p>$$<br>p(\boldsymbol{x}|z_m = 1) = N(\boldsymbol{x}|\boldsymbol{\mu}_m, \boldsymbol{\sigma}_m)<br>$$</p>
-<p>进而上式等价于</p>
-<p>$$<br>p(\boldsymbol{x}|\boldsymbol{z}) = \prod_{m=1}^{M}N(\boldsymbol{x}|\boldsymbol{\mu}_m, \boldsymbol{\sigma}_m)^{z_m}<br>$$</p>
-<p>我们有了$p(\boldsymbol{z})和p(\boldsymbol{x}|\boldsymbol{z})$，那么可以计算$p(\boldsymbol{x})$</p>
-<p>$$<br>p(\boldsymbol{x}) = \sum_Z p(\boldsymbol{x}|\boldsymbol{z})p(\boldsymbol{z})<br>\<br>= \sum^{M}_{m=1}c_mN(\boldsymbol{x};\boldsymbol{\mu}_m,\boldsymbol{\sigma}^2_m)，z_m = 0的项在连乘中为1<br>$$</p>
-<p>所以最终又回到了GMM的表示形式，但是我们增加了<strong>隐含变量z</strong>用于描述我们已经知道有多少个高斯成分。</p>
+<script type="math/tex; mode=display">
+p(\boldsymbol{x}) = \sum^{M}_{m=1}c_mN(\boldsymbol{x};\boldsymbol{\mu}_m,\boldsymbol{\sigma}^2_m)</script><p>其中$c<em>m$可以看作第m个高斯成分被选中的概率。我们引入一个新的M维变量$\boldsymbol{z}$，$z_m$只能取0或1；$z_m = 1$表示第m类被选中的概率$c_m$，即$p(z_m = 1) = c_m，且\sum^M</em>{m=1} z_m = 1$，所以$\boldsymbol{z}$的联合概率分布：</p>
+<script type="math/tex; mode=display">
+p(\boldsymbol{z}) = p(z_1)p(z_2)...p(z_M) = \prod_{m=1}^{M}c_m^{z_m}</script><p>又因为对于属于某一个高斯成分的数据来说（$z_m = 1$），其分布必定是高斯分布，所以</p>
+<script type="math/tex; mode=display">
+p(\boldsymbol{x}|z_m = 1) = N(\boldsymbol{x}|\boldsymbol{\mu}_m, \boldsymbol{\sigma}_m)</script><p>进而上式等价于</p>
+<script type="math/tex; mode=display">
+p(\boldsymbol{x}|\boldsymbol{z}) = \prod_{m=1}^{M}N(\boldsymbol{x}|\boldsymbol{\mu}_m, \boldsymbol{\sigma}_m)^{z_m}</script><p>我们有了$p(\boldsymbol{z})和p(\boldsymbol{x}|\boldsymbol{z})$，那么可以计算$p(\boldsymbol{x})$</p>
+<script type="math/tex; mode=display">
+p(\boldsymbol{x}) = \sum_Z p(\boldsymbol{x}|\boldsymbol{z})p(\boldsymbol{z})
+\\
+= \sum^{M}_{m=1}c_mN(\boldsymbol{x};\boldsymbol{\mu}_m,\boldsymbol{\sigma}^2_m)，z_m = 0的项在连乘中为1</script><p>所以最终又回到了GMM的表示形式，但是我们增加了<strong>隐含变量z</strong>用于描述我们已经知道有多少个高斯成分。</p>
 <hr>
 <p>在贝叶斯的思想下，$p(\boldsymbol{z})$是先验概率，$p(\boldsymbol{x}|\boldsymbol{z})$是似然概率，我们可以求解出后验概率$p(\boldsymbol{z}|\boldsymbol{x})$。</p>
 <p>E步：基于当前迭代轮数（用j表示），针对某个高斯成分m，用给定观察值$\boldsymbol{x}^{(t)}$计算得到的后验概率$t = 1, …, N，（N是采样率）$</p>
-<p>$$<br>h^{(j)}<em>m(t) = p(z_m^{(j)}=1|\boldsymbol{x}^{(t)})<br>\<br>= \frac{p(z_m^{(j)}=1)p(\boldsymbol{x}^{(t)}|z_m^{(j)}=1)}{p(\boldsymbol{x}^{(t)})}<br>\<br>= \frac{p(z_m^{(j)}=1)p(\boldsymbol{x}^{(t)}|z_m^{(j)}=1)}{\sum^M</em>{i=1}p(z_i=1)p(\boldsymbol{x}^{(t)}|z_i=1)}<br>\<br>= \frac{c_m^{(j)}N(\boldsymbol{x}^{(t)}; \boldsymbol{\mu}<em>m^{(j)}, \boldsymbol{\sigma}_m^{(j)})}{\sum^M</em>{i=1}c_i^{(j)}N(\boldsymbol{x}^{(t)}; \boldsymbol{\mu}_i^{(j)}, \boldsymbol{\sigma}_i^{(j)})}<br>$$</p>
-<p>M步：基于后验概率估计参数$\Theta$</p>
-<p>$$<br>c_m^{(j + 1)} = \frac{1}{N}\sum^N_{t=1}h_m^{(j)}(t)<br>\<br>\boldsymbol{\mu}<em>m^{(j + 1)} = \frac{\sum^N</em>{t=1}h_m^{(j)}(t)\boldsymbol{x}^{(t)}}{\sum^N_{t=1}h_m^{(j)}(t)}<br>\<br>\boldsymbol{\sigma}<em>m^{(j + 1)} = \frac{\sum^N</em>{t=1}h_m^{(j)}(t)[\boldsymbol{x}^{(t)} - \boldsymbol{\mu}<em>m^{(j)}][\boldsymbol{x}^{(t)} - \boldsymbol{\mu}_m^{(j)}]^T}{\sum^N</em>{t=1}h_m^{(j)}(t)}<br>$$</p>
-<p>计算对数似然函数</p>
-<p>$$<br>\ln p(\boldsymbol{x};c, \boldsymbol{\mu}, \boldsymbol{\sigma}) = \sum^N_{t=1}\ln{(\sum^M_{m=1}c_mN(\boldsymbol{x}^{(t)}|\boldsymbol{\mu}_m, \boldsymbol{\sigma}_m))}<br>$$</p>
-<p>先对$\Theta$进行初始化，然后执行E步，得到后验概率h，然后执行M步，计算新的$\Theta$，并更新参数，计算对数似然，直到参数收敛或对数似然收敛。</p>
+<script type="math/tex; mode=display">
+h^{(j)}_m(t) = p(z_m^{(j)}=1|\boldsymbol{x}^{(t)})
+\\
+= \frac{p(z_m^{(j)}=1)p(\boldsymbol{x}^{(t)}|z_m^{(j)}=1)}{p(\boldsymbol{x}^{(t)})}
+\\
+= \frac{p(z_m^{(j)}=1)p(\boldsymbol{x}^{(t)}|z_m^{(j)}=1)}{\sum^M_{i=1}p(z_i=1)p(\boldsymbol{x}^{(t)}|z_i=1)}
+\\
+= \frac{c_m^{(j)}N(\boldsymbol{x}^{(t)}; \boldsymbol{\mu}_m^{(j)}, \boldsymbol{\sigma}_m^{(j)})}{\sum^M_{i=1}c_i^{(j)}N(\boldsymbol{x}^{(t)}; \boldsymbol{\mu}_i^{(j)}, \boldsymbol{\sigma}_i^{(j)})}</script><p>M步：基于后验概率估计参数$\Theta$</p>
+<script type="math/tex; mode=display">
+c_m^{(j + 1)} = \frac{1}{N}\sum^N_{t=1}h_m^{(j)}(t)
+\\
+\boldsymbol{\mu}_m^{(j + 1)} = \frac{\sum^N_{t=1}h_m^{(j)}(t)\boldsymbol{x}^{(t)}}{\sum^N_{t=1}h_m^{(j)}(t)}
+\\
+\boldsymbol{\sigma}_m^{(j + 1)} = \frac{\sum^N_{t=1}h_m^{(j)}(t)[\boldsymbol{x}^{(t)} - \boldsymbol{\mu}_m^{(j)}][\boldsymbol{x}^{(t)} - \boldsymbol{\mu}_m^{(j)}]^T}{\sum^N_{t=1}h_m^{(j)}(t)}</script><p>计算对数似然函数</p>
+<script type="math/tex; mode=display">
+\ln p(\boldsymbol{x};c, \boldsymbol{\mu}, \boldsymbol{\sigma}) = \sum^N_{t=1}\ln{(\sum^M_{m=1}c_mN(\boldsymbol{x}^{(t)}|\boldsymbol{\mu}_m, \boldsymbol{\sigma}_m))}</script><p>先对$\Theta$进行初始化，然后执行E步，得到后验概率h，然后执行M步，计算新的$\Theta$，并更新参数，计算对数似然，直到参数收敛或对数似然收敛。</p>
 <h2 id="4-代码实现"><a href="#4-代码实现" class="headerlink" title="4. 代码实现"></a>4. 代码实现</h2><h3 id="4-1-sklearn实现"><a href="#4-1-sklearn实现" class="headerlink" title="4.1 sklearn实现"></a>4.1 sklearn实现</h3><p>使用<code>sklearn.mixture.GaussianMixture</code></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_wine</span><br><span class="line"><span class="keyword">from</span> sklearn.mixture <span class="keyword">import</span> GaussianMixture</span><br><span class="line"><span class="comment"># 这里使用酒类数据，数据集包括178个样本，每个样本由13个特征表示，以及一个标签，标签0、1、2分别表示3种酒</span></span><br><span class="line">rawData = load_wine()</span><br><span class="line"></span><br><span class="line">data = rawData[<span class="string">'data'</span>]</span><br><span class="line">target = rawData[<span class="string">'target'</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定n_components分类数，我们已知有3种酒</span></span><br><span class="line">gmm = GaussianMixture(n_components=<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定初始化的均值，同时根据先后顺序分配种类标签，指定means_init属性可以避免分类过程中分类标签与target不同</span></span><br><span class="line">gmm.means_init = np.array([data[target == i].mean(axis=<span class="number">0</span>) <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">3</span>)])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里就不划分测试集，直接对训练数据预测</span></span><br><span class="line">prediction = gmm.fit_predict(data, y=target)</span><br><span class="line">print(prediction)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 计算训练集上的准确率</span></span><br><span class="line">acc = np.mean(np.equal(prediction, target).astype(np.float))</span><br><span class="line">print(<span class="string">'GMM prediction accuracy: &#123;:.4f&#125;'</span>.format(acc))</span><br></pre></td></tr></table></figure>
 <blockquote>
@@ -477,7 +495,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-高斯分布"><span class="nav-text">1. 高斯分布</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-GMM示例"><span class="nav-text">2. GMM示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-参数估计"><span class="nav-text">3. 参数估计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-代码实现"><span class="nav-text">4. 代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-sklearn实现"><span class="nav-text">4.1 sklearn实现</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-高斯分布"><span class="nav-text">1. 高斯分布</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-text"></span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-GMM示例"><span class="nav-text">2. GMM示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-参数估计"><span class="nav-text">3. 参数估计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-代码实现"><span class="nav-text">4. 代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-sklearn实现"><span class="nav-text">4.1 sklearn实现</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -543,12 +561,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">897k</span>
+    <span title="站点总字数">877k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:36</span>
+    <span title="站点阅读时长">13:17</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

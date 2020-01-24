@@ -299,7 +299,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>18k</span>
+              <span>17k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -327,15 +327,16 @@
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/rnn0.png" alt="rnn0.png"></p>
 <a id="more"></a>
-
 <h2 id="1-展开计算图"><a href="#1-展开计算图" class="headerlink" title="1. 展开计算图"></a>1. 展开计算图</h2><p>计算图是形式化一组计算结构的方式，如那些涉及将输入和参数映射到输出和损失的计算。</p>
 <p>展开（unfolding）递归或循环计算得到的重复结构进行解释，这些重复结构通常对应于一个事件链。 展开（unfolding）这个计算图将导致深度网络结构中的参数共享。</p>
 <p>使用$\boldsymbol{h}$表示网络的隐藏单元</p>
-<p>$$<br>\boldsymbol{h}^{(t)} = f(\boldsymbol{h}^{(t-1)}, \boldsymbol{x}^{(t)};\boldsymbol{\theta})<br>$$</p>
-<p>我们需要将任意长的序列$(\boldsymbol{x}^{(t)}, \boldsymbol{x}^{(t-1)},…,\boldsymbol{x}^{(2)}, \boldsymbol{x}^{(1)})$到以固定长度的向量$\boldsymbol{h}^{(t)}$。根据实际情况，我们往往并不需要保存全部序列的信息，所以仅仅存储足够预测句子其余部分的信息。最苛刻的情况是要求$\boldsymbol{h}^{(t)}$足够风骨，并能大致恢复输入序列。</p>
+<script type="math/tex; mode=display">
+\boldsymbol{h}^{(t)} = f(\boldsymbol{h}^{(t-1)}, \boldsymbol{x}^{(t)};\boldsymbol{\theta})</script><p>我们需要将任意长的序列$(\boldsymbol{x}^{(t)}, \boldsymbol{x}^{(t-1)},…,\boldsymbol{x}^{(2)}, \boldsymbol{x}^{(1)})$到以固定长度的向量$\boldsymbol{h}^{(t)}$。根据实际情况，我们往往并不需要保存全部序列的信息，所以仅仅存储足够预测句子其余部分的信息。最苛刻的情况是要求$\boldsymbol{h}^{(t)}$足够风骨，并能大致恢复输入序列。</p>
 <p>展开图的大小取决于序列长度。用一个函数$g^{(t)}$代表经$t$步展开后的循环：</p>
-<p>$$<br>\boldsymbol{h}^{(t)} = g^{(t)}(\boldsymbol{x}^{(t)}, \boldsymbol{x}^{(t-1)},…,\boldsymbol{x}^{(2)}, \boldsymbol{x}^{(1)})<br>\<br>= f(\boldsymbol{h}^{(t-1)}, \boldsymbol{x}^{(t)};\boldsymbol{\theta})<br>$$</p>
-<p>函数$g^{(t)}$将全部过去序列作为输入来生成当前状态，但是展开的循环架构允许我们将$g^{(t)}$分解为函数$f$的重复应用。因此，展开过程引入两个主要优点：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{h}^{(t)} = g^{(t)}(\boldsymbol{x}^{(t)}, \boldsymbol{x}^{(t-1)},...,\boldsymbol{x}^{(2)}, \boldsymbol{x}^{(1)})
+\\
+= f(\boldsymbol{h}^{(t-1)}, \boldsymbol{x}^{(t)};\boldsymbol{\theta})</script><p>函数$g^{(t)}$将全部过去序列作为输入来生成当前状态，但是展开的循环架构允许我们将$g^{(t)}$分解为函数$f$的重复应用。因此，展开过程引入两个主要优点：</p>
 <ol>
 <li>无论序列的长度，学成的模型始终具有相同的输入大小，因为它指定的是从一种状态到另一种状态的转移，而不是在可变长度的历史状态上操作。</li>
 <li>我们可以在每个时间步使用相同参数的相同转移函数$f$。</li>
@@ -358,38 +359,72 @@
 <li>RNN从特定的初始状态$\boldsymbol{h}^{(0)}$开始前向传播。</li>
 </ul>
 <p>则从$t=1$到$t=\tau$的每个时间步，更新方程为</p>
-<p>$$<br>\boldsymbol{a}^{(t)} = \boldsymbol{b} + \boldsymbol{W}\boldsymbol{h}^{(t-1)}  + \boldsymbol{U}\boldsymbol{x}^{(t)}<br>\<br>\boldsymbol{h}^{(t)} = \tanh(\boldsymbol{a}^{(t)})<br>\<br>\boldsymbol{o}^{(t)} = \boldsymbol{c} + \boldsymbol{V}\boldsymbol{h}^{(t)}<br>\<br>\hat{\boldsymbol{y}}^{(t)} = softmax(\boldsymbol{o}^{(t)})<br>$$</p>
-<p>偏置向量$\boldsymbol{b, c}$分别对应于输入到隐藏和隐藏到输出的连接。我们将一个输入序列映射到相同长度的输出序列。总损失就是所有时间步的损失之和。例如$L^{(t)}$为给定的$\boldsymbol{x}^{(1)},…,\boldsymbol{x}^{(t)}$后$\boldsymbol{y}^{(t)}$的负对数似然，则</p>
-<p>$$<br>L({ \boldsymbol{x}^{(1)},…,\boldsymbol{x}^{(\tau)} }, { \boldsymbol{y}^{(1)},…,\boldsymbol{y}^{(\tau)} })<br>\<br>= \sum_t L^{(t)}<br>\<br>= - \sum_t \log p_{model}(\boldsymbol{y}^{(t)}|{ \boldsymbol{x}^{(1)},…,\boldsymbol{x}^{(t)} })<br>$$</p>
-<p>关于各个参数计算这个损失函数的梯度是计算成本很高的操作。梯度计算涉及执行一次前向传播，接着是由右到左的反向传播。运行时间是$O(\tau)$，并且不能通过并行化来降低，因为前向传播图是固有循序的；每个时间步只能一前一后地计算。前向传播中的各个状态必须保存，直到它们反向传播中被再次使用，因此内存代价也是$O(\tau)$。应用于展开图且代价为$O(\tau)$的反向传播算法称为<strong>通过时间反向传播BPTT</strong>。</p>
+<script type="math/tex; mode=display">
+\boldsymbol{a}^{(t)} = \boldsymbol{b} + \boldsymbol{W}\boldsymbol{h}^{(t-1)}  + \boldsymbol{U}\boldsymbol{x}^{(t)}
+\\
+\boldsymbol{h}^{(t)} = \tanh(\boldsymbol{a}^{(t)})
+\\
+\boldsymbol{o}^{(t)} = \boldsymbol{c} + \boldsymbol{V}\boldsymbol{h}^{(t)}
+\\
+\hat{\boldsymbol{y}}^{(t)} = softmax(\boldsymbol{o}^{(t)})</script><p>偏置向量$\boldsymbol{b, c}$分别对应于输入到隐藏和隐藏到输出的连接。我们将一个输入序列映射到相同长度的输出序列。总损失就是所有时间步的损失之和。例如$L^{(t)}$为给定的$\boldsymbol{x}^{(1)},…,\boldsymbol{x}^{(t)}$后$\boldsymbol{y}^{(t)}$的负对数似然，则</p>
+<script type="math/tex; mode=display">
+L(\{ \boldsymbol{x}^{(1)},...,\boldsymbol{x}^{(\tau)} \}, \{ \boldsymbol{y}^{(1)},...,\boldsymbol{y}^{(\tau)} \})
+\\
+= \sum_t L^{(t)}
+\\
+= - \sum_t \log p_{model}(\boldsymbol{y}^{(t)}|\{ \boldsymbol{x}^{(1)},...,\boldsymbol{x}^{(t)} \})</script><p>关于各个参数计算这个损失函数的梯度是计算成本很高的操作。梯度计算涉及执行一次前向传播，接着是由右到左的反向传播。运行时间是$O(\tau)$，并且不能通过并行化来降低，因为前向传播图是固有循序的；每个时间步只能一前一后地计算。前向传播中的各个状态必须保存，直到它们反向传播中被再次使用，因此内存代价也是$O(\tau)$。应用于展开图且代价为$O(\tau)$的反向传播算法称为<strong>通过时间反向传播BPTT</strong>。</p>
 <h3 id="2-2-导师驱动过程和输出循环网络"><a href="#2-2-导师驱动过程和输出循环网络" class="headerlink" title="2.2 导师驱动过程和输出循环网络"></a>2.2 导师驱动过程和输出循环网络</h3><!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/rnn2.png" alt="rnn2.png"></p>
 <p>这个网络在一个时间步的输出和下一个时间步的隐藏单元间存在循环网络，这就导致了丢失了隐藏单元到隐藏单元间对于序列变化的信息。但是优点在于基于训练集提供的输出的理想值，我们没有必要计算前一时刻的输出，所以我们可以并行计算所有时间步的梯度。</p>
 <p>由输出反馈到模型而产生循环连接的模型可用<strong>导师驱动过程</strong>进行训练。训练模型时，导师驱动过程不再使用最大似然准则，而在时刻$t+1$接收真实值$y^{(t)}$作为输入。我们可以通过检查两个时间步的序列得知这一点。条件最大似然准则是</p>
-<p>$$<br>\log p(\boldsymbol{y}^{(1)},\boldsymbol{y}^{(2)}|\boldsymbol{x}^{(1)},\boldsymbol{x}^{(2)})<br>\<br>\log p(\boldsymbol{y}^{(2)}|\boldsymbol{y}^{(1)},\boldsymbol{x}^{(1)},\boldsymbol{x}^{(2)}) + \log p(\boldsymbol{y}^{(1)}|\boldsymbol{x}^{(1)},\boldsymbol{x}^{(2)})<br>$$</p>
-<!--  -->
+<script type="math/tex; mode=display">
+\log p(\boldsymbol{y}^{(1)},\boldsymbol{y}^{(2)}|\boldsymbol{x}^{(1)},\boldsymbol{x}^{(2)})
+\\
+\log p(\boldsymbol{y}^{(2)}|\boldsymbol{y}^{(1)},\boldsymbol{x}^{(1)},\boldsymbol{x}^{(2)}) + \log p(\boldsymbol{y}^{(1)}|\boldsymbol{x}^{(1)},\boldsymbol{x}^{(2)})</script><!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/rnn3.png" alt="rnn3.png"></p>
 <p>我们使用导师驱动过程的最初动机是为了在缺乏隐藏到隐藏连接的模型中避免通过时间反向传播。只要模型一个时间步的输出与下一时间步计算的值存在连接，导师驱动过程仍然可以应用到这些存在隐藏到隐藏连接的模型。然而，只要隐藏单元成为较早时间步的函数，BPTT算法是必要的。因此训练某些模型时要同时使用导师驱动过程和BPTT。</p>
 <p>如果之后网络在开环 (open-loop) 模式下使用，即网络输出（或输出分布的样本）反馈作为输入，那么完全使用导师驱动过程进行训练的缺点就会出现。如上图所示，训练过程中的反馈与实际部署时的反馈是不同的。</p>
 <p>在这种情况下，训练期间该网络看到的输入与测试时看到的会有很大的不同。减轻此问题的一种方法是同时使用导师驱动过程和自由运行的输入进行训练，例如在展开循环的输出到输入路径上预测几个步骤的正确目标值。</p>
 <p>通过这种方式，网络可以学会考虑在训练时没有接触到的输入条件（如自由运行模式下，自身生成自身），以及将状态映射回使网络几步之后生成正确输出的状态。另外一种方式是通过随意选择生成值或真实的数据值作为输入以减小训练时和测试时看到的输入之间的差别。这种方法利用了课程学习策略，逐步使用更多生成值作为输入。</p>
 <h3 id="2-3-计算循环神经网络的梯度"><a href="#2-3-计算循环神经网络的梯度" class="headerlink" title="2.3 计算循环神经网络的梯度"></a>2.3 计算循环神经网络的梯度</h3><p>回顾一下前向传播的公式</p>
-<p>$$<br>\boldsymbol{a}^{(t)} = \boldsymbol{b} + \boldsymbol{W}\boldsymbol{h}^{(t-1)}  + \boldsymbol{U}\boldsymbol{x}^{(t)}<br>\<br>\boldsymbol{h}^{(t)} = \tanh(\boldsymbol{a}^{(t)})<br>\<br>\boldsymbol{o}^{(t)} = \boldsymbol{c} + \boldsymbol{V}\boldsymbol{h}^{(t)}<br>\<br>\hat{\boldsymbol{y}}^{(t)} = softmax(\boldsymbol{o}^{(t)})<br>$$</p>
-<p>我们做出的假设是：真实值和输入值都是onehot变量（对应于字或者词的字典模型），预测值是形状相同的概率输出，考虑onehot的每一位$i$，损失$L^{(t)}$为</p>
-<p>$$<br>L^{(t)} = -\sum_iy_i^{(t)}\log \hat{y}^{(t)}_i<br>$$</p>
-<p>再考虑整体损失</p>
-<p>$$<br>L({ \boldsymbol{x}^{(1)},…,\boldsymbol{x}^{(\tau)} }, { \boldsymbol{y}^{(1)},…,\boldsymbol{y}^{(\tau)} })<br>\<br>= \sum_t L^{(t)}<br>$$</p>
-<p>可以得到</p>
-<p>$$<br>\frac{\partial L}{\partial L^{(t)}} = 1<br>\<br>(\bigtriangledown_{\boldsymbol{o}^{(t)}}L)<em>i = \frac{\partial L}{\partial o^{(t)}_i} = \frac{\partial L}{\partial L^{(t)}}\frac{\partial L^{(t)}}{\partial o_i^{(t)}} = \hat{y}^{(t)}_i - \boldsymbol{1}</em>{i, y^{(t)}}<br>$$</p>
-<p>上面的式子其实并不复杂，对于onehot变量来说，$\boldsymbol{y}^{(t)}$中只有一位为1，其余位都为0，也就是说，对于$\boldsymbol{o}^{(t)}$来说，梯度简单到就是预测值与真实值的差值。具体证明参考<code>深度学习-激活函数</code>。</p>
+<script type="math/tex; mode=display">
+\boldsymbol{a}^{(t)} = \boldsymbol{b} + \boldsymbol{W}\boldsymbol{h}^{(t-1)}  + \boldsymbol{U}\boldsymbol{x}^{(t)}
+\\
+\boldsymbol{h}^{(t)} = \tanh(\boldsymbol{a}^{(t)})
+\\
+\boldsymbol{o}^{(t)} = \boldsymbol{c} + \boldsymbol{V}\boldsymbol{h}^{(t)}
+\\
+\hat{\boldsymbol{y}}^{(t)} = softmax(\boldsymbol{o}^{(t)})</script><p>我们做出的假设是：真实值和输入值都是onehot变量（对应于字或者词的字典模型），预测值是形状相同的概率输出，考虑onehot的每一位$i$，损失$L^{(t)}$为</p>
+<script type="math/tex; mode=display">
+L^{(t)} = -\sum_iy_i^{(t)}\log \hat{y}^{(t)}_i</script><p>再考虑整体损失</p>
+<script type="math/tex; mode=display">
+L(\{ \boldsymbol{x}^{(1)},...,\boldsymbol{x}^{(\tau)} \}, \{ \boldsymbol{y}^{(1)},...,\boldsymbol{y}^{(\tau)} \})
+\\
+= \sum_t L^{(t)}</script><p>可以得到</p>
+<script type="math/tex; mode=display">
+\frac{\partial L}{\partial L^{(t)}} = 1
+\\
+(\bigtriangledown_{\boldsymbol{o}^{(t)}}L)_i = \frac{\partial L}{\partial o^{(t)}_i} = \frac{\partial L}{\partial L^{(t)}}\frac{\partial L^{(t)}}{\partial o_i^{(t)}} = \hat{y}^{(t)}_i - \boldsymbol{1}_{i, y^{(t)}}</script><p>上面的式子其实并不复杂，对于onehot变量来说，$\boldsymbol{y}^{(t)}$中只有一位为1，其余位都为0，也就是说，对于$\boldsymbol{o}^{(t)}$来说，梯度简单到就是预测值与真实值的差值。具体证明参考<code>深度学习-激活函数</code>。</p>
 <p>基于上式，我们可以对最后的时间步$\tau$的$\boldsymbol{h}^{(\tau)}$进行求导计算</p>
-<p>$$<br>\bigtriangledown_{\boldsymbol{h}^{(\tau)}}L = \boldsymbol{V}^T\bigtriangledown_{\boldsymbol{o}^{(\tau)}}L<br>$$</p>
-<p>然后，计算从时刻$t= \tau - 1$到$t=1$反向迭代，通过时间反向传播梯度，由于$\boldsymbol{h}^{(t)}(t &lt; \tau)$同时存在于$\boldsymbol{o}^{(t)}$和$\boldsymbol{h}^{(t+1)}$中，因此梯度计算需要考虑两个部分</p>
-<p>$$<br>\bigtriangledown_{\boldsymbol{h}^{(t)}}L=(\frac{\partial \boldsymbol{h}^{(t+1)}}{\partial \boldsymbol{h}^{(t)}})^T(\bigtriangledown_{\boldsymbol{h}^{(t+1)}}L) + (\frac{\partial \boldsymbol{o}^{(t)}}{\partial \boldsymbol{h}^{(t)}})^T(\bigtriangledown_{\boldsymbol{o}^{(t)}}L)<br>\<br>= \boldsymbol{W}^T(\bigtriangledown_{\boldsymbol{h}^{(t+1)}}L)diag(1-(\boldsymbol{h}^{(t+1)})^2) + \boldsymbol{V}^T(\bigtriangledown_{\boldsymbol{o}^{(t)}}L)<br>$$</p>
-<p>$\tanh$求导参考<code>深度学习-激活函数</code>，其中$diag(1-(\boldsymbol{h}^{(t+1)})^2)$表示包含元素$1-(h_i^{(t+1)})^2$的对角矩阵。</p>
+<script type="math/tex; mode=display">
+\bigtriangledown_{\boldsymbol{h}^{(\tau)}}L = \boldsymbol{V}^T\bigtriangledown_{\boldsymbol{o}^{(\tau)}}L</script><p>然后，计算从时刻$t= \tau - 1$到$t=1$反向迭代，通过时间反向传播梯度，由于$\boldsymbol{h}^{(t)}(t &lt; \tau)$同时存在于$\boldsymbol{o}^{(t)}$和$\boldsymbol{h}^{(t+1)}$中，因此梯度计算需要考虑两个部分</p>
+<script type="math/tex; mode=display">
+\bigtriangledown_{\boldsymbol{h}^{(t)}}L=(\frac{\partial \boldsymbol{h}^{(t+1)}}{\partial \boldsymbol{h}^{(t)}})^T(\bigtriangledown_{\boldsymbol{h}^{(t+1)}}L) + (\frac{\partial \boldsymbol{o}^{(t)}}{\partial \boldsymbol{h}^{(t)}})^T(\bigtriangledown_{\boldsymbol{o}^{(t)}}L)
+\\
+= \boldsymbol{W}^T(\bigtriangledown_{\boldsymbol{h}^{(t+1)}}L)diag(1-(\boldsymbol{h}^{(t+1)})^2) + \boldsymbol{V}^T(\bigtriangledown_{\boldsymbol{o}^{(t)}}L)</script><p>$\tanh$求导参考<code>深度学习-激活函数</code>，其中$diag(1-(\boldsymbol{h}^{(t+1)})^2)$表示包含元素$1-(h_i^{(t+1)})^2$的对角矩阵。</p>
 <p>其他参数是时间步共享的，那么需要使用$t$时刻的虚拟变量$\boldsymbol{W}^{(t)}$作为$\boldsymbol{W}$的副本，然后计算在时间步$t$权重对梯度的贡献。</p>
-<p>$$<br>\bigtriangledown_\boldsymbol{c}L = \sum_t(\frac{\partial \boldsymbol{o}^{(t)}}{\partial \boldsymbol{c}})^T\bigtriangledown_{\boldsymbol{o}^{(t)}}L = \sum_t\bigtriangledown_{\boldsymbol{o}^{(t)}}L<br>\<br>\bigtriangledown_\boldsymbol{b}L = \sum_t(\frac{\partial \boldsymbol{h}^{(t)}}{\partial \boldsymbol{b}})^T\bigtriangledown_{\boldsymbol{h}^{(t)}}L = \sum_t diag(1-(\boldsymbol{h}^{(t)})^2) \bigtriangledown_{\boldsymbol{h}^{(t)}}L<br>\<br>\bigtriangledown_\boldsymbol{V}L = \sum_t\sum_i(\frac{\partial L}{\partial o_i^{(t)}})\bigtriangledown_{\boldsymbol{V}^{(t)}}o_i^{(t)} = \sum_t (\bigtriangledown_{\boldsymbol{o}^{(t)}}L) \boldsymbol{h}^{(t)^T}<br>\<br>\bigtriangledown_\boldsymbol{W}L = \sum_t\sum_i(\frac{\partial L}{\partial h_i^{(t)}})\bigtriangledown_{\boldsymbol{W}^{(t)}}h_i^{(t)}<br>= \sum_t diag(1-(\boldsymbol{h}^{(t)})^2) (\bigtriangledown_{\boldsymbol{h}^{(t)}}L)\boldsymbol{h}^{(t-1)^T}<br>\<br>\bigtriangledown_\boldsymbol{U}L = \sum_t\sum_i(\frac{\partial L}{\partial h_i^{(t)}})\bigtriangledown_{\boldsymbol{U}^{(t)}}h_i^{(t)}<br>= \sum_t diag(1-(\boldsymbol{h}^{(t)})^2) (\bigtriangledown_{\boldsymbol{h}^{(t)}}L)\boldsymbol{x}^{(t)^T}<br>$$</p>
-<h3 id="2-4-作为有向图模型的循环网络"><a href="#2-4-作为有向图模型的循环网络" class="headerlink" title="2.4 作为有向图模型的循环网络"></a>2.4 作为有向图模型的循环网络</h3><p>本节描述没有输入$\boldsymbol{x}$的情况下，RNN如何对应于有向图模型。</p>
+<script type="math/tex; mode=display">
+\bigtriangledown_\boldsymbol{c}L = \sum_t(\frac{\partial \boldsymbol{o}^{(t)}}{\partial \boldsymbol{c}})^T\bigtriangledown_{\boldsymbol{o}^{(t)}}L = \sum_t\bigtriangledown_{\boldsymbol{o}^{(t)}}L
+\\
+\bigtriangledown_\boldsymbol{b}L = \sum_t(\frac{\partial \boldsymbol{h}^{(t)}}{\partial \boldsymbol{b}})^T\bigtriangledown_{\boldsymbol{h}^{(t)}}L = \sum_t diag(1-(\boldsymbol{h}^{(t)})^2) \bigtriangledown_{\boldsymbol{h}^{(t)}}L
+\\
+\bigtriangledown_\boldsymbol{V}L = \sum_t\sum_i(\frac{\partial L}{\partial o_i^{(t)}})\bigtriangledown_{\boldsymbol{V}^{(t)}}o_i^{(t)} = \sum_t (\bigtriangledown_{\boldsymbol{o}^{(t)}}L) \boldsymbol{h}^{(t)^T}
+\\
+\bigtriangledown_\boldsymbol{W}L = \sum_t\sum_i(\frac{\partial L}{\partial h_i^{(t)}})\bigtriangledown_{\boldsymbol{W}^{(t)}}h_i^{(t)}
+= \sum_t diag(1-(\boldsymbol{h}^{(t)})^2) (\bigtriangledown_{\boldsymbol{h}^{(t)}}L)\boldsymbol{h}^{(t-1)^T}
+\\
+\bigtriangledown_\boldsymbol{U}L = \sum_t\sum_i(\frac{\partial L}{\partial h_i^{(t)}})\bigtriangledown_{\boldsymbol{U}^{(t)}}h_i^{(t)}
+= \sum_t diag(1-(\boldsymbol{h}^{(t)})^2) (\bigtriangledown_{\boldsymbol{h}^{(t)}}L)\boldsymbol{x}^{(t)^T}</script><h3 id="2-4-作为有向图模型的循环网络"><a href="#2-4-作为有向图模型的循环网络" class="headerlink" title="2.4 作为有向图模型的循环网络"></a>2.4 作为有向图模型的循环网络</h3><p>本节描述没有输入$\boldsymbol{x}$的情况下，RNN如何对应于有向图模型。</p>
 <p>与前馈网络类似，原则上循环网络几乎可以使用任何损失。但必须根据任务来选择损失。如前馈网络，我们通常希望将RNN的输出解释为一个概率分布，并且我们通常使用与分布相关联的交叉熵来定义损失。均方误差是与单位高斯分布的输出相关联的交叉熵损失，例如前馈网络中所使用的。</p>
 <p>若不考虑输入$x$，仅考虑输出$y^{(t)}$与之前序列的关系，我们可以得到一个全连接图模型，这种情况下，计算的是链式条件概率，比较类似马尔可夫链</p>
 <!--  -->
@@ -433,7 +468,7 @@
 <li>编码器或输入RNN处理输入序列，编码器输出上下文$C$（通常是最终隐藏状态的简单函数）；</li>
 <li>解码器或输出RNN则以固定长度的向量为条件产生输出序列$\boldsymbol{Y} = (\boldsymbol{y}^{(1)},…,\boldsymbol{y}^{(n_y)})$。</li>
 </ol>
-<p>序列长度$n_x,n_y$可以彼此不同。两个RNN共同训练以最大化$\log P(\boldsymbol{y}^{(1)},…,\boldsymbol{y}^{(n_y)}|\boldsymbol{x}^{(1)},…,\boldsymbol{x}^{(n_x)})$（关于训练集中所有$\boldsymbol{x}$和$\boldsymbol{y}$对的平均）。编码器RNN的最后一个状态$\boldsymbol{h}_{n_x}$通常被当作输入的表示$C$并作为解码器RNN的输入。</p>
+<p>序列长度$n<em>x,n_y$可以彼此不同。两个RNN共同训练以最大化$\log P(\boldsymbol{y}^{(1)},…,\boldsymbol{y}^{(n_y)}|\boldsymbol{x}^{(1)},…,\boldsymbol{x}^{(n_x)})$（关于训练集中所有$\boldsymbol{x}$和$\boldsymbol{y}$对的平均）。编码器RNN的最后一个状态$\boldsymbol{h}</em>{n_x}$通常被当作输入的表示$C$并作为解码器RNN的输入。</p>
 <p>这里并不强制要求编码器与解码器的隐藏层具有相同的大小。</p>
 <p>此架构的一个明显不足是，编码器RNN输出的上下文$C$的维度太小而难以适当地概括一个长序列。<br>让$C$成为可变长度的序列，而不是一个固定大小的向量；<br>将序列$C$的元素和输出序列的元素相关联的<strong>注意力机制</strong>。</p>
 <h2 id="5-深度循环网络"><a href="#5-深度循环网络" class="headerlink" title="5. 深度循环网络"></a>5. 深度循环网络</h2><p>大多数RNN中的计算可以分解为三块参数及其相关的变换：</p>
@@ -456,14 +491,14 @@
 <p>这类网络的潜在用途-学习推论。递归网络已成功地应用于输入是数据结构的神经网络。<br>递归网络的一个明显优势是，对于具有相同长度$\tau$的序列，深度（通过非线性操作的组合数量来衡量）可以急剧地从$\tau$减小为$O(\log \tau)$，这可能有助于解决长期依赖。<br>一个悬而未决的问题是如何以最佳的方式构造树。一种选择是使用不依赖于数据的树结构，如平衡二叉树。在某些应用领域，外部方法可以为选择适当的树结构提供借鉴。例如，处理自然语言的句子时，用于递归网络的树结构可以被固定为句子语法分析树的结构（可以由自然语言语法分析程序提供）。理想的情况下，人们希望学习器自行发现和推断适合于任意给定输入的树结构。</p>
 <h2 id="7-长期依赖的挑战"><a href="#7-长期依赖的挑战" class="headerlink" title="7. 长期依赖的挑战"></a>7. 长期依赖的挑战</h2><p>长期依赖的挑战根本问题是，经过许多阶段传播后的梯度倾向于消失（大部分情况）或爆炸（很少，但对优化过程影响很大）。</p>
 <p>循环神经网络所使用的函数组合有点像矩阵乘法，可以认为</p>
-<p>$$<br>\boldsymbol{h}^{(t)} = \boldsymbol{W}^T\boldsymbol{h}^{(t-1)}<br>$$</p>
-<p>是一个简单的、缺少非线性激活函数和输入的循环神经网络。根据递推关系</p>
-<p>$$<br>\boldsymbol{h}^{(t)} = (\boldsymbol{W}^t)^T\boldsymbol{h}^{(0)}<br>$$</p>
-<p>而当$\boldsymbol{W}$符合下列形式的特征分解</p>
-<p>$$<br>\boldsymbol{W} = \boldsymbol{Q\Lambda Q}^T<br>$$</p>
-<p>其中$\boldsymbol{Q}$正交，循环型可进一步简化为</p>
-<p>$$<br>\boldsymbol{h}^{(t)} = \boldsymbol{Q}^T\boldsymbol{\Lambda}^t\boldsymbol{Qh}^{(0)}<br>$$</p>
-<p>显然，$\boldsymbol{\Lambda}$中小于1的特征值会衰减到0，大于1的特征值会激增。任何不与最大特征向量对齐的$\boldsymbol{h}^{(0)}$的部分将最终被丢弃。</p>
+<script type="math/tex; mode=display">
+\boldsymbol{h}^{(t)} = \boldsymbol{W}^T\boldsymbol{h}^{(t-1)}</script><p>是一个简单的、缺少非线性激活函数和输入的循环神经网络。根据递推关系</p>
+<script type="math/tex; mode=display">
+\boldsymbol{h}^{(t)} = (\boldsymbol{W}^t)^T\boldsymbol{h}^{(0)}</script><p>而当$\boldsymbol{W}$符合下列形式的特征分解</p>
+<script type="math/tex; mode=display">
+\boldsymbol{W} = \boldsymbol{Q\Lambda Q}^T</script><p>其中$\boldsymbol{Q}$正交，循环型可进一步简化为</p>
+<script type="math/tex; mode=display">
+\boldsymbol{h}^{(t)} = \boldsymbol{Q}^T\boldsymbol{\Lambda}^t\boldsymbol{Qh}^{(0)}</script><p>显然，$\boldsymbol{\Lambda}$中小于1的特征值会衰减到0，大于1的特征值会激增。任何不与最大特征向量对齐的$\boldsymbol{h}^{(0)}$的部分将最终被丢弃。</p>
 <p>如果每个时刻使用不同的权重$w^{(t)}$，情况就不同了。假设$w^{(t)}$的值是随机生成的，各自独立且均值为0方差为$v$，乘积的方差为$O(v^n)$。如果我们希望最终结果的方差为$v^<em>$，我们就可以选择单个方差为$v=\sqrt[n]{v^</em>}$的权重。因此，非常深的前馈网络通过精心设计的比例可以避免梯度消失和爆炸问题。</p>
 <p>为了储存记忆并对小扰动具有鲁棒性，RNN必须进入参数空间中的梯度消失区域。具体来说，每当模型能够表示长期依赖时，长期相互作用的梯度幅值就会变得指数小（相比短期相互作用的梯度幅值）。这并不意味着这是不可能学习的，由于长期依赖关系的信号很容易被短期相关性产生的最小波动隐藏，因而学习长期依赖可能需要很长的时间。</p>
 <h2 id="8-回声状态网络"><a href="#8-回声状态网络" class="headerlink" title="8. 回声状态网络"></a>8. 回声状态网络</h2><p>从$\boldsymbol{h}^{(t-1)}$到$\boldsymbol{h}^{(t)}$的循环权重映射以及从$\boldsymbol{x}^{(t)}$到$\boldsymbol{h}^{(t)}$的输入权重映射是循环网络中最难学习的参数。<br>避免这种困难的方法是设定循环隐藏单元，使其能很好地捕捉过去输入历史，并且只学习输出权重。</p>
@@ -499,30 +534,35 @@
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/rnn14.png" alt="rnn14.png"></p>
 <ul>
 <li>最下方的<code>input, input gate, forget gate, output gate</code>的输入都是相同的，一个是当前时刻的输入$\boldsymbol{x}^{(t)}$，另一个是前一时刻的隐藏单元$\boldsymbol{h}^{(t-1)}$；</li>
-<li>最重要的部分是状态单元$s_i^{(t)}$，也就是<code>self-loop</code>对应的位置，此处自环的权重（或相关联的时间常数）由遗忘门$f_i^{(t)}$控制，由sigmoid单元将权重设置为0和1之间的值：<br>$$<br>f_i^{(t)} = \sigma(b_i^f + \sum_jU^f_{i,j}x_j^{(t)} + \sum_jW^f_{i,j}h_j^{(t-1)})<br>$$</li>
+<li>最重要的部分是状态单元$s_i^{(t)}$，也就是<code>self-loop</code>对应的位置，此处自环的权重（或相关联的时间常数）由遗忘门$f_i^{(t)}$控制，由sigmoid单元将权重设置为0和1之间的值：<script type="math/tex; mode=display">
+f_i^{(t)} = \sigma(b_i^f + \sum_jU^f_{i,j}x_j^{(t)} + \sum_jW^f_{i,j}h_j^{(t-1)})</script></li>
 <li>其中$\boldsymbol{x}^{(t)}$是当前输入向量，$\boldsymbol{h}^t$是当前隐藏层向量，$\boldsymbol{b}^f, \boldsymbol{U}^f, \boldsymbol{W}^f$分别是偏置、输入权重和遗忘门的循环权重；</li>
 <li>状态单元更新方式为：</li>
 </ul>
-<p>$$<br>s_i^{(t)} = f_i^{(t)}s_i^{(t-1)} + g_i^{(t)}\sigma(b_i + \sum_j U_{i,j}x_j^{(t)} + \sum_j W_{i,j}h_j^{(t-1)})<br>$$</p>
-<ul>
+<script type="math/tex; mode=display">
+s_i^{(t)} = f_i^{(t)}s_i^{(t-1)} + g_i^{(t)}\sigma(b_i + \sum_j U_{i,j}x_j^{(t)} + \sum_j W_{i,j}h_j^{(t-1)})</script><ul>
 <li>外部输入门单元$g_i^{(t)}$的更新方式：</li>
 </ul>
-<p>$$<br>g_i^{(t)} = \sigma(b_i^g + \sum_j U^g_{i,j}x_j^{(t)} + \sum_j W^g_{i,j}h_j^{(t-1)})<br>$$</p>
-<ul>
+<script type="math/tex; mode=display">
+g_i^{(t)} = \sigma(b_i^g + \sum_j U^g_{i,j}x_j^{(t)} + \sum_j W^g_{i,j}h_j^{(t-1)})</script><ul>
 <li>输出门$q_i^{(t)}$控制LSTM细胞的输出$h_i^{(t)}$：</li>
 </ul>
-<p>$$<br>h_i^{(t)} = \tanh(s_i^{(t)})q_i^{(t)}<br>\<br>q_i^{(t)} = \sigma(b_i^o + \sum_jU^o_{i,j}x_j^{(t)} + \sum_jW^o_{i,j}h_j^{(t-1)})<br>$$</p>
-<ul>
+<script type="math/tex; mode=display">
+h_i^{(t)} = \tanh(s_i^{(t)})q_i^{(t)}
+\\
+q_i^{(t)} = \sigma(b_i^o + \sum_jU^o_{i,j}x_j^{(t)} + \sum_jW^o_{i,j}h_j^{(t-1)})</script><ul>
 <li>在LSTM变体中，可以选择使用状态单元$s_i^{(t)}$作为额外的输入，输入到第$i$个单元的三个门，同时也需要额外的三个参数。</li>
 </ul>
 <p>LSTM网络比简单的循环架构更易于学习长期依赖。</p>
 <h3 id="10-2-其他门控RNN"><a href="#10-2-其他门控RNN" class="headerlink" title="10.2 其他门控RNN"></a>10.2 其他门控RNN</h3><p>门控RNN的单元被称为门控循环单元GRU。与LSTM的主要区别是，单个门控单元同时控制遗忘因子和更新状态单元的决定。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/rnn16.jpg" alt="rnn16.jpg"></p>
-<p>$$<br>h_i^{(t)} = u_i^{(t-1)}h_i^{(t-1)} + (1-u_i^{t-1})\sigma(b_i + \sum_jU_{i,j}x_j^{(t)} + \sum_jW_{i,j}r_j^{(t-1)}h_j^{(t-1)})<br>$$</p>
-<p>其中$\boldsymbol{u}$代表更新门，$\boldsymbol{r}$表示复位门（重置门）</p>
-<p>$$<br>u_i^{(t)} = \sigma(b_i^u + \sum_jU^u_{i,j}x_j^{(t)} + \sum_jW^u_{i,j}h_j^{(t)})<br>\<br>r_i^{(t)} = \sigma(b_i^r + \sum_jU^r_{i,j}x_j^{(t)} + \sum_jW^r_{i,j}h_j^{(t)})<br>$$</p>
-<p>复位和更新门能独立地“忽略”状态向量的一部分。更新门像条件渗漏累积器一样可以线性门控任意维度，从而选择将它复制（在sigmoid的一个极端）或完全由新的“目标状态”值（朝向渗漏累积器的收敛方向）替换并完全忽略它（在另一个极端）。复位门控制当前状态中哪些部分用于计算下一个目标状态，在过去状态和未来状态之间引入了附加的非线性效应。</p>
+<script type="math/tex; mode=display">
+h_i^{(t)} = u_i^{(t-1)}h_i^{(t-1)} + (1-u_i^{t-1})\sigma(b_i + \sum_jU_{i,j}x_j^{(t)} + \sum_jW_{i,j}r_j^{(t-1)}h_j^{(t-1)})</script><p>其中$\boldsymbol{u}$代表更新门，$\boldsymbol{r}$表示复位门（重置门）</p>
+<script type="math/tex; mode=display">
+u_i^{(t)} = \sigma(b_i^u + \sum_jU^u_{i,j}x_j^{(t)} + \sum_jW^u_{i,j}h_j^{(t)})
+\\
+r_i^{(t)} = \sigma(b_i^r + \sum_jU^r_{i,j}x_j^{(t)} + \sum_jW^r_{i,j}h_j^{(t)})</script><p>复位和更新门能独立地“忽略”状态向量的一部分。更新门像条件渗漏累积器一样可以线性门控任意维度，从而选择将它复制（在sigmoid的一个极端）或完全由新的“目标状态”值（朝向渗漏累积器的收敛方向）替换并完全忽略它（在另一个极端）。复位门控制当前状态中哪些部分用于计算下一个目标状态，在过去状态和未来状态之间引入了附加的非线性效应。</p>
 <p>围绕这一主题可以设计更多的变种。例如复位门（或遗忘门）的输出可以在多个隐藏单元间共享。或者，全局门的乘积（覆盖一整组的单元，例如整一层）和一个局部门（每单元）可用于结合全局控制和局部控制。然而，一些调查发现这些LSTM和GRU架构的变种，在广泛的任务中难以明显地同时击败这两个原始架构。</p>
 <h2 id="11-优化长期依赖"><a href="#11-优化长期依赖" class="headerlink" title="11. 优化长期依赖"></a>11. 优化长期依赖</h2><p>二阶导数可能在一阶导数消失的同时消失。二阶优化算法可以大致被理解为将一阶导数除以二阶导数（在更高维数，由梯度乘以Hessian的逆）。如果二阶导数与一阶导数以类似的速率收缩，那么一阶和二阶导数的比率可保持相对恒定。不幸的是，二阶方法有许多缺点，包括高的计算成本、需要一个大的小批量、并且倾向于被吸引到鞍点。</p>
 <p>使用较简单的方法可以达到类似的结果，例如经过谨慎初始化的Nesterov动量法。应用于LSTM时，这两种方法在很大程度上会被单纯的 SGD（甚至没有动量）取代。这是机器学习中一个延续的主题，设计一个易于优化模型通常比设计出更加强大的优化算法更容易。</p>
@@ -530,18 +570,20 @@
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/rnn17.png" alt="rnn17.png"></p>
 <p>由于RNN中存在$\boldsymbol{h}^{(t)}$的循环，因此在梯度下降时很容易遇到临界值为1的情况，当参数大于1时，梯度下降很大，导致参数更新步伐很大。因此，需要在这样的悬崖使用更小的学习率以中和梯度下降的速度。</p>
 <p>一个简单的解决方案是<strong>截断梯度</strong>。一种方式是在参数更新之前，逐元素地截断小批量产生地参数梯度；另一种是在参数更新之前截断梯度$\boldsymbol{g}$地范数$||\boldsymbol{g}||$</p>
-<p>$$<br>if \quad ||\boldsymbol{g}|| &gt; v<br>\<br>\boldsymbol{g} \leftarrow \frac{\boldsymbol{g}v}{||\boldsymbol{g}||}<br>$$</p>
-<p>其中$v$是范数上界，$\boldsymbol{g}$用来更新参数。</p>
+<script type="math/tex; mode=display">
+if \quad ||\boldsymbol{g}|| > v
+\\
+\boldsymbol{g} \leftarrow \frac{\boldsymbol{g}v}{||\boldsymbol{g}||}</script><p>其中$v$是范数上界，$\boldsymbol{g}$用来更新参数。</p>
 <p>如果爆炸非常严重，梯度数值上为$Inf$或$Nan$（无穷大或不是一个数字），则可以采取大小为$v$的随机一步，通常会离开数值不稳定的状态。截断每小批量梯度范数不会改变单个小批量的梯度方向。然而，许多小批量使用范数截断梯度后的平均值不等同于截断真实梯度（使用所有的实例所形成的梯度）的范数。大导数范数的样本，和像这样的出现在同一小批量的样本，其对最终方向的贡献将消失。不像传统小批量梯度下降，其中真实梯度的方向是等于所有小批量梯度的平均。换句话说，传统的随机梯度下降使用梯度的无偏估计，而与使用范数截断的梯度下降引入了经验上是有用的启发式偏置。通过逐元素截断，更新的方向与真实梯度或小批量的梯度不再对齐，但是它仍然是一个下降方向。</p>
 <h3 id="11-2-引导信息流的正则化"><a href="#11-2-引导信息流的正则化" class="headerlink" title="11.2 引导信息流的正则化"></a>11.2 引导信息流的正则化</h3><p>梯度截断有助于处理爆炸的梯度，但它无助于消失的梯度。为了解决消失的梯度问题并更好地捕获长期依赖，我们讨论了如下想法：在展开循环架构的计算图中，沿着与弧边相关联的梯度乘积接近1的部分创建路径。</p>
 <p>实现这一点的一种方法是使用LSTM以及其他自循环和门控机制。另一个想法是正则化或约束参数，以引导“信息流”。</p>
 <p>特别是即使损失函数只对序列尾部的输出作惩罚，我们也希望梯度向量$\bigtriangledown_{\boldsymbol{h}^{(t)}}L$在反向传播时能维持其幅度。形式上，我们要使</p>
-<p>$$<br>(\bigtriangledown_{\boldsymbol{h}^{(t)}}L)\frac{\partial \boldsymbol{h}^{(t)}}{\partial \boldsymbol{h}^{(t-1)}}<br>$$</p>
-<p>与</p>
-<p>$$<br>\bigtriangledown_{\boldsymbol{h}^{(t)}}L<br>$$</p>
-<p>一样大。在这个目标下，提出了以下正则项</p>
-<p>$$<br>\Omega = \sum_t(\frac{||(\bigtriangledown_{\boldsymbol{h}^{(t)}}L)\frac{\partial \boldsymbol{h}^{(t)}}{\partial \boldsymbol{h}^{(t-1)}}||}{||\bigtriangledown_{\boldsymbol{h}^{(t)}}L||} - 1)^2<br>$$</p>
-<p>计算这一梯度的正则项可能会出现困难，可以将后向传播向量$\bigtriangledown_{\boldsymbol{h}^{(t)}}L$考虑为恒值作为近似（为了计算正则化的目的，没有必要通过它们向后传播）。</p>
+<script type="math/tex; mode=display">
+(\bigtriangledown_{\boldsymbol{h}^{(t)}}L)\frac{\partial \boldsymbol{h}^{(t)}}{\partial \boldsymbol{h}^{(t-1)}}</script><p>与</p>
+<script type="math/tex; mode=display">
+\bigtriangledown_{\boldsymbol{h}^{(t)}}L</script><p>一样大。在这个目标下，提出了以下正则项</p>
+<script type="math/tex; mode=display">
+\Omega = \sum_t(\frac{||(\bigtriangledown_{\boldsymbol{h}^{(t)}}L)\frac{\partial \boldsymbol{h}^{(t)}}{\partial \boldsymbol{h}^{(t-1)}}||}{||\bigtriangledown_{\boldsymbol{h}^{(t)}}L||} - 1)^2</script><p>计算这一梯度的正则项可能会出现困难，可以将后向传播向量$\bigtriangledown_{\boldsymbol{h}^{(t)}}L$考虑为恒值作为近似（为了计算正则化的目的，没有必要通过它们向后传播）。</p>
 <h2 id="12-外显记忆"><a href="#12-外显记忆" class="headerlink" title="12. 外显记忆"></a>12. 外显记忆</h2><p>神经网络擅长存储隐性知识，但是他们很难记住事实。被存储在神经网络参数中之前，随机梯度下降需要多次提供相同的输入，即使如此，该输入也不会被特别精确地存储。Graves et al. (2014) 推测这是因为神经网络缺乏工作存储 (workingmemory) 系统，即类似人类为实现一些目标而明确保存和操作相关信息片段的系统。这种外显记忆组件将使我们的系统不仅能够快速“故意”地存储和检索具体的事实，也能利用他们循序推论。神经网络处理序列信息的需要，改变了每个步骤向网络注入输入的方式，长期以来推理能力被认为是重要的，而不是对输入做出自动的、直观的反应。</p>
 <p>为了解决这一难题，引入了<strong>记忆网络</strong>，其中包括一组可以通过寻址机制来访问的记忆单元。记忆网络原本需要监督信号指示他们如何使用自己的记忆单元。需要明确的监督指示采取哪些行动而能学习从记忆单元读写任意内容，并通过使用基于内容的软注意机制，允许端到端的训练。这种软寻址机制已成为其他允许基于梯度优化的模拟算法机制的相关架构的标准。</p>
 <p>每个记忆单元可以被认为是 LSTM 和 GRU 中记忆单元的扩展。不同的是，网络输出一个内部状态来选择从哪个单元读取或写入，正如数字计算机读取或写入到特定地址的内存访问。</p>
@@ -737,12 +779,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">897k</span>
+    <span title="站点总字数">877k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:36</span>
+    <span title="站点阅读时长">13:17</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

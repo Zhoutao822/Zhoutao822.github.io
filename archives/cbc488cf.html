@@ -307,32 +307,35 @@
 <p><strong>语音识别过程：切除首尾端静音-&gt;声音划分为帧-&gt;对每一帧提取MFCC特征-&gt;若干帧对应一个状态-&gt;三个状态组成一个音素-&gt;若干音素组成单词</strong></p>
 <h2 id="1-DNN-HMM混合系统"><a href="#1-DNN-HMM混合系统" class="headerlink" title="1. DNN-HMM混合系统"></a>1. DNN-HMM混合系统</h2><p>在前面的<code>语音识别-GMM</code>和<code>语音识别-HMM</code>中我们已经知道了，对于音频数据，经过提取特征处理后，通过GMM得到状态，然后通过HMM描述语音信号的动态变化，以预测输出。得益于DNN强大的表现学习能力，使用DNN替代GMM用于估计观察特征的概率，这样的语音识别系统性能远优于传统的GMM-HMM系统。</p>
 <a id="more"></a>
-
 <h3 id="1-1-结构"><a href="#1-1-结构" class="headerlink" title="1.1 结构"></a>1.1 结构</h3><!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/0db2c447fb5d8b64e.png" alt="0db2c447fb5d8b64e.png"></p>
 <p>HMM对语音信号的序列特性进行建模，DNN对所有聚类后的状态（聚类后的三音素状态）的<strong>似然度</strong>进行建模。</p>
 <p>在给定声学观察特征的条件下，我们用DNN的每个输出节点来估计连续密度HMM的某个状态的后验概率（类似于DNN的softmax输出，包括所有状态的概率，取最大值对应的状态）。DNN-HMM有两个额外的好处：训练过程可以使用维特比算法，解码通常也非常高效。</p>
 <p>对上下文相关因素的后验概率建模为</p>
-<p>$$<br>p(s_i,c_j|\boldsymbol{x}_t) = p(s_i|\boldsymbol{x}_t)p(c_j|s_i,\boldsymbol{x}_t)<br>$$</p>
-<p>或者</p>
-<p>$$<br>p(s_i,c_j|\boldsymbol{x}_t) = p(c_j|\boldsymbol{x}_t)p(s_i|c_j,\boldsymbol{x}_t)<br>$$</p>
-<p>其中$\boldsymbol{x}_t$是在$t$时刻的声学观察值，$c_j$是聚类后的上下文种类${ c_1, …, c_J }$中的一种，$s_i$是一个上下文无关的音素或音素中的状态。</p>
+<script type="math/tex; mode=display">
+p(s_i,c_j|\boldsymbol{x}_t) = p(s_i|\boldsymbol{x}_t)p(c_j|s_i,\boldsymbol{x}_t)</script><p>或者</p>
+<script type="math/tex; mode=display">
+p(s_i,c_j|\boldsymbol{x}_t) = p(c_j|\boldsymbol{x}_t)p(s_i|c_j,\boldsymbol{x}_t)</script><p>其中$\boldsymbol{x}_t$是在$t$时刻的声学观察值，$c_j$是聚类后的上下文种类${ c_1, …, c_J }$中的一种，$s_i$是一个上下文无关的音素或音素中的状态。</p>
 <p>为了提升性能：</p>
 <ol>
 <li>把传统的浅层神经网络替换成深层神经网络（可选择的预训练）；</li>
 <li>使用聚类后的状态（绑定后的三音素状态）替代单音素状态作为神经网络的输出单元。</li>
 </ol>
-<p>这种改善后的模型称为CD-DNN-HMM，对于所有的状态$s \in [1, S]$，我们只训练一个完整的DNN来估计状态的后验概率$p(q_t = s|\boldsymbol{x}<em>t)$。这和传统的GMM是不同的，因为GMM框架下，我们会使用其多个不同的GMM对不同的状态建模。除此之外，典型的DNN输入不是单一的一帧，而是一个$2w+1$（如9 ~ 13）帧大小的窗口特征$\boldsymbol{x}_t = [\boldsymbol{o}</em>{\max (0, t-w)}…\boldsymbol{o}<em>t…\boldsymbol{o}</em>{\min (T, t+w)}]$，这使得相邻帧的信息可以被有效地利用。</p>
+<p>这种改善后的模型称为CD-DNN-HMM，对于所有的状态$s \in [1, S]$，我们只训练一个完整的DNN来估计状态的后验概率$p(q<em>t = s|\boldsymbol{x}_t)$。这和传统的GMM是不同的，因为GMM框架下，我们会使用其多个不同的GMM对不同的状态建模。除此之外，典型的DNN输入不是单一的一帧，而是一个$2w+1$（如9 ~ 13）帧大小的窗口特征$\boldsymbol{x}_t = [\boldsymbol{o}</em>{\max (0, t-w)}…\boldsymbol{o}<em>t…\boldsymbol{o}</em>{\min (T, t+w)}]$，这使得相邻帧的信息可以被有效地利用。</p>
 <h3 id="1-2-用CD-DNN-HMM解码"><a href="#1-2-用CD-DNN-HMM解码" class="headerlink" title="1.2 用CD-DNN-HMM解码"></a>1.2 用CD-DNN-HMM解码</h3><p>解码过程中HMM需要似然度$p(\boldsymbol{x}_t|q_t)$，而不是后验概率：</p>
-<p>$$<br>p(\boldsymbol{x}_t|q_t = s) = \frac{p(q_t = s|\boldsymbol{x}_t)p(\boldsymbol{x}_t)}{p(s)}<br>$$</p>
-<p>其中$p(s) = \frac{T_s}{T}$是从训练集中统计地每个状态（聚类后地状态）的先验概率，$T_s$是标记属于状态$s$的帧数，$T$是总帧数。$p(\boldsymbol{x}_t)$是与字词序无关的，计算时可以忽略，得到近似缩放过的似然度$\bar{p}(\boldsymbol{x}_t|q_t) = \frac{p(q_t=s|\boldsymbol{x}_t)}{p(s)}$。</p>
+<script type="math/tex; mode=display">
+p(\boldsymbol{x}_t|q_t = s) = \frac{p(q_t = s|\boldsymbol{x}_t)p(\boldsymbol{x}_t)}{p(s)}</script><p>其中$p(s) = \frac{T_s}{T}$是从训练集中统计地每个状态（聚类后地状态）的先验概率，$T_s$是标记属于状态$s$的帧数，$T$是总帧数。$p(\boldsymbol{x}_t)$是与字词序无关的，计算时可以忽略，得到近似缩放过的似然度$\bar{p}(\boldsymbol{x}_t|q_t) = \frac{p(q_t=s|\boldsymbol{x}_t)}{p(s)}$。</p>
 <p>在CD-DNN-HMM解码出的字词序列$\hat{w}$由以下公式确定</p>
-<p>$$<br>\hat{w} = \underset{w}{\arg \max} p(w|\boldsymbol{x}) = \underset{w}{\arg \max} \frac{p(\boldsymbol{x}|w)p(w)}{p(\boldsymbol{x})}<br>\<br>= \underset{w}{\arg \max} p(\boldsymbol{x}|w)p(w)<br>$$</p>
-<p>其中$p(w)$是语言模型（LM）概率，以及</p>
-<p>$$<br>p(\boldsymbol{x}|w) = \sum_qp(\boldsymbol{x},q|w)p(q|w)<br>\<br>\approx \pi(q_0) \prod^T_{t=1}a_{q_{t-1}q_t} \prod^T_{t=0}\frac{p(q_t|\boldsymbol{x}_t)}{p(q_t)}<br>$$</p>
-<p>是声学模型（AM）的概率，其中$p(q_t|\boldsymbol{x}<em>t)$由DNN计算得出，$p(q_t)$是状态先验概率，这个概率也是训练过程中训练出来的（就是把观测值（特征向量）网状态上对齐，跟某个状态对齐的观测值的个数占比就是这个状态的先验概率），$\pi(q_0)$和$a</em>{q_{t-1}q_t}$分别是状态初始概率和状态转移概率，各自由HMM决定。语音模型权重稀疏$\lambda$用于平衡声学和语言模型得分，最终解码路径由以下公式确定</p>
-<p>$$<br>\hat{w} = \underset{w}{\arg \max} [\log p(\boldsymbol{x}|w) + \lambda \log p(w)]<br>$$</p>
-<h3 id="1-3-CD-DNN-HMM训练过程"><a href="#1-3-CD-DNN-HMM训练过程" class="headerlink" title="1.3 CD-DNN-HMM训练过程"></a>1.3 CD-DNN-HMM训练过程</h3><p>CD-DNN-HMM包含三个组成部分，一个深度神经网络dnn，一个隐马尔可夫模型hmm以及一个状态先验概率分布prior。</p>
+<script type="math/tex; mode=display">
+\hat{w} = \underset{w}{\arg \max} p(w|\boldsymbol{x}) = \underset{w}{\arg \max} \frac{p(\boldsymbol{x}|w)p(w)}{p(\boldsymbol{x})}
+\\
+= \underset{w}{\arg \max} p(\boldsymbol{x}|w)p(w)</script><p>其中$p(w)$是语言模型（LM）概率，以及</p>
+<script type="math/tex; mode=display">
+p(\boldsymbol{x}|w) = \sum_qp(\boldsymbol{x},q|w)p(q|w)
+\\
+\approx \pi(q_0) \prod^T_{t=1}a_{q_{t-1}q_t} \prod^T_{t=0}\frac{p(q_t|\boldsymbol{x}_t)}{p(q_t)}</script><p>是声学模型（AM）的概率，其中$p(q<em>t|\boldsymbol{x}_t)$由DNN计算得出，$p(q_t)$是状态先验概率，这个概率也是训练过程中训练出来的（就是把观测值（特征向量）网状态上对齐，跟某个状态对齐的观测值的个数占比就是这个状态的先验概率），$\pi(q_0)$和$a</em>{q_{t-1}q_t}$分别是状态初始概率和状态转移概率，各自由HMM决定。语音模型权重稀疏$\lambda$用于平衡声学和语言模型得分，最终解码路径由以下公式确定</p>
+<script type="math/tex; mode=display">
+\hat{w} = \underset{w}{\arg \max} [\log p(\boldsymbol{x}|w) + \lambda \log p(w)]</script><h3 id="1-3-CD-DNN-HMM训练过程"><a href="#1-3-CD-DNN-HMM训练过程" class="headerlink" title="1.3 CD-DNN-HMM训练过程"></a>1.3 CD-DNN-HMM训练过程</h3><p>CD-DNN-HMM包含三个组成部分，一个深度神经网络dnn，一个隐马尔可夫模型hmm以及一个状态先验概率分布prior。</p>
 <ol>
 <li>首先训练一个状态共享的三音素 GMM-HMM 系统,使用决策树来决定如何共享状态。设训练完成的系统为 gmm-hmm。</li>
 <li>用步骤 1 得到的 gmm-hmm 初始化一个新隐马尔可夫模型(包括转移概率,观测概率,隐马尔可夫模型的状态),并生成一个 DNN-HMM 模型,设该模型为 dnn-hmm1。</li>
@@ -363,10 +366,10 @@
       <div class="popular-posts-title"><a href="/archives/280b588e.html" rel="bookmark">支持向量机</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/archives/24da735a.html" rel="bookmark">语音识别-GMM</a></div>
+      <div class="popular-posts-title"><a href="/archives/4b26bf35.html" rel="bookmark">语音识别-MFCC</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="/archives/4b26bf35.html" rel="bookmark">语音识别-MFCC</a></div>
+      <div class="popular-posts-title"><a href="/archives/24da735a.html" rel="bookmark">语音识别-GMM</a></div>
     </li>
   </ul>
 
@@ -533,12 +536,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">897k</span>
+    <span title="站点总字数">877k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:36</span>
+    <span title="站点阅读时长">13:17</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

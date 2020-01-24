@@ -46,12 +46,12 @@
   };
 </script>
 
-  <meta name="description" content="论如何成为一个优秀的瓜农 参考：  西瓜书第2章 模型评估与选择  1. 经验误差与过拟合 错误率（error rate）：在m个样本中有a个样本分类错误，即错误率E &#x3D; a&#x2F;m；  精度（accuracy）：1 - a&#x2F;m；  误差（error）：模型的预测输出与样本的真实输出之间的差异；  训练误差（training error）：训练集上的误差；  泛化误差（generalization e">
+  <meta name="description" content="论如何成为一个优秀的瓜农 参考：  西瓜书第2章 模型评估与选择  1. 经验误差与过拟合 错误率（error rate）：在m个样本中有a个样本分类错误，即错误率E &#x3D; a&#x2F;m； 精度（accuracy）：1 - a&#x2F;m； 误差（error）：模型的预测输出与样本的真实输出之间的差异； 训练误差（training error）：训练集上的误差； 泛化误差（generalization error">
 <meta property="og:type" content="article">
 <meta property="og:title" content="模型评估与选择">
 <meta property="og:url" content="http://zhoutao822.coding.me/archives/7d1dcda7.html">
 <meta property="og:site_name" content="Tao">
-<meta property="og:description" content="论如何成为一个优秀的瓜农 参考：  西瓜书第2章 模型评估与选择  1. 经验误差与过拟合 错误率（error rate）：在m个样本中有a个样本分类错误，即错误率E &#x3D; a&#x2F;m；  精度（accuracy）：1 - a&#x2F;m；  误差（error）：模型的预测输出与样本的真实输出之间的差异；  训练误差（training error）：训练集上的误差；  泛化误差（generalization e">
+<meta property="og:description" content="论如何成为一个优秀的瓜农 参考：  西瓜书第2章 模型评估与选择  1. 经验误差与过拟合 错误率（error rate）：在m个样本中有a个样本分类错误，即错误率E &#x3D; a&#x2F;m； 精度（accuracy）：1 - a&#x2F;m； 误差（error）：模型的预测输出与样本的真实输出之间的差异； 训练误差（training error）：训练集上的误差； 泛化误差（generalization error">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/pr.png">
 <meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/18/roc.jpg">
@@ -283,7 +283,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>4.9k</span>
+              <span>4.8k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -308,20 +308,15 @@
 <p>西瓜书第2章 模型评估与选择</p>
 </blockquote>
 <h2 id="1-经验误差与过拟合"><a href="#1-经验误差与过拟合" class="headerlink" title="1. 经验误差与过拟合"></a>1. 经验误差与过拟合</h2><ul>
-<li><p>错误率（error rate）：在m个样本中有a个样本分类错误，即错误率<code>E = a/m</code>；</p>
-</li>
-<li><p>精度（accuracy）：<code>1 - a/m</code>；</p>
-</li>
-<li><p>误差（error）：模型的预测输出与样本的真实输出之间的差异；</p>
-</li>
-<li><p>训练误差（training error）：训练集上的误差；</p>
-</li>
+<li>错误率（error rate）：在m个样本中有a个样本分类错误，即错误率<code>E = a/m</code>；</li>
+<li>精度（accuracy）：<code>1 - a/m</code>；</li>
+<li>误差（error）：模型的预测输出与样本的真实输出之间的差异；</li>
+<li>训练误差（training error）：训练集上的误差；</li>
 <li><p>泛化误差（generalization error）：新样本上的误差，或者说测试集上的误差；</p>
 </li>
 <li><p>过拟合（overfitting）：学习器把训练集中的某些特征当作一般特征，导致泛化性能下降，表现为模型在训练集上表现非常好，在测试集上表现不好；</p>
 </li>
-<li><p>欠拟合（underfitting）：学习器尚未习得样本数据集的特性，导致无法正确的预测，表现为模型在训练集和测试集上表现都不好；</p>
-</li>
+<li>欠拟合（underfitting）：学习器尚未习得样本数据集的特性，导致无法正确的预测，表现为模型在训练集和测试集上表现都不好；</li>
 </ul>
 <p><strong>解决方法：</strong></p>
 <ul>
@@ -329,7 +324,6 @@
 <li>欠拟合：增加训练轮数或增加分支，容易解决；</li>
 </ul>
 <a id="more"></a>
-
 <h2 id="2-评估方法"><a href="#2-评估方法" class="headerlink" title="2. 评估方法"></a>2. 评估方法</h2><h3 id="2-1-目标"><a href="#2-1-目标" class="headerlink" title="2.1 目标"></a>2.1 目标</h3><blockquote>
 <p>训练集用于训练学习器，测试集用于测试学习器泛化性能，训练集与测试集不相交，且样本分布应大致相同。</p>
 </blockquote>
@@ -365,18 +359,20 @@
 <li>在研究阶段，将数据集划分为训练集、验证集和测试集，测试集用于评估模型在实际使用时的泛化能力，验证集用于模型选择和调参</li>
 </ul>
 <h2 id="3-性能度量"><a href="#3-性能度量" class="headerlink" title="3. 性能度量"></a>3. 性能度量</h2><h3 id="3-1-常见性能度量函数"><a href="#3-1-常见性能度量函数" class="headerlink" title="3.1 常见性能度量函数"></a>3.1 常见性能度量函数</h3><p><strong>1. 均方误差MSE（Mean Squard Error）</strong></p>
-<p>$$<br>E(f; D)) = \frac{1}{m} \sum_{i=1}^{m} (f(\boldsymbol{x}_i) - y_i) ^ 2<br>$$</p>
-<p>对于数据分布$D$和概率密度函数$p(·)$，均方误差为<br>$$<br>E(f; D) = \int_{\boldsymbol{x} \sim  D}^{ } (f(\boldsymbol{x}) - y)^2p(\boldsymbol{x})d\boldsymbol{x}<br>$$</p>
-<p><strong>2. 均方根误差RMSE（Root Mean Squard Error）</strong></p>
-<p>$$<br>E(f; D)) = \sqrt{\frac{1}{m} \sum_{i=1}^{m} (f(\boldsymbol{x}_i) - y_i) ^ 2}<br>$$</p>
-<p><strong>3. 平均绝对误差MAE（Mean Absolute Error）</strong></p>
-<p>$$<br>E(f; D)) = \frac{1}{m} \sum_{i=1}^{m} \left | f(\boldsymbol{x}_i) - y_i \right |<br>$$</p>
-<p>区别：</p>
+<script type="math/tex; mode=display">
+E(f; D)) = \frac{1}{m} \sum_{i=1}^{m} (f(\boldsymbol{x}_i) - y_i) ^ 2</script><p>对于数据分布$D$和概率密度函数$p(·)$，均方误差为</p>
+<script type="math/tex; mode=display">
+E(f; D) = \int_{\boldsymbol{x} \sim  D}^{ } (f(\boldsymbol{x}) - y)^2p(\boldsymbol{x})d\boldsymbol{x}</script><p><strong>2. 均方根误差RMSE（Root Mean Squard Error）</strong></p>
+<script type="math/tex; mode=display">
+E(f; D)) = \sqrt{\frac{1}{m} \sum_{i=1}^{m} (f(\boldsymbol{x}_i) - y_i) ^ 2}</script><p><strong>3. 平均绝对误差MAE（Mean Absolute Error）</strong></p>
+<script type="math/tex; mode=display">
+E(f; D)) = \frac{1}{m} \sum_{i=1}^{m} \left | f(\boldsymbol{x}_i) - y_i \right |</script><p>区别：</p>
 <ul>
 <li>MSE和RMSE放大数据波动，预测效果不好的值产生的残差会被放大；</li>
 <li>RMSE和MAE的数量级和单位与数据相同，因此可以直观的显示模型性能，但是RMSE更关注错误情况。</li>
 </ul>
 <h3 id="3-2-查准率、查全率与F1"><a href="#3-2-查准率、查全率与F1" class="headerlink" title="3.2 查准率、查全率与F1"></a>3.2 查准率、查全率与F1</h3><p>分类结果混淆矩阵</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -385,7 +381,8 @@
 <th>反例</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>正例</td>
 <td>TP（真正例）</td>
 <td>FN（假反例）</td>
@@ -395,40 +392,43 @@
 <td>FP（假正例）</td>
 <td>TN（真反例）</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <ul>
 <li>查准率P（precision）</li>
 </ul>
-<p>$$<br>P = \frac{TP}{ TP + FP}<br>$$</p>
-<ul>
+<script type="math/tex; mode=display">
+P = \frac{TP}{ TP + FP}</script><ul>
 <li>查全率R（recall）</li>
 </ul>
-<p>$$<br>R = \frac{TP}{TP + FN}<br>$$</p>
-<!-- ![](images/pr.png) -->
+<script type="math/tex; mode=display">
+R = \frac{TP}{TP + FN}</script><!-- ![](images/pr.png) -->
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/18/pr.png" alt="pr.png"></p>
 <p>查准率与查全率是一对矛盾的度量，如果一条曲线可以将另一条曲线完全“包裹”，则可以判断后者的模型性能比前者弱；如果两条曲线相交，那么可以使用“平衡点”（BEP），即当$P = R$时的值，谁大谁更优，但是BEP还是过于简单，更常用的时F1度量：</p>
-<p>$$<br>F1 = \frac{2 \times P \times R}{P + R} = \frac{2 \times TP}{样例总数 + TP - TN}<br>$$</p>
-<p>上式中我们对查准率和查全率没有偏向，但是在实际使用中，我们可能会更关注两者之一，那么就需要对其进行加权， $\beta &gt; 1$时查全率有更大影响；$\beta &lt; 1$时查准率有更大影响：</p>
-<p>$$<br>F_{\beta} = \frac{(1 + \beta ^2) \times P \times R}{(\beta ^2 \times P) + R}<br>$$</p>
-<h3 id="3-3-ROC与AUC"><a href="#3-3-ROC与AUC" class="headerlink" title="3.3 ROC与AUC"></a>3.3 ROC与AUC</h3><p>很多学习器为测试样本产生一个实值或概率预测，然后将这个预测值与一个分类阈值进行比较，若大于阈值则分为正类，否则反类；根据阈值设定的大小，我们决定更加偏向于查准率还是查全率，比如，如果更重视查准率，则提高分类阈值。ROC曲线则是从这个角度出发来研究学习器泛化性能的有力工具。</p>
+<script type="math/tex; mode=display">
+F1 = \frac{2 \times P \times R}{P + R} = \frac{2 \times TP}{样例总数 + TP - TN}</script><p>上式中我们对查准率和查全率没有偏向，但是在实际使用中，我们可能会更关注两者之一，那么就需要对其进行加权， $\beta &gt; 1$时查全率有更大影响；$\beta &lt; 1$时查准率有更大影响：</p>
+<script type="math/tex; mode=display">
+F_{\beta} = \frac{(1 + \beta ^2) \times P \times R}{(\beta ^2 \times P) + R}</script><h3 id="3-3-ROC与AUC"><a href="#3-3-ROC与AUC" class="headerlink" title="3.3 ROC与AUC"></a>3.3 ROC与AUC</h3><p>很多学习器为测试样本产生一个实值或概率预测，然后将这个预测值与一个分类阈值进行比较，若大于阈值则分为正类，否则反类；根据阈值设定的大小，我们决定更加偏向于查准率还是查全率，比如，如果更重视查准率，则提高分类阈值。ROC曲线则是从这个角度出发来研究学习器泛化性能的有力工具。</p>
 <p>ROC纵轴“真正例率”（TPR）</p>
-<p>$$<br>TPR = \frac{TP}{TP + FN}<br>$$</p>
-<p>ROC横轴“假正例率”（FPR）</p>
-<p>$$<br>FPR = \frac{FP}{TN + FP}<br>$$</p>
-<p>当ROC曲线越接近左边和上边时，模型性能越好。</p>
+<script type="math/tex; mode=display">
+TPR = \frac{TP}{TP + FN}</script><p>ROC横轴“假正例率”（FPR）</p>
+<script type="math/tex; mode=display">
+FPR = \frac{FP}{TN + FP}</script><p>当ROC曲线越接近左边和上边时，模型性能越好。</p>
 <!-- ![](images/roc.jpg) -->
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/18/roc.jpg" alt="roc.jpg"></p>
 <p>实际过程中的ROC曲线不是平滑的，绘制过程：给定$m^+$个正例和$m^-$个反例，根据学习器预测结果排序，然后将分类阈值设置为最大，然后分类阈值依次设为每个样例的预测值，设前一个标记点的坐标为$(x, y)$，若当前为真正例，则对应的标记点坐标为$(x, y + \frac{1}{m^+})$，若当前为假正例，则标记点为$(x + \frac{1}{m^-}, y)$；分类阈值最大时对应所有样例均预测为反例，TPR和FPR均为0</p>
 <p>AUC为ROC曲线下的面积</p>
-<p>$$<br>AUC = \frac{1}{2} \sum_{i=1}^{m-1}(x_{i+1} - x_i) \cdot (y_i + y_{i+1})<br>$$</p>
-<p>形式化的看，AUC考虑的是样本预测的排序质量，因此它与排序误差有紧密联系。给定$m^+$个正例和$m^-$个反例，令$D^+$和$D^-$分别表示正、反例集合，则排序损失定义为：</p>
-<p>$$<br>l_{rank} = \frac{1}{m^+m^-} \sum_{\boldsymbol{x}^+ \in D^+}\sum_{\boldsymbol{x}^- \in D^-}(\mathbb{I}(f(\boldsymbol{x}^+) &lt; f(\boldsymbol{x}^-)) + \frac{1}{2}\mathbb{I}(f(\boldsymbol{x}^+) = f(\boldsymbol{x}^-)))<br>$$</p>
-<p>即考虑每一对正、反例，若正例的预测值小于反例，则记一个罚分，若相等，记0.5个罚分。因此$l_{rank}$对应ROC曲线之上的面积</p>
-<p>$$<br>AUC = 1 - l_{rank}<br>$$</p>
-<h3 id="3-4-代价敏感错误率与代价曲线"><a href="#3-4-代价敏感错误率与代价曲线" class="headerlink" title="3.4 代价敏感错误率与代价曲线"></a>3.4 代价敏感错误率与代价曲线</h3><p>在实际分类问题中，把健康人诊断为患者和把患者诊断为健康人的代价是完全不同的，因此需要一个代价矩阵对分类错误加权。</p>
+<script type="math/tex; mode=display">
+AUC = \frac{1}{2} \sum_{i=1}^{m-1}(x_{i+1} - x_i) \cdot (y_i + y_{i+1})</script><p>形式化的看，AUC考虑的是样本预测的排序质量，因此它与排序误差有紧密联系。给定$m^+$个正例和$m^-$个反例，令$D^+$和$D^-$分别表示正、反例集合，则排序损失定义为：</p>
+<script type="math/tex; mode=display">
+l_{rank} = \frac{1}{m^+m^-} \sum_{\boldsymbol{x}^+ \in D^+}\sum_{\boldsymbol{x}^- \in D^-}(\mathbb{I}(f(\boldsymbol{x}^+) < f(\boldsymbol{x}^-)) + \frac{1}{2}\mathbb{I}(f(\boldsymbol{x}^+) = f(\boldsymbol{x}^-)))</script><p>即考虑每一对正、反例，若正例的预测值小于反例，则记一个罚分，若相等，记0.5个罚分。因此$l_{rank}$对应ROC曲线之上的面积</p>
+<script type="math/tex; mode=display">
+AUC = 1 - l_{rank}</script><h3 id="3-4-代价敏感错误率与代价曲线"><a href="#3-4-代价敏感错误率与代价曲线" class="headerlink" title="3.4 代价敏感错误率与代价曲线"></a>3.4 代价敏感错误率与代价曲线</h3><p>在实际分类问题中，把健康人诊断为患者和把患者诊断为健康人的代价是完全不同的，因此需要一个代价矩阵对分类错误加权。</p>
 <p>二分类代价矩阵</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -437,7 +437,8 @@
 <th>第1类</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>第0类</td>
 <td>0</td>
 <td>cost01</td>
@@ -447,29 +448,35 @@
 <td>cost10</td>
 <td>0</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <p>代价敏感错误率为</p>
-<p>$$<br>E(f;D;cost) = \frac{1}{m}(\sum_{\boldsymbol{x}<em>i \in D^+}\mathbb{I}(f(\boldsymbol{x}_i) \neq y_i) \times cost</em>{01} + \sum_{\boldsymbol{x}<em>i \in D^-}\mathbb{I}(f(\boldsymbol{x}_i) \neq y_i) \times cost</em>{10})<br>$$</p>
-<p>在非均等代价下，ROC曲线不能直接反映出学习器的期望总体代价，而“代价曲线”则可达到该目的，代价曲线图的横轴是取值为$[0, 1]$的正例率代价</p>
-<p>$$<br>P(+)cost = \frac{p \times cost_{01}}{p \times cost_{01} + (1 - p) \times cost_{10}}<br>$$</p>
-<p>其中p是样例为正例的概率；纵轴是取值为$[0, 1]$的归一化代价</p>
-<p>$$<br>cost_{norm} = \frac{FNR \times p \times cost_{01} + FPR \times (1 - p) \times cost_{10}}{p \times cost_{01} + (1-p) \times cost_{10}}<br>$$</p>
-<p>FPR是假正例率，$FNR = 1 - TPR$是假反例率</p>
+<script type="math/tex; mode=display">
+E(f;D;cost) = \frac{1}{m}(\sum_{\boldsymbol{x}_i \in D^+}\mathbb{I}(f(\boldsymbol{x}_i) \neq y_i) \times cost_{01} + \sum_{\boldsymbol{x}_i \in D^-}\mathbb{I}(f(\boldsymbol{x}_i) \neq y_i) \times cost_{10})</script><p>在非均等代价下，ROC曲线不能直接反映出学习器的期望总体代价，而“代价曲线”则可达到该目的，代价曲线图的横轴是取值为$[0, 1]$的正例率代价</p>
+<script type="math/tex; mode=display">
+P(+)cost = \frac{p \times cost_{01}}{p \times cost_{01} + (1 - p) \times cost_{10}}</script><p>其中p是样例为正例的概率；纵轴是取值为$[0, 1]$的归一化代价</p>
+<script type="math/tex; mode=display">
+cost_{norm} = \frac{FNR \times p \times cost_{01} + FPR \times (1 - p) \times cost_{10}}{p \times cost_{01} + (1-p) \times cost_{10}}</script><p>FPR是假正例率，$FNR = 1 - TPR$是假反例率</p>
 <!-- ![](images/cost.jpg) -->
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/18/cost.png" alt="cost.png"></p>
 <h2 id="4-偏差与方差"><a href="#4-偏差与方差" class="headerlink" title="4. 偏差与方差"></a>4. 偏差与方差</h2><p>学习算法的期望预测为</p>
-<p>$$<br>\overline{f}(\boldsymbol{x}) = \mathbb{E}_D[f(\boldsymbol{x};D)]<br>$$</p>
-<p>使用样本数相同的不同训练集产生的方差为</p>
-<p>$$<br>var(\boldsymbol{x}) = \mathbb{E}_D[(f(\boldsymbol{x};D) - \overline{f}(\boldsymbol{x}))^2]<br>$$</p>
-<p>噪声为</p>
-<p>$$<br>\varepsilon ^2 = \mathbb{E}_D[(y_D - y)^2]<br>$$</p>
-<p>期望输出与真实标记的差别为偏差（bias）</p>
-<p>$$<br>bias^2(\boldsymbol{x}) = (\overline{f}(\boldsymbol{x}) - y)^2<br>$$</p>
-<p>假定噪声期望为0，即$\mathbb{E}[y_D - y] = 0$，通过简单的计算可对算法的期望泛化误差进行分解：</p>
-<p>$$<br>E(f;D) = \mathbb{E}_D[(f(\boldsymbol{x};D) - y_D)^2]<br>$$<br>$$<br>= \mathbb{E}_D[(f(\boldsymbol{x};D) - \overline{f}(\boldsymbol{x}) + \overline{f}(\boldsymbol{x}) - y_D)^2]<br>$$<br>$$<br>…<br>$$<br>$$<br>= \mathbb{E}_D[(f(\boldsymbol{x};D) - \overline{f}(\boldsymbol{x}))^2] + (\overline{f}(\boldsymbol{x}) - y)^2 + \mathbb{E}[(y_D - y)^2]<br>$$</p>
-<p>于是，<br>$$<br>E(f;D) = bias^2(\boldsymbol{x}) + var(\boldsymbol{x}) + \varepsilon^2<br>$$</p>
-<p>也就是说，泛化误差可分解为偏差、方差和噪声之和。</p>
+<script type="math/tex; mode=display">
+\overline{f}(\boldsymbol{x}) = \mathbb{E}_D[f(\boldsymbol{x};D)]</script><p>使用样本数相同的不同训练集产生的方差为</p>
+<script type="math/tex; mode=display">
+var(\boldsymbol{x}) = \mathbb{E}_D[(f(\boldsymbol{x};D) - \overline{f}(\boldsymbol{x}))^2]</script><p>噪声为</p>
+<script type="math/tex; mode=display">
+\varepsilon ^2 = \mathbb{E}_D[(y_D - y)^2]</script><p>期望输出与真实标记的差别为偏差（bias）</p>
+<script type="math/tex; mode=display">
+bias^2(\boldsymbol{x}) = (\overline{f}(\boldsymbol{x}) - y)^2</script><p>假定噪声期望为0，即$\mathbb{E}[y_D - y] = 0$，通过简单的计算可对算法的期望泛化误差进行分解：</p>
+<script type="math/tex; mode=display">
+E(f;D) = \mathbb{E}_D[(f(\boldsymbol{x};D) - y_D)^2]</script><script type="math/tex; mode=display">
+= \mathbb{E}_D[(f(\boldsymbol{x};D) - \overline{f}(\boldsymbol{x}) + \overline{f}(\boldsymbol{x}) - y_D)^2]</script><script type="math/tex; mode=display">
+...</script><script type="math/tex; mode=display">
+= \mathbb{E}_D[(f(\boldsymbol{x};D) - \overline{f}(\boldsymbol{x}))^2] + (\overline{f}(\boldsymbol{x}) - y)^2 + \mathbb{E}[(y_D - y)^2]</script><p>于是，</p>
+<script type="math/tex; mode=display">
+E(f;D) = bias^2(\boldsymbol{x}) + var(\boldsymbol{x}) + \varepsilon^2</script><p>也就是说，泛化误差可分解为偏差、方差和噪声之和。</p>
 <ul>
 <li>偏差度量了学习算法的期望预测与真实结果的偏离程度，即刻画了学习算法本身的拟合能力；</li>
 <li>方差度量了同样大小的训练集的变动所导致的学习性能的变化，即刻画了数据扰动所造成的影响；</li>
@@ -666,12 +673,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">897k</span>
+    <span title="站点总字数">877k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:36</span>
+    <span title="站点阅读时长">13:17</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

@@ -46,12 +46,12 @@
   };
 </script>
 
-  <meta name="description" content="参考：  《深度学习》第9章 卷积网络  1. 卷积运算$$s(t) &#x3D; \int x(a)w(t-a)da$$ 其中$t$是时间，$x(t)$是原始输入，$w(a)$是加权函数，$a$表示测量结果距当前时刻$t$的时间间隔。连起来就是，根据加权函数$w$，我们对原始输入$x$进行加权积分以求得一个更加平滑的输出$s$，积分区间一般为$[t-a, t]$，一般对时间来说，不会取$t$之后的区间，因">
+  <meta name="description" content="参考：  《深度学习》第9章 卷积网络  1. 卷积运算 s(t) &#x3D; \int x(a)w(t-a)da其中$t$是时间，$x(t)$是原始输入，$w(a)$是加权函数，$a$表示测量结果距当前时刻$t$的时间间隔。连起来就是，根据加权函数$w$，我们对原始输入$x$进行加权积分以求得一个更加平滑的输出$s$，积分区间一般为$[t-a, t]$，一般对时间来说，不会取$t$之后的区间，因为无法预">
 <meta property="og:type" content="article">
 <meta property="og:title" content="卷积神经网络">
 <meta property="og:url" content="http://zhoutao822.coding.me/archives/c6767314.html">
 <meta property="og:site_name" content="Tao">
-<meta property="og:description" content="参考：  《深度学习》第9章 卷积网络  1. 卷积运算$$s(t) &#x3D; \int x(a)w(t-a)da$$ 其中$t$是时间，$x(t)$是原始输入，$w(a)$是加权函数，$a$表示测量结果距当前时刻$t$的时间间隔。连起来就是，根据加权函数$w$，我们对原始输入$x$进行加权积分以求得一个更加平滑的输出$s$，积分区间一般为$[t-a, t]$，一般对时间来说，不会取$t$之后的区间，因">
+<meta property="og:description" content="参考：  《深度学习》第9章 卷积网络  1. 卷积运算 s(t) &#x3D; \int x(a)w(t-a)da其中$t$是时间，$x(t)$是原始输入，$w(a)$是加权函数，$a$表示测量结果距当前时刻$t$的时间间隔。连起来就是，根据加权函数$w$，我们对原始输入$x$进行加权积分以求得一个更加平滑的输出$s$，积分区间一般为$[t-a, t]$，一般对时间来说，不会取$t$之后的区间，因为无法预">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/cnn0.png">
 <meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/cnn3.jpg">
@@ -307,20 +307,19 @@
 <blockquote>
 <p><a href="https://github.com/exacity/deeplearningbook-chinese" target="_blank" rel="noopener">《深度学习》第9章 卷积网络</a></p>
 </blockquote>
-<h2 id="1-卷积运算"><a href="#1-卷积运算" class="headerlink" title="1. 卷积运算"></a>1. 卷积运算</h2><p>$$<br>s(t) = \int x(a)w(t-a)da<br>$$</p>
-<p>其中$t$是时间，$x(t)$是原始输入，$w(a)$是加权函数，$a$表示测量结果距当前时刻$t$的时间间隔。连起来就是，根据加权函数$w$，我们对原始输入$x$进行加权积分以求得一个更加平滑的输出$s$，积分区间一般为$[t-a, t]$，一般对时间来说，不会取$t$之后的区间，因为无法预测未来。</p>
+<h2 id="1-卷积运算"><a href="#1-卷积运算" class="headerlink" title="1. 卷积运算"></a>1. 卷积运算</h2><script type="math/tex; mode=display">
+s(t) = \int x(a)w(t-a)da</script><p>其中$t$是时间，$x(t)$是原始输入，$w(a)$是加权函数，$a$表示测量结果距当前时刻$t$的时间间隔。连起来就是，根据加权函数$w$，我们对原始输入$x$进行加权积分以求得一个更加平滑的输出$s$，积分区间一般为$[t-a, t]$，一般对时间来说，不会取$t$之后的区间，因为无法预测未来。</p>
 <p>这种运算就叫做<strong>卷积</strong>，通常用$*$表示为</p>
-<p>$$<br>s(t) = (x * w)(t)<br>$$</p>
-<p>在卷积网络的术语中，函数$x$叫做输入，函数$w$叫做核函数，输出$s$有时被叫做特征映射。</p>
+<script type="math/tex; mode=display">
+s(t) = (x * w)(t)</script><p>在卷积网络的术语中，函数$x$叫做输入，函数$w$叫做核函数，输出$s$有时被叫做特征映射。</p>
 <p>实际上时间会被离散化，假设函数$x, w$都定义在整数时刻$t$上，我们只能取离散形式的卷积：</p>
-<p>$$<br>s(t) = (x * w)(t) = \sum^\infty_{a = -\infty} x(a)w(t-a)<br>$$</p>
-<a id="more"></a>
-
+<script type="math/tex; mode=display">
+s(t) = (x * w)(t) = \sum^\infty_{a = -\infty} x(a)w(t-a)</script><a id="more"></a>
 <p>在机器学习任务上，我们会在图像处理上使用卷积，例如把二维图像$I$作为输入，使用二维的核$K$：</p>
-<p>$$<br>S(i,j) = (I * K)(i, j) = \sum_m\sum_n I(m,n)K(i-m,j-n)<br>$$</p>
-<p>卷积是可交换的，所以上式等价于</p>
-<p>$$<br>S(i,j) = (K * I)(i, j) = \sum_m\sum_n I(i-m,j-n)K(m,n)<br>$$</p>
-<p>核矩阵$K$的维度相对$I$很小，使用核翻转，所以第二个式子更常用，也更好理解。</p>
+<script type="math/tex; mode=display">
+S(i,j) = (I * K)(i, j) = \sum_m\sum_n I(m,n)K(i-m,j-n)</script><p>卷积是可交换的，所以上式等价于</p>
+<script type="math/tex; mode=display">
+S(i,j) = (K * I)(i, j) = \sum_m\sum_n I(i-m,j-n)K(m,n)</script><p>核矩阵$K$的维度相对$I$很小，使用核翻转，所以第二个式子更常用，也更好理解。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/cnn0.png" alt="cnn0.png"></p>
 <p>卷积通常对应着一个非常稀疏的矩阵，这是因为核的大小通常远小于输入图像的大小。</p>
@@ -565,12 +564,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">897k</span>
+    <span title="站点总字数">877k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:36</span>
+    <span title="站点阅读时长">13:17</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

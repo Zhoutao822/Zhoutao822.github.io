@@ -46,12 +46,12 @@
   };
 </script>
 
-  <meta name="description" content="参考：  中国科学技术大学学位论文 LaTeX 模板   论文写作的又一利器：VSCode + LaTeX Workshop + MikTex + Git   MikTeX   MacTeX   VSCode  Windows环境1. 安装LaTeX发行版在Windows下我选择的是MikTeX，Mac下选择的是MacTex，这个LaTeX发行版相当于一个开发工具包，你需要的编译器以及某些资源文件">
+  <meta name="description" content="参考：  中国科学技术大学学位论文 LaTeX 模板 论文写作的又一利器：VSCode + LaTeX Workshop + MikTex + Git MikTeX MacTeX VSCode  Windows环境1. 安装LaTeX发行版在Windows下我选择的是MikTeX，Mac下选择的是MacTex，这个LaTeX发行版相当于一个开发工具包，你需要的编译器以及某些资源文件都包含在这个包里">
 <meta property="og:type" content="article">
 <meta property="og:title" content="VSCode搭建LaTeX论文写作环境">
 <meta property="og:url" content="http://zhoutao822.coding.me/archives/212d026f.html">
 <meta property="og:site_name" content="Tao">
-<meta property="og:description" content="参考：  中国科学技术大学学位论文 LaTeX 模板   论文写作的又一利器：VSCode + LaTeX Workshop + MikTex + Git   MikTeX   MacTeX   VSCode  Windows环境1. 安装LaTeX发行版在Windows下我选择的是MikTeX，Mac下选择的是MacTex，这个LaTeX发行版相当于一个开发工具包，你需要的编译器以及某些资源文件">
+<meta property="og:description" content="参考：  中国科学技术大学学位论文 LaTeX 模板 论文写作的又一利器：VSCode + LaTeX Workshop + MikTex + Git MikTeX MacTeX VSCode  Windows环境1. 安装LaTeX发行版在Windows下我选择的是MikTeX，Mac下选择的是MacTex，这个LaTeX发行版相当于一个开发工具包，你需要的编译器以及某些资源文件都包含在这个包里">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/latex-workshop.png">
 <meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/ustcthesis.png">
@@ -312,28 +312,18 @@
         <p>参考：</p>
 <blockquote>
 <p><a href="https://github.com/ustctug/ustcthesis" target="_blank" rel="noopener">中国科学技术大学学位论文 LaTeX 模板</a></p>
-</blockquote>
-<blockquote>
 <p><a href="https://blog.csdn.net/yinqingwang/article/details/79684419" target="_blank" rel="noopener">论文写作的又一利器：VSCode + LaTeX Workshop + MikTex + Git</a></p>
-</blockquote>
-<blockquote>
 <p><a href="https://miktex.org/" target="_blank" rel="noopener">MikTeX</a></p>
-</blockquote>
-<blockquote>
 <p><a href="https://www.tug.org/mactex/" target="_blank" rel="noopener">MacTeX</a></p>
-</blockquote>
-<blockquote>
 <p><a href="https://code.visualstudio.com/" target="_blank" rel="noopener">VSCode</a></p>
 </blockquote>
 <h2 id="Windows环境"><a href="#Windows环境" class="headerlink" title="Windows环境"></a>Windows环境</h2><h3 id="1-安装LaTeX发行版"><a href="#1-安装LaTeX发行版" class="headerlink" title="1. 安装LaTeX发行版"></a>1. 安装LaTeX发行版</h3><p>在Windows下我选择的是MikTeX，Mac下选择的是MacTex，这个LaTeX发行版相当于一个开发工具包，你需要的编译器以及某些资源文件都包含在这个包里面，安装完成后可以通过命令行启用。</p>
 <p>在Windows下MikTeX的安装教程链接为<a href="https://miktex.org/howto/install-miktex" target="_blank" rel="noopener">Install MiKTeX on Windows</a>，链接里也给出了安装包的地址<a href="https://miktex.org/download" target="_blank" rel="noopener">Basic MiKTeX Installer</a>，安装完成后打开 MiKTeX Console 更新package。目前这个阶段还不需要安装额外的package，这个我们可以等到编译论文的时候再下载。</p>
 <a id="more"></a>
-
 <h3 id="2-VSCode安装与参数设置"><a href="#2-VSCode安装与参数设置" class="headerlink" title="2. VSCode安装与参数设置"></a>2. VSCode安装与参数设置</h3><p>VSCode的安装没什么可说的，完成后需要在<strong>扩展</strong>中搜索<code>latex</code>，就可以找到需要的插件<code>LaTeX Workshop</code>，安装完成后需要配置一些参数，在设置中搜索<code>latex</code>，打开<code>settings.json</code>，加入以下参数</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/latex-workshop.png" alt="latex-workshop.png"></p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line">"latex-workshop.view.pdf.viewer": "tab",</span><br><span class="line">"latex-workshop.latex.recipes": [</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">"name"</span>: <span class="string">"latexmk"</span>,</span><br><span class="line">        <span class="attr">"tools"</span>: [</span><br><span class="line">            <span class="string">"latexmk"</span></span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">"name"</span>: <span class="string">"pdflatex"</span>,</span><br><span class="line">        <span class="attr">"tools"</span>: [</span><br><span class="line">            <span class="string">"pdflatex"</span></span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">"name"</span>: <span class="string">"pdflatex -&gt; bibtex -&gt; pdflatex*2"</span>,</span><br><span class="line">        <span class="attr">"tools"</span>: [</span><br><span class="line">            <span class="string">"pdflatex"</span>,</span><br><span class="line">            <span class="string">"bibtex"</span>,</span><br><span class="line">            <span class="string">"pdflatex"</span>,</span><br><span class="line">            <span class="string">"pdflatex"</span></span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">],</span><br><span class="line">"latex-workshop.latex.tools": [</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">"name"</span>: <span class="string">"xelatex"</span>,</span><br><span class="line">        <span class="attr">"command"</span>: <span class="string">"xelatex"</span>,</span><br><span class="line">        <span class="attr">"args"</span>: [</span><br><span class="line">            <span class="string">"-synctex=1"</span>,</span><br><span class="line">            <span class="string">"-interaction=nonstopmode"</span>,</span><br><span class="line">            <span class="string">"-file-line-error"</span>,</span><br><span class="line">            <span class="string">"%DOC%"</span></span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">"name"</span>: <span class="string">"pdflatex"</span>,</span><br><span class="line">        <span class="attr">"command"</span>: <span class="string">"pdflatex"</span>,</span><br><span class="line">        <span class="attr">"args"</span>: [</span><br><span class="line">            <span class="string">"-synctex=1"</span>,</span><br><span class="line">            <span class="string">"-interaction=nonstopmode"</span>,</span><br><span class="line">            <span class="string">"-file-line-error"</span>,</span><br><span class="line">            <span class="string">"%DOC%"</span></span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">"name"</span>: <span class="string">"latexmk"</span>,</span><br><span class="line">        <span class="attr">"command"</span>: <span class="string">"latexmk"</span>,</span><br><span class="line">        <span class="attr">"args"</span>: [</span><br><span class="line">            <span class="string">"-xelatex"</span></span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">"name"</span>: <span class="string">"bibtex"</span>,</span><br><span class="line">        <span class="attr">"command"</span>: <span class="string">"bibtex"</span>,</span><br><span class="line">        <span class="attr">"args"</span>: [</span><br><span class="line">            <span class="string">"%DOCFILE%"</span></span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">],</span><br><span class="line">"latex-workshop.latex.autoBuild.run": "never",</span><br><span class="line">"latex-workshop.latex.autoClean.run": "never",</span><br><span class="line">"latex-workshop.latex.clean.fileTypes": [</span><br><span class="line">        "*.aux",</span><br><span class="line">        "*.bbl",</span><br><span class="line">        "*.blg",</span><br><span class="line">        "*.idx",</span><br><span class="line">        "*.ind",</span><br><span class="line">        "*.lof",</span><br><span class="line">        "*.lot",</span><br><span class="line">        "*.out",</span><br><span class="line">        "*.toc",</span><br><span class="line">        "*.acn",</span><br><span class="line">        "*.acr",</span><br><span class="line">        "*.alg",</span><br><span class="line">        "*.glg",</span><br><span class="line">        "*.glo",</span><br><span class="line">        "*.gls",</span><br><span class="line">        "*.ist",</span><br><span class="line">        "*.fls",</span><br><span class="line">        "*.log",</span><br><span class="line">        "*.xdv",</span><br><span class="line">        "*.fdb_latexmk",</span><br><span class="line">        <span class="string">"*.synctex.gz"</span></span><br><span class="line">    ]</span><br></pre></td></tr></table></figure>
-
 <p>参数说明：</p>
 <ol>
 <li><code>latex-workshop.view.pdf.viewer</code>设置为<code>tab</code>可以在VSCode里查看生成的pdf文件，你也可以选择其他方式；</li>
@@ -360,18 +350,14 @@
 <p>命令行工具为<code>tlmgr</code>，我在运行时需要加<code>sudo</code>，应该是安装路径对一般用户不可写。</p>
 <p>然后需要使用<code>tlmgr</code>安装一些package，我们先设置一下镜像源加速下载</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 这是清华镜像源，也可以使用科大镜像源http://mirrors.ustc.edu.cn/CTAN/systems/texlive/tlnet</span></span><br><span class="line">tlmgr option repository https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/tlnet</span><br></pre></td></tr></table></figure>
-
 <p>然后更新自己和所有的package</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo tlmgr update --self --all</span><br></pre></td></tr></table></figure>
-
 <p>最后需要下载<code>latexmk</code>包，Windows不需要应该是MikTeX中已经包含了这个包，而Mac下<code>BasicTeX</code>没有包含，所以需要自己下载。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo tlmgr install latexmk</span><br></pre></td></tr></table></figure>
-
 <h3 id="2-VSCode安装与参数设置-1"><a href="#2-VSCode安装与参数设置-1" class="headerlink" title="2. VSCode安装与参数设置"></a>2. VSCode安装与参数设置</h3><p>安装配置同Windows。</p>
 <h3 id="3-编译论文模板-1"><a href="#3-编译论文模板-1" class="headerlink" title="3. 编译论文模板"></a>3. 编译论文模板</h3><p>在Mac上使用<code>latexmk -xelatex main.tex</code>会失败，而且<strong>系统不会像Windows那样提示你需要下载哪些package，每次失败都会告诉你缺少哪个文件，这个在log中是可以看到的，一般来说在<a href="https://www.ctan.org/" target="_blank" rel="noopener">CTAN官网</a><em>搜索缺少的文件</em>就可以知道需要下载哪个package</strong>。</p>
 <p>下载package的代码为</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> package_name为包名，比如可能有siunitx...</span></span><br><span class="line">sudo tlmgr install package_name</span><br></pre></td></tr></table></figure>
-
 <p>这些下载的package是可以在<code>/usr/local/texlive/2019basic/texmf-dist/tex/latex</code>下找到的，我的可以正确运行科大LaTeX模板的package截图如下，不想一个一个搜索的可以直接对照下载缺少的package。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/3.png" alt="3.png"></p>
@@ -566,12 +552,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">897k</span>
+    <span title="站点总字数">877k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:36</span>
+    <span title="站点阅读时长">13:17</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

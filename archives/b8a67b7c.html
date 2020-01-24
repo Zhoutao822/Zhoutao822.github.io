@@ -312,7 +312,6 @@
 <p>GAN，即生成式对抗网络，是一个生成模型，也是半监督和无监督学习模型，它可以在<strong>不需要大量标注数据</strong>的情况下学习深度表征。最大的特点就是提出了一种让两个深度网络对抗训练的方法。</p>
 <p>GAN 主要就是两个网络组成，生成器网络(Generator)和判别器网络(Discriminator)，通过这两个网络的互相博弈，让生成器网络最终能够学习到输入数据的分布，这也就是 GAN 想达到的目的：学习输入数据的分布。</p>
 <a id="more"></a>
-
 <h2 id="1-基本原理"><a href="#1-基本原理" class="headerlink" title="1. 基本原理"></a>1. 基本原理</h2><!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/1f0b378fcabfd36c7.png" alt="1f0b378fcabfd36c7.png"></p>
 <ul>
@@ -408,7 +407,6 @@
 <li>如果要这样做，需要制定一个准则而非依靠直觉</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">while lossD &gt; A:</span><br><span class="line">  train D</span><br><span class="line">while lossG &gt; B:</span><br><span class="line">  train G</span><br></pre></td></tr></table></figure>
-
 <h3 id="3-12-给输入添加噪声，随时间衰减"><a href="#3-12-给输入添加噪声，随时间衰减" class="headerlink" title="3.12 给输入添加噪声，随时间衰减"></a>3.12 给输入添加噪声，随时间衰减</h3><ul>
 <li>给 D 的输入添加人为的噪声<ul>
 <li><a href="https://www.inference.vc/instance-noise-a-trick-for-stabilising-gan-training/" target="_blank" rel="noopener">www.inference.vc/instance-no…</a></li>
@@ -434,19 +432,19 @@
 <p>因为在 L2 范数看来，对于熊猫和长臂猿的决策边界并没有那么远，添加了非常微弱的随机噪声的图片可能就远离了熊猫的决策边界内，到达长臂猿的预测范围内，因此欺骗了分类器。</p>
 <p>除了这种简单的添加随机噪声，还可以通过图像变形的方式，使得新图像和原始图像视觉上一样的情况下，让分类器得到有很高置信度的错误分类结果。这种过程也被称为对抗攻击(adversarial attack)，这种生成方式的简单性也是给 GAN 提供了解释。</p>
 <h2 id="5-生成对抗网络GAN"><a href="#5-生成对抗网络GAN" class="headerlink" title="5. 生成对抗网络GAN"></a>5. 生成对抗网络GAN</h2><p>生成器G与判别器D组合起来就是GAN，其目标是</p>
-<p>$$<br>\underset{G}{\min} \underset{D}{\max} V(D, G) = \mathbb{E}<em>{\boldsymbol{x} \sim p</em>{data}(\boldsymbol{x})}[\log D(\boldsymbol{x})] + \mathbb{E}<em>{\boldsymbol{z} \sim p</em>{\boldsymbol{z}}(\boldsymbol{z})}[\log (1 - D(G(\boldsymbol{z})))]<br>$$</p>
-<p>对于判别器D来说，其更新梯度为</p>
-<p>$$<br>\bigtriangledown_{\theta_d}\frac{1}{m}\sum^m_{i=1}[\log D(\boldsymbol{x}^{(i)} ) + \log(1 - D(G(\boldsymbol{z}^{(i)})))]<br>$$</p>
-<p>对于生成器G来说，其更新梯度为</p>
-<p>$$<br>\bigtriangledown_{\theta_g}\frac{1}{m} \sum^m_{i=1}\log(1-D(G(\boldsymbol{z}^{(i)})))<br>$$</p>
-<p>这里根据它们的损失函数分析下，G 网络的训练目标就是让<strong>D(G(z)) 趋近于 1</strong>，这也是让其 loss 变小的做法；而 D 网络的训练目标是区分真假数据，自然是让<strong>D(x) 趋近于 1，而 D(G(z)) 趋近于 0</strong>。这就是两个网络相互对抗，彼此博弈的过程了。</p>
+<script type="math/tex; mode=display">
+\underset{G}{\min} \underset{D}{\max} V(D, G) = \mathbb{E}_{\boldsymbol{x} \sim p_{data}(\boldsymbol{x})}[\log D(\boldsymbol{x})] + \mathbb{E}_{\boldsymbol{z} \sim p_{\boldsymbol{z}}(\boldsymbol{z})}[\log (1 - D(G(\boldsymbol{z})))]</script><p>对于判别器D来说，其更新梯度为</p>
+<script type="math/tex; mode=display">
+\bigtriangledown_{\theta_d}\frac{1}{m}\sum^m_{i=1}[\log D(\boldsymbol{x}^{(i)} ) + \log(1 - D(G(\boldsymbol{z}^{(i)})))]</script><p>对于生成器G来说，其更新梯度为</p>
+<script type="math/tex; mode=display">
+\bigtriangledown_{\theta_g}\frac{1}{m} \sum^m_{i=1}\log(1-D(G(\boldsymbol{z}^{(i)})))</script><p>这里根据它们的损失函数分析下，G 网络的训练目标就是让<strong>D(G(z)) 趋近于 1</strong>，这也是让其 loss 变小的做法；而 D 网络的训练目标是区分真假数据，自然是让<strong>D(x) 趋近于 1，而 D(G(z)) 趋近于 0</strong>。这就是两个网络相互对抗，彼此博弈的过程了。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/40bd67b4be7a9365f.png" alt="40bd67b4be7a9365f.png"></p>
 <p>上图中，黑色曲线表示输入数据 x 的实际分布，绿色曲线表示的是 G 网络生成数据的分布，我们的目标自然是希望着两条曲线可以相互重合，也就是两个数据分布一致了。而蓝色的曲线表示的是生成数据对应于 D 的分布。</p>
 <p>在 a 图中是刚开始训练的时候，D 的分类能力还不是最好，因此有所波动，而生成数据的分布也自然和真实数据分布不同，毕竟 G 网络输入是随机生成的噪声；到了 b 图的时候，D 网络的分类能力就比较好了，可以看到对于真实数据和生成数据，它是明显可以区分出来，也就是给出的概率是不同的；</p>
 <p>而绿色的曲线，即 G 网络的目标是学习真实数据的分布，所以它会往蓝色曲线方向移动，也就是 c 图了，并且因为 G 和 D 是相互对抗的，当 G 网络提升，也会影响 D 网络的分辨能力。论文中，Ian Goodfellow 做出了证明，当假设 G 网络不变，训练 D 网络，最优的情况会是：</p>
-<p>$$<br>D_G^*(\boldsymbol{x}) = \frac{p_{data}(\boldsymbol{x})}{p_{data}(\boldsymbol{x}) + p_g(\boldsymbol{x})}<br>$$</p>
-<p>也就是当生成数据的分布$p_g(x)$趋近于真实数据分布$p_{data}(x)$的时候，D 网络输出的概率$D_G^*(x)$会趋近于 0.5，也就是 d 图的结果，这也是最终希望达到的训练结果，这时候 G 和 D 网络也就达到一个平衡状态。</p>
+<script type="math/tex; mode=display">
+D_G^*(\boldsymbol{x}) = \frac{p_{data}(\boldsymbol{x})}{p_{data}(\boldsymbol{x}) + p_g(\boldsymbol{x})}</script><p>也就是当生成数据的分布$p<em>g(x)$趋近于真实数据分布$p</em>{data}(x)$的时候，D 网络输出的概率$D_G^*(x)$会趋近于 0.5，也就是 d 图的结果，这也是最终希望达到的训练结果，这时候 G 和 D 网络也就达到一个平衡状态。</p>
 <h2 id="6-算法"><a href="#6-算法" class="headerlink" title="6. 算法"></a>6. 算法</h2><p>论文给出的算法实现过程如下所示</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/5f601eac50c9eb3e3.png" alt="5f601eac50c9eb3e3.png"></p>
@@ -645,12 +643,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">897k</span>
+    <span title="站点总字数">877k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:36</span>
+    <span title="站点阅读时长">13:17</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

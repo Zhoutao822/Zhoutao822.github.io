@@ -325,7 +325,6 @@
 </blockquote>
 <p>LightGBM属于Boosting一族，由微软开源，被评价为“速度惊人”，“非常有启发”，“支持分布式”，“内存占用小”等。</p>
 <a id="more"></a>
-
 <h2 id="1-回顾"><a href="#1-回顾" class="headerlink" title="1. 回顾"></a>1. 回顾</h2><h3 id="1-1-Boosting"><a href="#1-1-Boosting" class="headerlink" title="1.1 Boosting"></a>1.1 Boosting</h3><p>参考<code>决策树</code></p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/0.png" alt="0.png"></p>
@@ -416,7 +415,7 @@
 <li>只需做一次减法就得到两棵树的一阶梯度和，那么速度比分别计算左右两边快两倍。</li>
 </ol>
 <h3 id="5-4-增加缓存命中率"><a href="#5-4-增加缓存命中率" class="headerlink" title="5.4 增加缓存命中率"></a>5.4 增加缓存命中率</h3><p>cache miss一般发生在访问的数据随机性很大的任务中，这是由于内存的管理机制决定的，因此如果访问的数据是相邻的或有序的，那么缓存命中率就会提升，缓存命中率提升会增加访问速度，从另一个角度增加计算速度。</p>
-<p>在XGBoost中我们计算某个叶结点权重的最优值需要用到落入此结点的所有样本的一阶梯度以及二阶梯度，与此同时，划分依据的特征也是需要遍历的，也就是说，在划分并确定最佳权重的阶段，计算复杂度为$O(n_{data} \times n_{feature})$，而且数据之间没有规律可循，因此缓存命中率低。</p>
+<p>在XGBoost中我们计算某个叶结点权重的最优值需要用到落入此结点的所有样本的一阶梯度以及二阶梯度，与此同时，划分依据的特征也是需要遍历的，也就是说，在划分并确定最佳权重的阶段，计算复杂度为$O(n<em>{data} \times n</em>{feature})$，而且数据之间没有规律可循，因此缓存命中率低。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/9.png" alt="9.png"></p>
 <p>在LightGBM使用基于直方图算法，它是如何增加缓存命中率的？</p>
@@ -651,12 +650,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">897k</span>
+    <span title="站点总字数">877k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:36</span>
+    <span title="站点阅读时长">13:17</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

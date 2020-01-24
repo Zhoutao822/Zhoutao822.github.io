@@ -525,7 +525,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>5.8k</span>
+              <span>5.7k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -550,10 +550,10 @@
 </blockquote>
 <p>相较于线性模型描述输入$\boldsymbol{x}$与输出$\boldsymbol{y}$的关系，线性因子模型考虑的是输入$\boldsymbol{x}$与隐变量$\boldsymbol{h}$的关系，也就是说线性因子模型的目的是发掘出输入变量$\boldsymbol{x}$的统计特征，利用隐变量实现降维或输入优化等目的。</p>
 <p>线性因子模型，顾名思义，我们假设$\boldsymbol{x}$是$\boldsymbol{h}$的线性变换以及添加噪声来生成的</p>
-<p>$$<br>\boldsymbol{x} = \boldsymbol{Wh} + \boldsymbol{b} + noise<br>$$</p>
-<p>其中解释性因子$\boldsymbol{h}$从一个分布中抽取</p>
-<p>$$<br>\boldsymbol{h} \sim p(\boldsymbol{h})<br>$$</p>
-<p>其中$p(\boldsymbol{h})$是一个因子分布，满足$p(\boldsymbol{h}) = \prod_ip(h_i)$，噪声通常是对角化的且服从高斯分布。</p>
+<script type="math/tex; mode=display">
+\boldsymbol{x} = \boldsymbol{Wh} + \boldsymbol{b} + noise</script><p>其中解释性因子$\boldsymbol{h}$从一个分布中抽取</p>
+<script type="math/tex; mode=display">
+\boldsymbol{h} \sim p(\boldsymbol{h})</script><p>其中$p(\boldsymbol{h})$是一个因子分布，满足$p(\boldsymbol{h}) = \prod_ip(h_i)$，噪声通常是对角化的且服从高斯分布。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/linear.png" alt="linear.png"></p>
           <!--noindex-->
@@ -675,7 +675,7 @@
       
           <p>参考：</p>
 <blockquote>
-<p><a href="https://github.com/keras-team/keras-applications" target="_blank" rel="noopener">Keras Applications</a><br><a href="https://keras.io/applications/#xception" target="_blank" rel="noopener">Models for image classification with weights trained on ImageNet</a><br><a href="https://blog.csdn.net/qq_40027052/article/details/79015827" target="_blank" rel="noopener">深度学习VGG模型核心拆解</a><br><a href="https://github.com/SnailTyan/deep-learning-papers-translation" target="_blank" rel="noopener">Deep Learning Papers Translation(CV)</a><br><a href="https://blog.csdn.net/Quincuntial/article/details/77263607" target="_blank" rel="noopener">ResNet论文翻译——中英文对照</a><br><a href="https://towardsdatascience.com/an-overview-of-resnet-and-its-variants-5281e2f56035" target="_blank" rel="noopener">An Overview of ResNet and its Variants</a><br><a href="https://blog.csdn.net/qq_38906523/article/details/80061075" target="_blank" rel="noopener">深度学习—GoogLeNet</a><br><a href="https://blog.csdn.net/stesha_chen/article/details/82115429" target="_blank" rel="noopener">Inception-V4和Inception-Resnet论文阅读和代码解析</a><br><a href="https://blog.csdn.net/just_sort/article/details/79901885" target="_blank" rel="noopener">MobileNet 翻译及总结：用于移动视觉应用的高效卷积神经网络</a><br><a href="https://blog.csdn.net/u011974639/article/details/79199588" target="_blank" rel="noopener">轻量级网络–MobileNetV2论文解读</a><br><a href="https://blog.csdn.net/qq_14845119/article/details/83050862" target="_blank" rel="noopener">NASNet</a></p>
+<p><a href="https://github.com/keras-team/keras-applications" target="_blank" rel="noopener">Keras Applications</a><br><a href="https://keras.io/applications/#xception" target="_blank" rel="noopener">Models for image classification with weights trained on ImageNet</a><br><a href="https://blog.csdn.net/qq_40027052/article/details/79015827" target="_blank" rel="noopener">深度学习VGG模型核心拆解</a><br><a href="https://github.com/SnailTyan/deep-learning-papers-translation" target="_blank" rel="noopener">Deep Learning Papers Translation(CV)</a><br><a href="https://blog.csdn.net/Quincuntial/article/details/77263607" target="_blank" rel="noopener">ResNet论文翻译——中英文对照</a><br><a href="https://towardsdatascience.com/an-overview-of-resnet-and-its-variants-5281e2f56035" target="_blank" rel="noopener">An Overview of ResNet and its Variants</a><br><a href="https://blog.csdn.net/qq_38906523/article/details/80061075" target="_blank" rel="noopener">深度学习—-GoogLeNet</a><br><a href="https://blog.csdn.net/stesha_chen/article/details/82115429" target="_blank" rel="noopener">Inception-V4和Inception-Resnet论文阅读和代码解析</a><br><a href="https://blog.csdn.net/just_sort/article/details/79901885" target="_blank" rel="noopener">MobileNet 翻译及总结：用于移动视觉应用的高效卷积神经网络</a><br><a href="https://blog.csdn.net/u011974639/article/details/79199588" target="_blank" rel="noopener">轻量级网络—MobileNetV2论文解读</a><br><a href="https://blog.csdn.net/qq_14845119/article/details/83050862" target="_blank" rel="noopener">NASNet</a></p>
 </blockquote>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/cnn.png" alt="cnn.png"></p>
@@ -1043,9 +1043,7 @@
 
       
           <a id="more"></a>
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"><span class="comment"># ==============================================================================</span></span><br><span class="line"><span class="string">"""数据清洗</span></span><br><span class="line"><span class="string">版本：</span></span><br><span class="line"><span class="string">    Python：3.6.7</span></span><br><span class="line"><span class="string">参考：</span></span><br><span class="line"><span class="string">    https://www.gushiwen.org/</span></span><br><span class="line"><span class="string">将爬取到的古诗词数据进行清洗，包括content注释部分的清除，特殊符号的清除，换行符等清除，</span></span><br><span class="line"><span class="string">最终目标是将content转换为一行的仅包含中文、标点符号的内容。</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="comment">#%%</span></span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="comment"># read_csv不能直接读路径，需要赋给path再读，很奇怪</span></span><br><span class="line">path = <span class="string">r'E:\pythonprojects\craft\code\RNN\shici.csv'</span></span><br><span class="line">df = pd.read_csv(path)</span><br><span class="line">df.head(<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># VSCode使用#%%可以将代码划分为cell，直接可以运行，等同于jupyter notebook</span></span><br><span class="line"><span class="comment">#%%</span></span><br><span class="line"><span class="comment"># 需要将content中的一些特殊符号删掉或者转换为其他字符，比如换行符\n删掉，</span></span><br><span class="line"><span class="comment"># 各种括号转换为英文括号然后通过正则式删除，需要使用re进行转换</span></span><br><span class="line">symbol_dict = &#123;<span class="string">'\n'</span>: <span class="string">''</span>, <span class="string">' '</span>: <span class="string">''</span>, <span class="string">'\u3000'</span>: <span class="string">''</span>, <span class="string">'\ue112'</span>: <span class="string">''</span>, <span class="string">'\ue83d'</span>: <span class="string">''</span>,</span><br><span class="line">    <span class="string">'\ue85d'</span>: <span class="string">''</span>, <span class="string">'\ue85f'</span>: <span class="string">''</span>, <span class="string">'〖'</span>: <span class="string">''</span>, <span class="string">'𬞞'</span>: <span class="string">''</span>, <span class="string">'②'</span>: <span class="string">''</span>,</span><br><span class="line">    <span class="string">'■'</span>: <span class="string">''</span>, <span class="string">'□'</span>: <span class="string">''</span>, <span class="string">'◇'</span>: <span class="string">''</span>, <span class="string">'#'</span>: <span class="string">''</span>, <span class="string">'＊'</span>: <span class="string">''</span>, <span class="string">'＿'</span>: <span class="string">''</span>,</span><br><span class="line">    <span class="string">'&lt;'</span>: <span class="string">''</span>, <span class="string">'&gt;'</span>: <span class="string">''</span>, <span class="string">'¤'</span>: <span class="string">''</span>, <span class="string">'á'</span>: <span class="string">''</span>, <span class="string">'è'</span>: <span class="string">''</span>, <span class="string">'ì'</span>: <span class="string">''</span>,</span><br><span class="line">    <span class="string">'í'</span>: <span class="string">''</span>, <span class="string">'ù'</span>: <span class="string">''</span>, <span class="string">'—'</span>: <span class="string">''</span>, <span class="string">'﹑'</span>: <span class="string">','</span>, <span class="string">'!'</span>: <span class="string">'！'</span>, <span class="string">':'</span>: <span class="string">'：'</span>,</span><br><span class="line">    <span class="string">'．'</span>: <span class="string">'.'</span>, <span class="string">'?'</span>: <span class="string">'？'</span>, <span class="string">'‘'</span>: <span class="string">"'"</span>, <span class="string">','</span>: <span class="string">'，'</span>, <span class="string">'.'</span>: <span class="string">'。'</span>, </span><br><span class="line">    <span class="string">'’'</span>: <span class="string">"'"</span>, <span class="string">'“'</span>: <span class="string">'"'</span>, <span class="string">'”'</span>: <span class="string">'"'</span>, <span class="string">';'</span>: <span class="string">'；'</span>, <span class="string">'（'</span>: <span class="string">'('</span>, <span class="string">'）'</span>: <span class="string">')'</span>,</span><br><span class="line">    <span class="string">'【'</span>: <span class="string">'('</span>, <span class="string">'】'</span>: <span class="string">')'</span>, <span class="string">'〔'</span>: <span class="string">'('</span>, <span class="string">'〕'</span>: <span class="string">')'</span>, <span class="string">'·'</span>: <span class="string">''</span>&#125;</span><br><span class="line"><span class="comment"># 生成re的pattern，symbol_format是处理特殊字符替换的pattern</span></span><br><span class="line">rep = &#123;re.escape(k): v <span class="keyword">for</span> k, v <span class="keyword">in</span> symbol_dict.items()&#125;</span><br><span class="line">symbol_format = re.compile(<span class="string">'|'</span>.join(rep.keys()))</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">process_data</span><span class="params">(data)</span>:</span></span><br><span class="line">    <span class="string">"""利用正则式以及re处理数据，结合DataFrame.apply使用</span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        data: 输入数据str</span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">        data: 处理完成后的数据str</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="comment"># 第一步特殊字符转换</span></span><br><span class="line">    data = symbol_format.sub(<span class="keyword">lambda</span> x: rep[re.escape(x.group(<span class="number">0</span>))], data)</span><br><span class="line">    <span class="comment"># 第二步删除括号及括号中的所有内容</span></span><br><span class="line">    data = re.sub(<span class="string">u"\\&#123;.*?\\&#125;|\\[.*?\\]|\\(.*?\\)"</span>, <span class="string">""</span>, data)</span><br><span class="line">    <span class="comment"># 第三步删除大小写字母及数字</span></span><br><span class="line">    data = re.sub(<span class="string">r'[a-zA-Z0-9]+'</span>, <span class="string">''</span>, data)</span><br><span class="line">    <span class="keyword">return</span> data</span><br><span class="line"><span class="comment"># 依照上述过程清洗数据，使用apply</span></span><br><span class="line">df[<span class="string">'content'</span>] = df[<span class="string">'content'</span>].apply(process_data)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将清洗完成后的content转换为set和list，set用于确定字典，list用于确定特征向量</span></span><br><span class="line"><span class="comment"># 这里就直接保存在原始数据中了，便于对比</span></span><br><span class="line">set_format = <span class="keyword">lambda</span> x: set(x)</span><br><span class="line">list_format = <span class="keyword">lambda</span> x: list(x)</span><br><span class="line"></span><br><span class="line">df[<span class="string">'content_set'</span>] = df[<span class="string">'content'</span>].map(set_format)</span><br><span class="line">df[<span class="string">'content_list'</span>] = df[<span class="string">'content'</span>].map(list_format)</span><br><span class="line">df.head(<span class="number">5</span>)</span><br><span class="line"><span class="comment">#%%</span></span><br><span class="line">df.to_csv(<span class="string">'data.csv'</span>, index=<span class="number">0</span>) <span class="comment"># index=0表示不保存索引</span></span><br></pre></td></tr></table></figure>
-
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/09b4f5b23d50bed18.png" alt="09b4f5b23d50bed18.png"></p>
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/13264cee7ad8e879c.png" alt="13264cee7ad8e879c.png"></p>
 
@@ -1262,14 +1260,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>6.5k</span>
+              <span>6k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>6 分钟</span>
+              <span>5 分钟</span>
             </span>
 
         </div>
@@ -1287,9 +1285,9 @@
 </blockquote>
 <p><strong>所有的损失都是reduce_sum处理的，log运算以e为底</strong></p>
 <h2 id="1-absolute-difference"><a href="#1-absolute-difference" class="headerlink" title="1. absolute_difference"></a>1. absolute_difference</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">tf.losses.absolute_difference(</span><br><span class="line">    labels,</span><br><span class="line">    predictions,</span><br><span class="line">    weights&#x3D;1.0,</span><br><span class="line">    scope&#x3D;None,</span><br><span class="line">    loss_collection&#x3D;tf.GraphKeys.LOSSES,</span><br><span class="line">    reduction&#x3D;Reduction.SUM_BY_NONZERO_WEIGHTS</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
 <p>绝对值损失，差距不会被平方缩放。</p>
-<p>$$<br>loss = |label - prediction|<br>$$</p>
+<script type="math/tex; mode=display">
+loss = |label - prediction|</script>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/archives/e6c50c31.html#more" rel="contents">
@@ -1388,7 +1386,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>4.1k</span>
+              <span>4k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -1562,12 +1560,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">897k</span>
+    <span title="站点总字数">877k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:36</span>
+    <span title="站点阅读时长">13:17</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

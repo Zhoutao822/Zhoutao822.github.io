@@ -292,7 +292,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>4.1k</span>
+              <span>4k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -323,94 +323,130 @@
 <li>激活函数的选择，能对输入进行约束，求导方便。</li>
 </ol>
 <a id="more"></a>
-
 <h2 id="1-linear"><a href="#1-linear" class="headerlink" title="1. linear"></a>1. linear</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tf.keras.activations.linear(x)</span><br></pre></td></tr></table></figure>
-
 <p>线性激活函数，输出和输入成比例。线性激活函数的问题在于，它的导数是常数，梯度也是常数，梯度下降无法工作。</p>
-<p>$$<br>f(x) = x<br>$$</p>
-<!--  -->
+<script type="math/tex; mode=display">
+f(x) = x</script><!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/linear22dc05c43fe34722.png" alt="linear22dc05c43fe34722.png"></p>
 <h2 id="2-elu"><a href="#2-elu" class="headerlink" title="2. elu"></a>2. elu</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tf.keras.activations.elu(</span><br><span class="line">    x,</span><br><span class="line">    alpha&#x3D;1.0</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
 <p>ELU（Exponential Linear Unit，指数线性单元）尝试加快学习速度。基于ELU，有可能得到比ReLU更高的分类精确度。这里$\alpha$是一个超参数（限制：$\alpha \geqslant 0$）。</p>
-<p>$$<br>f(x) =<br>\left{\begin{matrix}<br>\alpha(e^x-1), \quad  x &lt; 0\<br>x, \quad    x \geqslant 0<br>\end{matrix}\right.<br>$$</p>
-<!--  -->
+<script type="math/tex; mode=display">
+f(x) = 
+\left\{\begin{matrix}
+\alpha(e^x-1), \quad  x < 0\\ 
+x, \quad    x \geqslant 0 
+\end{matrix}\right.</script><!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/elu.png" alt="elu.png"></p>
 <h2 id="3-hard-sigmoid"><a href="#3-hard-sigmoid" class="headerlink" title="3. hard_sigmoid"></a>3. hard_sigmoid</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tf.keras.activations.hard_sigmoid(x)</span><br></pre></td></tr></table></figure>
-
 <p>比sigmoid函数计算更快</p>
-<p>$$<br>f(x) =<br>\left{\begin{matrix}<br>0, \quad  x &lt; -2.5\<br>0.2 \times x + 0.5, \quad  -2.5 \leqslant x \leqslant 2.5\<br>1, \quad    x &gt; 2.5<br>\end{matrix}\right.<br>$$</p>
-<h2 id="4-relu"><a href="#4-relu" class="headerlink" title="4. relu"></a>4. relu</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">tf.keras.activations.relu(</span><br><span class="line">    x,</span><br><span class="line">    alpha&#x3D;0.0,</span><br><span class="line">    max_value&#x3D;None,</span><br><span class="line">    threshold&#x3D;0</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
+<script type="math/tex; mode=display">
+f(x) = 
+\left\{\begin{matrix}
+0, \quad  x < -2.5\\ 
+0.2 \times x + 0.5, \quad  -2.5 \leqslant x \leqslant 2.5\\
+1, \quad    x > 2.5 
+\end{matrix}\right.</script><h2 id="4-relu"><a href="#4-relu" class="headerlink" title="4. relu"></a>4. relu</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">tf.keras.activations.relu(</span><br><span class="line">    x,</span><br><span class="line">    alpha&#x3D;0.0,</span><br><span class="line">    max_value&#x3D;None,</span><br><span class="line">    threshold&#x3D;0</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 <p>整流线性函数，默认情况$\max(x, 0)$，训练速度比tanh快6倍。当输入值小于零时，输出值为零。当输入值大于等于零时，输出值等于输入值。当输入值为正数时，导数为1，因此不会出现sigmoid函数反向传播时的挤压效应。</p>
-<p>$$<br>f(x) =<br>\left{\begin{matrix}<br>max_value, \quad  x \geqslant max_value\<br>x, \quad  threshold \leqslant x &lt; max_value \<br>alpha \times (x - threshold), \quad otherwise<br>\end{matrix}\right.<br>$$</p>
-<p>默认情况导数</p>
-<p>$$<br>f’(x) =<br>\left{\begin{matrix}<br>0, \quad  x &lt; 0\<br>1, \quad    x \geqslant 0<br>\end{matrix}\right.<br>$$</p>
-<p>不幸的是，ReLU在训练时可能很脆弱，可能“死亡”。例如，通过ReLU神经元的较大梯度可能导致权重更新过头，导致神经元再也不会因为任何数据点激活。如果这一情况发生了，经过这一单元的梯度从此以后将永远为零。也就是说，ReLU单元可能在训练中不可逆地死亡，因为它们被从数据流形上踢出去了。例如，你可能发现，如果学习率设置过高，40%的网络可能“死亡”（即神经元在整个训练数据集上永远不会激活）。设置一个合适的学习率可以缓解这一问题。</p>
+<script type="math/tex; mode=display">
+f(x) = 
+\left\{\begin{matrix}
+max\_value, \quad  x \geqslant max\_value\\ 
+x, \quad  threshold \leqslant x < max\_value \\
+alpha \times (x - threshold), \quad otherwise
+\end{matrix}\right.</script><p>默认情况导数</p>
+<script type="math/tex; mode=display">
+f'(x) = 
+\left\{\begin{matrix}
+0, \quad  x < 0\\ 
+1, \quad    x \geqslant 0 
+\end{matrix}\right.</script><p>不幸的是，ReLU在训练时可能很脆弱，可能“死亡”。例如，通过ReLU神经元的较大梯度可能导致权重更新过头，导致神经元再也不会因为任何数据点激活。如果这一情况发生了，经过这一单元的梯度从此以后将永远为零。也就是说，ReLU单元可能在训练中不可逆地死亡，因为它们被从数据流形上踢出去了。例如，你可能发现，如果学习率设置过高，40%的网络可能“死亡”（即神经元在整个训练数据集上永远不会激活）。设置一个合适的学习率可以缓解这一问题。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/relu.png" alt="relu.png"></p>
 <h3 id="4-1-Leaky-ReLU函数"><a href="#4-1-Leaky-ReLU函数" class="headerlink" title="4.1 Leaky ReLU函数"></a>4.1 Leaky ReLU函数</h3><p>Leaky ReLU让单元未激活时能有一个很小的非零梯度。这里，很小的非零梯度是0.01。</p>
-<p>$$<br>f(x) =<br>\left{\begin{matrix}<br>0.01x, \quad  x &lt; 0\<br>x, \quad    x \geqslant 0<br>\end{matrix}\right.<br>$$</p>
-<p>导数</p>
-<p>$$<br>f’(x) =<br>\left{\begin{matrix}<br>0.01, \quad  x &lt; 0\<br>1, \quad    x \geqslant 0<br>\end{matrix}\right.<br>$$</p>
-<!--  -->
+<script type="math/tex; mode=display">
+f(x) = 
+\left\{\begin{matrix}
+0.01x, \quad  x < 0\\ 
+x, \quad    x \geqslant 0 
+\end{matrix}\right.</script><p>导数</p>
+<script type="math/tex; mode=display">
+f'(x) = 
+\left\{\begin{matrix}
+0.01, \quad  x < 0\\ 
+1, \quad    x \geqslant 0 
+\end{matrix}\right.</script><!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/leaky.png" alt="leaky.png"></p>
 <h3 id="4-2-PReLU函数"><a href="#4-2-PReLU函数" class="headerlink" title="4.2 PReLU函数"></a>4.2 PReLU函数</h3><p>PReLU（Parametric Rectified Linear Unit）函数类似Leaky ReLU，只不过将系数（很小的非零梯度）作为激活函数的参数，该参数和网络的其他参数一样，在训练过程中学习。</p>
-<p>$$<br>f(x) =<br>\left{\begin{matrix}<br>\alpha x, \quad  x &lt; 0\<br>x, \quad    x \geqslant 0<br>\end{matrix}\right.<br>$$</p>
-<h3 id="4-3-RReLU函数"><a href="#4-3-RReLU函数" class="headerlink" title="4.3 RReLU函数"></a>4.3 RReLU函数</h3><p>RReLU也类似Leaky ReLU，只不过系数（较小的非零梯度）在训练中取一定范围内的随机值，在测试时固定。</p>
-<p>$$<br>f(x_{ij}) =<br>\left{\begin{matrix}<br>\alpha_{ij} x_{ij}, \quad  x &lt; 0\<br>x_{ij}, \quad    x \geqslant 0<br>\end{matrix}\right.<br>$$</p>
-<!--  -->
+<script type="math/tex; mode=display">
+f(x) = 
+\left\{\begin{matrix}
+\alpha x, \quad  x < 0\\ 
+x, \quad    x \geqslant 0 
+\end{matrix}\right.</script><h3 id="4-3-RReLU函数"><a href="#4-3-RReLU函数" class="headerlink" title="4.3 RReLU函数"></a>4.3 RReLU函数</h3><p>RReLU也类似Leaky ReLU，只不过系数（较小的非零梯度）在训练中取一定范围内的随机值，在测试时固定。</p>
+<script type="math/tex; mode=display">
+f(x_{ij}) =  
+\left\{\begin{matrix}
+\alpha_{ij} x_{ij}, \quad  x < 0\\ 
+x_{ij}, \quad    x \geqslant 0 
+\end{matrix}\right.</script><!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/rand.png" alt="rand.png"></p>
 <h3 id="4-4-SReLU函数"><a href="#4-4-SReLU函数" class="headerlink" title="4.4 SReLU函数"></a>4.4 SReLU函数</h3><p>SReLU（S-shaped Rectified Linear Activation Unit，S型修正线性激活单元）由三个分段线性函数组成。系数$t_l, a_l, t_r, a_r$作为参数，将在网络训练中学习。</p>
-<p>$$<br>f_{t_l, a_l, t_r, a_r}(x) =<br>\left{\begin{matrix}<br>t_l + a_l(x - t_l), \quad  x \leqslant t_l\<br>x \quad t_l &lt; x &lt; t_r \<br>t_r + a_r(x - t_r), \quad    x \geqslant t_r<br>\end{matrix}\right.<br>$$</p>
-<!--  -->
+<script type="math/tex; mode=display">
+f_{t_l, a_l, t_r, a_r}(x) = 
+\left\{\begin{matrix}
+t_l + a_l(x - t_l), \quad  x \leqslant t_l\\ 
+x \quad t_l < x < t_r \\
+t_r + a_r(x - t_r), \quad    x \geqslant t_r
+\end{matrix}\right.</script><!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/srelu.png" alt="srelu.png"></p>
 <h2 id="5-selu"><a href="#5-selu" class="headerlink" title="5. selu"></a>5. selu</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tf.keras.activations.selu(x)</span><br></pre></td></tr></table></figure>
-
 <p>SELU（Scaled Exponential Linear Unit，拉伸指数线性单元）是ELU经过拉伸的版本。</p>
-<p>$$<br>f(x) = scale \times elu(x, alpha)<br>\<br>alpha = 1.6732632423543772848170429916717<br>\<br>scale = 1.0507009873554804934193349852946<br>$$</p>
-<h2 id="6-sigmoid"><a href="#6-sigmoid" class="headerlink" title="6. sigmoid"></a>6. sigmoid</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tf.keras.activations.sigmoid(x)</span><br></pre></td></tr></table></figure>
-
+<script type="math/tex; mode=display">
+f(x) = scale \times elu(x, alpha)
+\\
+alpha = 1.6732632423543772848170429916717
+\\
+scale = 1.0507009873554804934193349852946</script><h2 id="6-sigmoid"><a href="#6-sigmoid" class="headerlink" title="6. sigmoid"></a>6. sigmoid</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tf.keras.activations.sigmoid(x)</span><br></pre></td></tr></table></figure>
 <p>sigmoid激活函数，常用于二分类任务的输出层。它有梯度消失问题。在一定epoch数目之后，网络拒绝学习，或非常缓慢地学习，因为输入$x$导致输出$y$中非常小的改动，计算sigmoid函数的导数非常简单。</p>
 <p>就神经网络的反向传播过程而言，每层（至少）挤入四分之一的误差。因此，网络越深，越多关于数据的知识将“丢失”。某些输出层的“较大”误差可能不会影响相对较浅的层中的神经元的突触权重（“较浅”意味着接近输入层）。</p>
-<p>$$<br>f(x) = \frac{1}{1 + e^{-x}}<br>$$</p>
-<p>导数为</p>
-<p>$$<br>f’(x) = f(x)(1-f(x))<br>$$</p>
-<!--  -->
+<script type="math/tex; mode=display">
+f(x) = \frac{1}{1 + e^{-x}}</script><p>导数为</p>
+<script type="math/tex; mode=display">
+f'(x) = f(x)(1-f(x))</script><!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/sigmoid.png" alt="sigmoid.png"></p>
 <h2 id="7-softmax"><a href="#7-softmax" class="headerlink" title="7. softmax"></a>7. softmax</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tf.keras.activations.softmax(</span><br><span class="line">    x,</span><br><span class="line">    axis&#x3D;-1</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
 <p>softmax函数将原始值转换为后验分布，可用于衡量确定性。类似sigmoid，softmax将每个单元的输出值挤压到0和1之间。不过，softmax同时确保输出的总和等于1。</p>
-<p>$$<br>\sigma(z)<em>j = \frac{e^{z_j}}{\sum^K</em>{k=1}e^{z_k}}<br>$$</p>
-<p>交叉熵对参数的偏导数为</p>
-<p>$$<br>\frac{\partial L}{\partial z_i} = \sigma(z)_i - y_i<br>$$</p>
-<!--  -->
+<script type="math/tex; mode=display">
+\sigma(z)_j = \frac{e^{z_j}}{\sum^K_{k=1}e^{z_k}}</script><p>交叉熵对参数的偏导数为</p>
+<script type="math/tex; mode=display">
+\frac{\partial L}{\partial z_i} = \sigma(z)_i - y_i</script><!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/softmax.png" alt="softmax.png"></p>
 <h2 id="8-softplus"><a href="#8-softplus" class="headerlink" title="8. softplus"></a>8. softplus</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tf.keras.activations.softplus(x)</span><br></pre></td></tr></table></figure>
-
 <p>SoftPlus函数的导数为逻辑（logistic）函数。大体上，ReLU和SoftPlus很相似，只不过SoftPlus在接近零处平滑可微。另外，计算ReLU及其导数要比SoftPlus容易很多。</p>
-<p>$$<br>f(x) = \ln (1+e^x)<br>$$</p>
-<p>导数为</p>
-<p>$$<br>f’(x) = \frac{1}{1+e^{-x}}<br>$$</p>
-<h2 id="9-softsign"><a href="#9-softsign" class="headerlink" title="9. softsign"></a>9. softsign</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tf.keras.activations.softsign(x)</span><br></pre></td></tr></table></figure>
-
+<script type="math/tex; mode=display">
+f(x) = \ln (1+e^x)</script><p>导数为</p>
+<script type="math/tex; mode=display">
+f'(x) = \frac{1}{1+e^{-x}}</script><h2 id="9-softsign"><a href="#9-softsign" class="headerlink" title="9. softsign"></a>9. softsign</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tf.keras.activations.softsign(x)</span><br></pre></td></tr></table></figure>
 <p>平滑的sign函数，求导更方便。</p>
-<p>$$<br>f(x) = \frac{x}{|x| + 1}<br>$$</p>
-<h2 id="10-tanh"><a href="#10-tanh" class="headerlink" title="10. tanh"></a>10. tanh</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tf.keras.activations.tanh(x)</span><br></pre></td></tr></table></figure>
-
+<script type="math/tex; mode=display">
+f(x) = \frac{x}{|x| + 1}</script><h2 id="10-tanh"><a href="#10-tanh" class="headerlink" title="10. tanh"></a>10. tanh</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tf.keras.activations.tanh(x)</span><br></pre></td></tr></table></figure>
 <p>tanh函数是拉伸过的sigmoid函数，以零为中心，因此导数更陡峭。tanh比sigmoid激活函数收敛得更快。</p>
-<p>$$<br>f(x) = \tanh(x) = \frac{2}{1+e^{-2x}} - 1<br>$$</p>
-<p>导数</p>
-<p>$$<br>f’(x) = 1 - (f(x))^2<br>$$</p>
-<!--  -->
+<script type="math/tex; mode=display">
+f(x) = \tanh(x) = \frac{2}{1+e^{-2x}} - 1</script><p>导数</p>
+<script type="math/tex; mode=display">
+f'(x) = 1 - (f(x))^2</script><!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/tanh.png" alt="tanh.png"></p>
 <h2 id="11-阶跃函数"><a href="#11-阶跃函数" class="headerlink" title="11. 阶跃函数"></a>11. 阶跃函数</h2><p>通常只在单层感知器上有用，单层感知器是神经网络的早期形式，可用于分类线性可分的数据。这些函数可用于二元分类任务。</p>
-<p>$$<br>f(x) =<br>\left{\begin{matrix}<br>0, \quad  x &lt; 0\<br>1, \quad  x \geqslant 0<br>\end{matrix}\right.<br>$$</p>
-<!--  -->
+<script type="math/tex; mode=display">
+f(x) = 
+\left\{\begin{matrix}
+0, \quad  x < 0\\ 
+1, \quad  x \geqslant 0
+\end{matrix}\right.</script><!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/jieyue.png" alt="jieyue.png"></p>
 <h2 id="12-APL函数"><a href="#12-APL函数" class="headerlink" title="12. APL函数"></a>12. APL函数</h2><p>APL（Adaptive Piecewise Linear，自适应分段线性）函数</p>
-<p>$$<br>f(x) = \max(x, 0) + \sum^S_{s=1}a_i^s\max(0, -x+b^s_i)<br>$$</p>
-<!--  -->
+<script type="math/tex; mode=display">
+f(x) = \max(x, 0) + \sum^S_{s=1}a_i^s\max(0, -x+b^s_i)</script><!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/apl.png" alt="apl.png"></p>
 <p>选择激活函数时，优先选择ReLU及其变体，而不是sigmoid或tanh。同时ReLU及其变体训练起来更快。如果ReLU导致神经元死亡，使用Leaky ReLU或者ReLU的其他变体。sigmoid和tanh受到消失梯度问题的困扰，不应该在隐藏层中使用。隐藏层使用ReLU及其变体较好。使用容易求导和训练的激活函数。</p>
 
@@ -603,12 +639,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">897k</span>
+    <span title="站点总字数">877k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:36</span>
+    <span title="站点阅读时长">13:17</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

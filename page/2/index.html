@@ -357,7 +357,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-17 23:07:46" itemprop="dateModified" datetime="2020-01-17T23:07:46+08:00">2020-01-17</time>
+                <time title="修改时间：2020-01-22 11:17:44" itemprop="dateModified" datetime="2020-01-22T11:17:44+08:00">2020-01-22</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -541,11 +541,10 @@
       
           <p>参考：</p>
 <blockquote>
-<p><a href="https://www.jianshu.com/p/2ec39d8b7e98" target="_blank" rel="noopener">Android开发之dagger.android–Activity</a><br><a href="https://dagger.dev/" target="_blank" rel="noopener">Dagger</a><br><a href="https://www.jianshu.com/p/24af4c102f62?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation" target="_blank" rel="noopener">Dagger2 最清晰的使用教程</a><br><a href="https://blog.mindorks.com/the-new-dagger-2-android-injector-cbe7d55afa6a" target="_blank" rel="noopener">The New Dagger2</a><br><a href="https://www.jianshu.com/p/2ac2f39cb25f" target="_blank" rel="noopener">Dagger 2 完全解析</a></p>
+<p><a href="https://www.jianshu.com/p/2ec39d8b7e98" target="_blank" rel="noopener">Android开发之dagger.android—Activity</a><br><a href="https://dagger.dev/" target="_blank" rel="noopener">Dagger</a><br><a href="https://www.jianshu.com/p/24af4c102f62?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation" target="_blank" rel="noopener">Dagger2 最清晰的使用教程</a><br><a href="https://blog.mindorks.com/the-new-dagger-2-android-injector-cbe7d55afa6a" target="_blank" rel="noopener">The New Dagger2</a><br><a href="https://www.jianshu.com/p/2ac2f39cb25f" target="_blank" rel="noopener">Dagger 2 完全解析</a></p>
 </blockquote>
 <p>Dagger2框架是一个依赖注入框架，它既可以用于Java Web项目也可以用于Android项目，依赖注入是什么意思呢</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Dependent</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Dependency dependency;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 属性注入 </span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Dependent</span><span class="params">(Dependency dependency)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.dependency = dependency;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// public Dependent()&#123;</span></span><br><span class="line">    <span class="comment">//     this.dependency = new Dependency();</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 方法注入</span></span><br><span class="line">    <span class="comment">// public void setDependency(Dependency dependency)&#123;</span></span><br><span class="line">    <span class="comment">//     this.dependency = dependency;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>看名字知含义，在上面的代码中Dependent类的构造始终需要Dependency类，那么我们就称Dependency为依赖，将其引入Dependent中的过程称为注入，上述代码在构造函数中引入，当然也可以通过set方法注入，无论是哪种方式都会面临一个问题就是当我们后续如果需要修改Dependency的构造函数时，需要在所有包含<code>new Dependency()</code>的代码中进行修改，显然这是非常痛苦的事情，而且不符合依赖倒置原则，本文所涉及到的是通过注解的方式进行依赖注入可以解决这种问题。</p>
           <!--noindex-->
             <div class="post-button">
@@ -806,12 +805,7 @@
 <li>注释里的URL</li>
 </ol>
 <p>不要使用反斜杠连接行.</p>
-<p>Python会将 <code>圆括号, 中括号和花括号中的行隐式的连接起来</code> , 你可以利用这个特点. 如果需要, 你可以在表达式外围增加一对额外的圆括号.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Yes: foo_bar(self, width, height, color=<span class="string">'black'</span>, design=<span class="literal">None</span>, x=<span class="string">'foo'</span>,</span><br><span class="line">             emphasis=<span class="literal">None</span>, highlight=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">     <span class="keyword">if</span> (width == <span class="number">0</span> <span class="keyword">and</span> height == <span class="number">0</span> <span class="keyword">and</span></span><br><span class="line">         color == <span class="string">'red'</span> <span class="keyword">and</span> emphasis == <span class="string">'strong'</span>):</span><br></pre></td></tr></table></figure>
-<p>如果一个文本字符串在一行放不下, 可以使用圆括号来实现隐式行连接:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x = (<span class="string">'This will build a very long long '</span></span><br><span class="line">     <span class="string">'long long long long long long string'</span>)</span><br></pre></td></tr></table></figure>
-<p>在注释中，如果必要，将长的URL放在一行上。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Yes:  <span class="comment"># See details at</span></span><br><span class="line">      <span class="comment"># http://www.example.com/us/developer/documentation/api/content/v2.0/csv_file_name_extension_full_specification.html</span></span><br><span class="line">No:  <span class="comment"># See details at</span></span><br><span class="line">     <span class="comment"># http://www.example.com/us/developer/documentation/api/content/\</span></span><br><span class="line">     <span class="comment"># v2.0/csv_file_name_extension_full_specification.html</span></span><br></pre></td></tr></table></figure>
+<p>Python会将 <code>圆括号, 中括号和花括号中的行隐式的连接起来</code> , 你可以利用这个特点. 如果需要, 你可以在表达式外围增加一对额外的圆括号.<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Yes: foo_bar(self, width, height, color=<span class="string">'black'</span>, design=<span class="literal">None</span>, x=<span class="string">'foo'</span>,</span><br><span class="line">             emphasis=<span class="literal">None</span>, highlight=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">     <span class="keyword">if</span> (width == <span class="number">0</span> <span class="keyword">and</span> height == <span class="number">0</span> <span class="keyword">and</span></span><br><span class="line">         color == <span class="string">'red'</span> <span class="keyword">and</span> emphasis == <span class="string">'strong'</span>):</span><br></pre></td></tr></table></figure><br>如果一个文本字符串在一行放不下, 可以使用圆括号来实现隐式行连接:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x = (<span class="string">'This will build a very long long '</span></span><br><span class="line">     <span class="string">'long long long long long long string'</span>)</span><br></pre></td></tr></table></figure><br>在注释中，如果必要，将长的URL放在一行上。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Yes:  <span class="comment"># See details at</span></span><br><span class="line">      <span class="comment"># http://www.example.com/us/developer/documentation/api/content/v2.0/csv_file_name_extension_full_specification.html</span></span><br><span class="line">No:  <span class="comment"># See details at</span></span><br><span class="line">     <span class="comment"># http://www.example.com/us/developer/documentation/api/content/\</span></span><br><span class="line">     <span class="comment"># v2.0/csv_file_name_extension_full_specification.html</span></span><br></pre></td></tr></table></figure></p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/archives/10dab2b.html#more" rel="contents">
@@ -936,7 +930,6 @@
 <h2 id="1-Pylint"><a href="#1-Pylint" class="headerlink" title="1. Pylint"></a>1. Pylint</h2><p>pylint是一个可以查找py文件中部分错误以及不规范的语法，虽然pylint还不够完美但是我们可以借助它修正不规范的地方。</p>
 <p>使用方式</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pylint xxx.py</span><br></pre></td></tr></table></figure>
-
 <p>输出类似于</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">************* Module wine</span><br><span class="line">wine.py:20:0: C0304: Final newline missing (missing-final-newline)</span><br><span class="line">wine.py:1:0: C0111: Missing module docstring (missing-docstring)</span><br><span class="line">wine.py:3:0: E0401: Unable to import &#39;numpy&#39; (import-error)</span><br><span class="line">wine.py:4:0: E0401: Unable to import &#39;sklearn.datasets&#39; (import-error)</span><br><span class="line">wine.py:5:0: E0401: Unable to import &#39;sklearn.mixture&#39; (import-error)</span><br><span class="line">wine.py:6:0: C0103: Constant name &quot;rawData&quot; doesn&#39;t conform to UPPER_CASE naming style (invalid-name)</span><br><span class="line">wine.py:8:0: C0103: Constant name &quot;data&quot; doesn&#39;t conform to UPPER_CASE naming style (invalid-name)</span><br><span class="line">wine.py:9:0: C0103: Constant name &quot;target&quot; doesn&#39;t conform to UPPER_CASE naming style (invalid-name)</span><br><span class="line">wine.py:11:0: C0103: Constant name &quot;gmm&quot; doesn&#39;t conform to UPPER_CASE naming style (invalid-name)</span><br><span class="line">wine.py:15:0: C0103: Constant name &quot;prediction&quot; doesn&#39;t conform to UPPER_CASE naming style (invalid-name)</span><br><span class="line">wine.py:19:0: C0103: Constant name &quot;acc&quot; doesn&#39;t conform to UPPER_CASE naming style (invalid-name)</span><br><span class="line"></span><br><span class="line">---------------------------------------------------------------------</span><br><span class="line">Your code has been rated at -9.17&#x2F;10 (previous run: 10.00&#x2F;10, -19.17)</span><br></pre></td></tr></table></figure>
           <!--noindex-->
@@ -1059,8 +1052,6 @@
           <p>参考：</p>
 <blockquote>
 <p><a href="https://material.io/develop/android/components/bottom-sheet-behavior/" target="_blank" rel="noopener">Material Design</a></p>
-</blockquote>
-<blockquote>
 <p><a href="https://github.com/material-components/material-components-android/blob/master/docs/getting-started.md" target="_blank" rel="noopener">Getting started with Material Components for Android</a></p>
 </blockquote>
 <p>BottomSheetDialog，顾名思义就是从界面底部往上出现的Dialog，它是Material Design的控件之一，目前在<a href="https://github.com/material-components/material-components-android" target="_blank" rel="noopener">Material Components</a>库中。</p>
@@ -1186,8 +1177,6 @@
           <p>参考：</p>
 <blockquote>
 <p><a href="https://www.liaoxuefeng.com/wiki/897692888725344/923056128128864" target="_blank" rel="noopener">正则表达式-廖雪峰</a></p>
-</blockquote>
-<blockquote>
 <p>1.用<code>\d</code>可以匹配一个数字，<code>\w</code>可以匹配一个字母或数字，所以：</p>
 </blockquote>
 <ul>
@@ -1336,17 +1325,9 @@
           <p>参考：</p>
 <blockquote>
 <p><a href="https://github.com/ustctug/ustcthesis" target="_blank" rel="noopener">中国科学技术大学学位论文 LaTeX 模板</a></p>
-</blockquote>
-<blockquote>
 <p><a href="https://blog.csdn.net/yinqingwang/article/details/79684419" target="_blank" rel="noopener">论文写作的又一利器：VSCode + LaTeX Workshop + MikTex + Git</a></p>
-</blockquote>
-<blockquote>
 <p><a href="https://miktex.org/" target="_blank" rel="noopener">MikTeX</a></p>
-</blockquote>
-<blockquote>
 <p><a href="https://www.tug.org/mactex/" target="_blank" rel="noopener">MacTeX</a></p>
-</blockquote>
-<blockquote>
 <p><a href="https://code.visualstudio.com/" target="_blank" rel="noopener">VSCode</a></p>
 </blockquote>
 <h2 id="Windows环境"><a href="#Windows环境" class="headerlink" title="Windows环境"></a>Windows环境</h2><h3 id="1-安装LaTeX发行版"><a href="#1-安装LaTeX发行版" class="headerlink" title="1. 安装LaTeX发行版"></a>1. 安装LaTeX发行版</h3><p>在Windows下我选择的是MikTeX，Mac下选择的是MacTex，这个LaTeX发行版相当于一个开发工具包，你需要的编译器以及某些资源文件都包含在这个包里面，安装完成后可以通过命令行启用。</p>
@@ -1611,12 +1592,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">897k</span>
+    <span title="站点总字数">877k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:36</span>
+    <span title="站点阅读时长">13:17</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

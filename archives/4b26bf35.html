@@ -46,12 +46,12 @@
   };
 </script>
 
-  <meta name="description" content="参考：  Spectrogram, Cepstrum and Mel-Frequency Analysis《解析深度学习-语音识别实践》第1章 简介  语音识别过程：切除首尾端静音—声音划分为帧—对每一帧提取MFCC特征—若干帧对应一个状态—三个状态组成一个音素—若干音素组成单词 1. 语音识别系统的基本结构语音识别系统主要由4个部分组成：信号处理和特征提取、声学模型（AM）、语言模型（LM）和解">
+  <meta name="description" content="参考：  Spectrogram, Cepstrum and Mel-Frequency Analysis《解析深度学习-语音识别实践》第1章 简介  语音识别过程：切除首尾端静音—-声音划分为帧—-对每一帧提取MFCC特征—-若干帧对应一个状态—-三个状态组成一个音素—-若干音素组成单词 1. 语音识别系统的基本结构语音识别系统主要由4个部分组成：信号处理和特征提取、声学模型（AM）、语言模型（">
 <meta property="og:type" content="article">
 <meta property="og:title" content="语音识别-MFCC">
 <meta property="og:url" content="http://zhoutao822.coding.me/archives/4b26bf35.html">
 <meta property="og:site_name" content="Tao">
-<meta property="og:description" content="参考：  Spectrogram, Cepstrum and Mel-Frequency Analysis《解析深度学习-语音识别实践》第1章 简介  语音识别过程：切除首尾端静音—声音划分为帧—对每一帧提取MFCC特征—若干帧对应一个状态—三个状态组成一个音素—若干音素组成单词 1. 语音识别系统的基本结构语音识别系统主要由4个部分组成：信号处理和特征提取、声学模型（AM）、语言模型（LM）和解">
+<meta property="og:description" content="参考：  Spectrogram, Cepstrum and Mel-Frequency Analysis《解析深度学习-语音识别实践》第1章 简介  语音识别过程：切除首尾端静音—-声音划分为帧—-对每一帧提取MFCC特征—-若干帧对应一个状态—-三个状态组成一个音素—-若干音素组成单词 1. 语音识别系统的基本结构语音识别系统主要由4个部分组成：信号处理和特征提取、声学模型（AM）、语言模型（">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/asr.png">
 <meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/ft.gif">
@@ -317,7 +317,7 @@
 <blockquote>
 <p><a href="http://www.speech.cs.cmu.edu/15-492/slides/03_mfcc.pdf" target="_blank" rel="noopener">Spectrogram, Cepstrum and Mel-Frequency Analysis</a><br>《解析深度学习-语音识别实践》第1章 简介</p>
 </blockquote>
-<p><strong>语音识别过程：切除首尾端静音—声音划分为帧—对每一帧提取MFCC特征—若干帧对应一个状态—三个状态组成一个音素—若干音素组成单词</strong></p>
+<p><strong>语音识别过程：切除首尾端静音—-声音划分为帧—-对每一帧提取MFCC特征—-若干帧对应一个状态—-三个状态组成一个音素—-若干音素组成单词</strong></p>
 <h2 id="1-语音识别系统的基本结构"><a href="#1-语音识别系统的基本结构" class="headerlink" title="1. 语音识别系统的基本结构"></a>1. 语音识别系统的基本结构</h2><p>语音识别系统主要由4个部分组成：信号处理和特征提取、声学模型（AM）、语言模型（LM）和解码搜索部分。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/asr.png" alt="asr.png"></p>
@@ -329,7 +329,6 @@
 </ul>
 <p>在信号处理和特征提取部分，通常使用梅尔频率倒谱系数（MFCC）或者相对频谱变换-感知线性预测（RASTA-PLP）作为特征向量，这里是对MFCC进行说明。</p>
 <a id="more"></a>
-
 <h2 id="2-傅里叶变换"><a href="#2-傅里叶变换" class="headerlink" title="2. 傅里叶变换"></a>2. 傅里叶变换</h2><p>傅里叶变换是一种将时域信息转换为频域信息的函数，转换后的频域信息是基于三角函数<code>sin，cos</code>的复合函数，<br>理论上来说傅里叶变换可以拟合任意形式的时域函数图像，最终得到的频谱图就包含了所有成分的频率和振幅。</p>
 <!-- ![](2018-11-14-语音识别-MFCC/ft.gif) -->
 <!--  -->
@@ -368,17 +367,20 @@
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/detail.png" alt="detail.png"></p>
 <p>那么倒谱分析的过程为：</p>
 <ol>
-<li><p>语音信号经过傅里叶变换称为频谱<br>$$<br>X[k] = H[k]E[k]<br>\<br>\left | X[k] \right | = \left | H[k] \right | \left | E[k] \right |，只考虑幅度<br>$$</p>
-</li>
+<li><p>语音信号经过傅里叶变换称为频谱</p>
+<script type="math/tex; mode=display">
+X[k] = H[k]E[k]
+\\
+\left \| X[k] \right \| = \left \| H[k] \right \| \left \| E[k] \right \|，只考虑幅度</script></li>
 <li><p>两边取对数</p>
 </li>
 </ol>
-<p>$$<br>\log{\left | X[k] \right |} = \log{\left | H[k] \right |} + \log{\left | E[k] \right |}<br>$$</p>
-<ol start="3">
+<script type="math/tex; mode=display">
+\log{\left \| X[k] \right \|} = \log{\left \| H[k] \right \|} + \log{\left \| E[k] \right \|}</script><ol>
 <li>两边做傅里叶逆变换</li>
 </ol>
-<p>$$<br>x[k] = h[k] + e[k]<br>$$</p>
-<h2 id="5-梅尔频率分析Mel-Frequency-Analysis"><a href="#5-梅尔频率分析Mel-Frequency-Analysis" class="headerlink" title="5. 梅尔频率分析Mel-Frequency Analysis"></a>5. 梅尔频率分析Mel-Frequency Analysis</h2><p>梅尔频率分析是基于人类听觉感知实验的，实验发现，如果将人耳表示为一个滤波器，那么这个滤波器的特点是在所有频率上不是均匀分布，在低频部分有更多的滤波器，在高频部分较少，并且只针对特定的某些频率有效。</p>
+<script type="math/tex; mode=display">
+x[k] = h[k] + e[k]</script><h2 id="5-梅尔频率分析Mel-Frequency-Analysis"><a href="#5-梅尔频率分析Mel-Frequency-Analysis" class="headerlink" title="5. 梅尔频率分析Mel-Frequency Analysis"></a>5. 梅尔频率分析Mel-Frequency Analysis</h2><p>梅尔频率分析是基于人类听觉感知实验的，实验发现，如果将人耳表示为一个滤波器，那么这个滤波器的特点是在所有频率上不是均匀分布，在低频部分有更多的滤波器，在高频部分较少，并且只针对特定的某些频率有效。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/filter.png" alt="filter.png"></p>
 <p>梅尔频率倒谱系数（MFCC）考虑到了人类的听觉特征，先将线性频谱映射到基于听觉感知的梅尔非线性频谱中，然后转换到倒谱上，也就是说我们需要修改上面的步骤1，增加梅尔滤波器进行频谱映射</p>
@@ -585,12 +587,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">897k</span>
+    <span title="站点总字数">877k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:36</span>
+    <span title="站点阅读时长">13:17</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

@@ -46,12 +46,12 @@
   };
 </script>
 
-  <meta name="description" content="参考：  Keras ApplicationsModels for image classification with weights trained on ImageNet深度学习VGG模型核心拆解Deep Learning Papers Translation(CV)ResNet论文翻译——中英文对照An Overview of ResNet and its Variants深度学习—Goog">
+  <meta name="description" content="参考：  Keras ApplicationsModels for image classification with weights trained on ImageNet深度学习VGG模型核心拆解Deep Learning Papers Translation(CV)ResNet论文翻译——中英文对照An Overview of ResNet and its Variants深度学习—-Goo">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深度学习模型-KerasApplications">
 <meta property="og:url" content="http://zhoutao822.coding.me/archives/4981e084.html">
 <meta property="og:site_name" content="Tao">
-<meta property="og:description" content="参考：  Keras ApplicationsModels for image classification with weights trained on ImageNet深度学习VGG模型核心拆解Deep Learning Papers Translation(CV)ResNet论文翻译——中英文对照An Overview of ResNet and its Variants深度学习—Goog">
+<meta property="og:description" content="参考：  Keras ApplicationsModels for image classification with weights trained on ImageNet深度学习VGG模型核心拆解Deep Learning Papers Translation(CV)ResNet论文翻译——中英文对照An Overview of ResNet and its Variants深度学习—-Goo">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/cnn.png">
 <meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/vgg.png">
@@ -355,12 +355,11 @@
       
         <p>参考：</p>
 <blockquote>
-<p><a href="https://github.com/keras-team/keras-applications" target="_blank" rel="noopener">Keras Applications</a><br><a href="https://keras.io/applications/#xception" target="_blank" rel="noopener">Models for image classification with weights trained on ImageNet</a><br><a href="https://blog.csdn.net/qq_40027052/article/details/79015827" target="_blank" rel="noopener">深度学习VGG模型核心拆解</a><br><a href="https://github.com/SnailTyan/deep-learning-papers-translation" target="_blank" rel="noopener">Deep Learning Papers Translation(CV)</a><br><a href="https://blog.csdn.net/Quincuntial/article/details/77263607" target="_blank" rel="noopener">ResNet论文翻译——中英文对照</a><br><a href="https://towardsdatascience.com/an-overview-of-resnet-and-its-variants-5281e2f56035" target="_blank" rel="noopener">An Overview of ResNet and its Variants</a><br><a href="https://blog.csdn.net/qq_38906523/article/details/80061075" target="_blank" rel="noopener">深度学习—GoogLeNet</a><br><a href="https://blog.csdn.net/stesha_chen/article/details/82115429" target="_blank" rel="noopener">Inception-V4和Inception-Resnet论文阅读和代码解析</a><br><a href="https://blog.csdn.net/just_sort/article/details/79901885" target="_blank" rel="noopener">MobileNet 翻译及总结：用于移动视觉应用的高效卷积神经网络</a><br><a href="https://blog.csdn.net/u011974639/article/details/79199588" target="_blank" rel="noopener">轻量级网络–MobileNetV2论文解读</a><br><a href="https://blog.csdn.net/qq_14845119/article/details/83050862" target="_blank" rel="noopener">NASNet</a></p>
+<p><a href="https://github.com/keras-team/keras-applications" target="_blank" rel="noopener">Keras Applications</a><br><a href="https://keras.io/applications/#xception" target="_blank" rel="noopener">Models for image classification with weights trained on ImageNet</a><br><a href="https://blog.csdn.net/qq_40027052/article/details/79015827" target="_blank" rel="noopener">深度学习VGG模型核心拆解</a><br><a href="https://github.com/SnailTyan/deep-learning-papers-translation" target="_blank" rel="noopener">Deep Learning Papers Translation(CV)</a><br><a href="https://blog.csdn.net/Quincuntial/article/details/77263607" target="_blank" rel="noopener">ResNet论文翻译——中英文对照</a><br><a href="https://towardsdatascience.com/an-overview-of-resnet-and-its-variants-5281e2f56035" target="_blank" rel="noopener">An Overview of ResNet and its Variants</a><br><a href="https://blog.csdn.net/qq_38906523/article/details/80061075" target="_blank" rel="noopener">深度学习—-GoogLeNet</a><br><a href="https://blog.csdn.net/stesha_chen/article/details/82115429" target="_blank" rel="noopener">Inception-V4和Inception-Resnet论文阅读和代码解析</a><br><a href="https://blog.csdn.net/just_sort/article/details/79901885" target="_blank" rel="noopener">MobileNet 翻译及总结：用于移动视觉应用的高效卷积神经网络</a><br><a href="https://blog.csdn.net/u011974639/article/details/79199588" target="_blank" rel="noopener">轻量级网络—MobileNetV2论文解读</a><br><a href="https://blog.csdn.net/qq_14845119/article/details/83050862" target="_blank" rel="noopener">NASNet</a></p>
 </blockquote>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/cnn.png" alt="cnn.png"></p>
 <a id="more"></a>
-
 <p>ImageNet项目是一个用于视觉对象识别软件研究的大型可视化数据库。超过1400万的图像URL被ImageNet手动注释，以指示图片中的对象；在至少一百万个图像中，还提供了边界框。ImageNet包含2万多个类别；一个典型的类别，如“气球”或“草莓”，包含数百个图像。第三方图像URL的注释数据库可以直接从ImageNet免费获得；但是，实际的图像不属于ImageNet。自2010年以来，ImageNet项目每年举办一次软件比赛，即ImageNet大规模视觉识别挑战赛（ILSVRC），软件程序竞相正确分类检测物体和场景。</p>
 <h2 id="1-VGG16-amp-VGG19"><a href="#1-VGG16-amp-VGG19" class="headerlink" title="1. VGG16 &amp; VGG19"></a>1. VGG16 &amp; VGG19</h2><p><a href="https://arxiv.org/abs/1409.1556" target="_blank" rel="noopener">Very Deep Convolutional Networks for Large-Scale Image Recognition</a></p>
 <!--  -->
@@ -393,8 +392,8 @@
 <h2 id="2-ResNet50-amp-ResNet101-amp-ResNet152"><a href="#2-ResNet50-amp-ResNet101-amp-ResNet152" class="headerlink" title="2. ResNet50 &amp; ResNet101 &amp; ResNet152"></a>2. ResNet50 &amp; ResNet101 &amp; ResNet152</h2><p><a href="https://arxiv.org/abs/1512.03385" target="_blank" rel="noopener">Deep Residual Learning for Image Recognition</a></p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/res.png" alt="res.png"></p>
-<p>$$<br>\boldsymbol{y} = F(\boldsymbol{x}, \boldsymbol{W}_i) + \boldsymbol{x}<br>$$</p>
-<p>对于输入$\boldsymbol{x}$来说，映射$H(\boldsymbol{x})$是预测输出的最优解，但是实际上我们通过深度学习得到的映射并不一定是完美解，利用残差$F(\boldsymbol{x}) = H(\boldsymbol{x}) - \boldsymbol{x}$这种思想，使用$F(\boldsymbol{x}) + \boldsymbol{x}$作为期望的输出。我觉得采用残差类似于决策树中的残差概念，在ResNet网络中，对于输入到输出中不变的部分或维度，利用残差可以很好的保留这部分稀疏性，训练过程中变化的部分会产生梯度，这种前提是输入输出维度相同；对于输入与输出维度不同的时候，ResNet采取两种策略：补0或使用线性映射$\boldsymbol{W}_s$匹配维度（由1 $\times$ 1卷积完成）。</p>
+<script type="math/tex; mode=display">
+\boldsymbol{y} = F(\boldsymbol{x}, \boldsymbol{W}_i) + \boldsymbol{x}</script><p>对于输入$\boldsymbol{x}$来说，映射$H(\boldsymbol{x})$是预测输出的最优解，但是实际上我们通过深度学习得到的映射并不一定是完美解，利用残差$F(\boldsymbol{x}) = H(\boldsymbol{x}) - \boldsymbol{x}$这种思想，使用$F(\boldsymbol{x}) + \boldsymbol{x}$作为期望的输出。我觉得采用残差类似于决策树中的残差概念，在ResNet网络中，对于输入到输出中不变的部分或维度，利用残差可以很好的保留这部分稀疏性，训练过程中变化的部分会产生梯度，这种前提是输入输出维度相同；对于输入与输出维度不同的时候，ResNet采取两种策略：补0或使用线性映射$\boldsymbol{W}_s$匹配维度（由1 $\times$ 1卷积完成）。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/resnet.png" alt="resnet.png"></p>
 <p>ResNet模型结构：</p>
@@ -423,8 +422,10 @@
 </ul>
 <h2 id="3-ResNet50V2-amp-ResNet101V2-amp-ResNet152V2"><a href="#3-ResNet50V2-amp-ResNet101V2-amp-ResNet152V2" class="headerlink" title="3. ResNet50V2 &amp; ResNet101V2 &amp; ResNet152V2"></a>3. ResNet50V2 &amp; ResNet101V2 &amp; ResNet152V2</h2><p><a href="https://arxiv.org/abs/1603.05027" target="_blank" rel="noopener">Identity Mappings in Deep Residual Networks</a></p>
 <p>ResNetV2在ResNet初代的基础上进行了更深一步的思考</p>
-<p>$$<br>\boldsymbol{y}<em>l = h(\boldsymbol{x}_l) + F(\boldsymbol{x}_l, \boldsymbol{W}_l)<br>\<br>\boldsymbol{x}</em>{l+1} = f(\boldsymbol{y}_l)<br>$$</p>
-<p>$h$表示恒等映射，$F$是残差函数，$f$是ReLU</p>
+<script type="math/tex; mode=display">
+\boldsymbol{y}_l = h(\boldsymbol{x}_l) + F(\boldsymbol{x}_l, \boldsymbol{W}_l)
+\\
+\boldsymbol{x}_{l+1} = f(\boldsymbol{y}_l)</script><p>$h$表示恒等映射，$F$是残差函数，$f$是ReLU</p>
 <p>与初代不同的是，V2考虑如果$f$也是恒等映射的情况下，网络的性能</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/resnetv2-0.png" alt="resnetv2-0.png"></p>
@@ -571,13 +572,15 @@
 <h3 id="8-1-Deep-wise-Separabe-深度可分离卷积"><a href="#8-1-Deep-wise-Separabe-深度可分离卷积" class="headerlink" title="8.1 Deep-wise Separabe 深度可分离卷积"></a>8.1 Deep-wise Separabe 深度可分离卷积</h3><!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/mobilenetv1-1.png" alt="mobilenetv1-1.png"></p>
 <p>传统卷积考虑到通道数，对于输入通道数为$N$，输出通道数为$M$，输入长宽$D_K$，输出长宽$D_F$，则卷积层的计算量为</p>
-<p>$$<br>D_K \times D_K \times M \times N \times D_F \times D_F<br>$$</p>
-<p>若采用深度可分离卷积，首先使用2D卷积核对所有通道进行处理，再使用3D1×1卷积核处理之前输出的特征图，最终得到的输出是与传统卷积是相同的</p>
+<script type="math/tex; mode=display">
+D_K \times D_K \times M \times N \times D_F \times D_F</script><p>若采用深度可分离卷积，首先使用2D卷积核对所有通道进行处理，再使用3D1×1卷积核处理之前输出的特征图，最终得到的输出是与传统卷积是相同的</p>
 <p>计算量分为两部分</p>
-<p>$$<br>D_K \times D_K \times M \times D_F \times D_F<br>\<br>M \times N \times D_F \times D_F<br>$$</p>
-<p>显然总计算量为上述两部分之和，那么与传统卷积计算量的比值为</p>
-<p>$$<br>\frac{1}{N} + \frac{1}{D_K^2}<br>$$</p>
-<p>MobileNet对3×3卷积进行这种改变使得计算量减少为原始的$\frac{1}{9}$，准确率仅下降一点。</p>
+<script type="math/tex; mode=display">
+D_K \times D_K \times M \times D_F \times D_F
+\\
+M \times N \times D_F \times D_F</script><p>显然总计算量为上述两部分之和，那么与传统卷积计算量的比值为</p>
+<script type="math/tex; mode=display">
+\frac{1}{N} + \frac{1}{D_K^2}</script><p>MobileNet对3×3卷积进行这种改变使得计算量减少为原始的$\frac{1}{9}$，准确率仅下降一点。</p>
 <h3 id="8-2-Network-Structure-and-Training-网络结构和训练"><a href="#8-2-Network-Structure-and-Training-网络结构和训练" class="headerlink" title="8.2 Network Structure and Training 网络结构和训练"></a>8.2 Network Structure and Training 网络结构和训练</h3><p>所有层之后都是BatchNormalization和ReLU非线性激活函数，但是最后的全连接层例外，它没有非线性激活函数，直接馈送到softmax层进行分类。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/19/mobilenetv1-2.png" alt="mobilenetv1-2.png"></p>
@@ -586,8 +589,8 @@
 <p>与训练大模型相反，我们较少地使用正则化和数据增加技术，因为小模型不容易过拟合。当训练MobileNets时，我们不使用sideheads或者labelsmoothing，通过限制croping的尺寸来减少图片扭曲。另外，我们发现重要的是在depthwise滤波器上放置很少或没有重量衰减（L2正则化），因为它们参数很少</p>
 <h3 id="8-3-Width-Multiplier-Thinner-Models-alpha参数：更小的模型"><a href="#8-3-Width-Multiplier-Thinner-Models-alpha参数：更小的模型" class="headerlink" title="8.3 Width Multiplier: Thinner Models(alpha参数：更小的模型)"></a>8.3 Width Multiplier: Thinner Models(alpha参数：更小的模型)</h3><p>引入了一个非常简单的参数$\alpha$，称为width multiplier。这个参数widthmultiplier的作用是在每层均匀地减负网络。对于一个给定的层和widthmultiplierα，输入通道的数量从$M$变成$\alpha M$，输出通道的数量从$N$变成$\alpha N$。深度可分离卷积（以widthmultiplier参数$\alpha$为计）的计算复杂度：<br>$\alpha \in (0,1]$，通常设为1，0.75，0.5和0.25。$\alpha = 1$表示基准MobileNet，而$\alpha &lt; 1$则表示瘦身的MobileNets。Width multiplier有减少计算复杂度和参数数量（大概$\alpha$二次方）的作用。Width multiplier可以应用于任何模型结构，以定义一个具有合理准确性，延迟和尺寸的新的较小的模型。它用于定义新的简化结构，但需要重新进行训练。</p>
 <h3 id="8-4-Resolution-Multiplier-Reduced-Representation"><a href="#8-4-Resolution-Multiplier-Reduced-Representation" class="headerlink" title="8.4 Resolution Multiplier: Reduced Representation"></a>8.4 Resolution Multiplier: Reduced Representation</h3><p>降低神经网络的第二个超参数是resolution multiplier ρ，简而言之就是作用于输出特征图大小（输出大小的系数），$\rho \in (0,1]$，通常设为224,192,160或者128。$\rho=1$是基本MobileNets而$\rho&lt;1$示瘦身的MobileNets。计算量</p>
-<p>$$<br>D_K \times D_K \times \alpha M \times \rho D_F \times \rho D_F + \alpha M \times \alpha N \times \rho D_F \times \rho D_F<br>$$</p>
-<p>MobileNet模型总结：</p>
+<script type="math/tex; mode=display">
+D_K \times D_K \times \alpha M \times \rho D_F \times \rho D_F + \alpha M \times \alpha N \times \rho D_F \times \rho D_F</script><p>MobileNet模型总结：</p>
 <ul>
 <li>提供了Width Multiplier和Resolution Multiplier两个参数控制模型大小；</li>
 <li>提出了深度可分离卷积的思想。</li>
@@ -865,12 +868,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">897k</span>
+    <span title="站点总字数">877k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:36</span>
+    <span title="站点阅读时长">13:17</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

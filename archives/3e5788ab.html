@@ -316,9 +316,8 @@
 </ol>
 <p>标准化的方式很多，对于稀疏矩阵，我们希望在标准化的同时保持矩阵稀疏性，这时的计算方式可能需要改变。具体参考<a href="http://sklearn.apachecn.org/cn/0.19.0/modules/preprocessing.html#preprocessing" target="_blank" rel="noopener">sklearn-preprocessing</a></p>
 <a id="more"></a>
-
 <h2 id="2-模型初始化"><a href="#2-模型初始化" class="headerlink" title="2. 模型初始化"></a>2. 模型初始化</h2><p>模型参数初始值需要足够小才能使sigmoid函数输出值在$(0,1)$，而不是接近0或1，那样会导致梯度很小，收敛很慢。</p>
-<p>推荐参数$b$初始为0，$w$初始值属于高斯分布$N(0, \sigma^2_{w^{l+1}})$，$\sigma_{w^{l+1}} = \frac{1}{\sqrt{N_l}}$，其中$N_l$为与权重连接的输出节点的个数。</p>
+<p>推荐参数$b$初始为0，$w$初始值属于高斯分布$N(0, \sigma^2<em>{w^{l+1}})$，$\sigma</em>{w^{l+1}} = \frac{1}{\sqrt{N_l}}$，其中$N_l$为与权重连接的输出节点的个数。</p>
 <h2 id="3-权重衰减"><a href="#3-权重衰减" class="headerlink" title="3. 权重衰减"></a>3. 权重衰减</h2><p>基于$L_1$范数和$L_2$范数的正则化，当DNN模型有超过1百万的参数，插值系数$\lambda$应该很小（通常在$10^{-4}$范围），当训练数据量较大时设置为0.</p>
 <h2 id="4-丢弃法"><a href="#4-丢弃法" class="headerlink" title="4. 丢弃法"></a>4. 丢弃法</h2><p>dropout基本思想时在训练过程中随机丢弃每一个隐层中一定比例（丢弃比例$\alpha$）的神经元。当一个隐层神经元被丢弃时，它的激活值被设置为0。分析一下流程就知道，在测试阶段只需要在与dropout训练有关的所有权重上乘以$(1-\alpha)$就可以直接使用。</p>
 <p>经验表明，在dropout比例为0.1 ~ 0.2时，识别率会有提升。与此同时，若将初始dropout比例设置为0.5，在训练过程中渐渐减小dropout比例会有更好的效果。</p>
@@ -328,11 +327,11 @@
 <p>在语音识别领域中，采用滚动窗的方式每次加载一大块数据（通常为24 ~ 48小时的语音或者8.6M到17.2M个样本）进内存，然后再窗内随机取样。</p>
 <h2 id="7-惯性系数"><a href="#7-惯性系数" class="headerlink" title="7. 惯性系数"></a>7. 惯性系数</h2><p>参考<a href="http://zhoutao822.coding.me/2018/11/26/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E4%BC%98%E5%8C%96%E5%99%A8/"><code>深度学习-优化器</code></a>。</p>
 <p>类似Adadelta中的参数$\gamma$，通常取值为$0.9$ ~ $0.99^4$。定义在相同层面下惯性系数为$\rho_s$，若考虑批量块大小$M_b$条件下的惯性系数</p>
-<p>$$<br>\rho = \exp(M_b\rho_s)<br>$$</p>
-<h2 id="8-学习率和停止准则"><a href="#8-学习率和停止准则" class="headerlink" title="8. 学习率和停止准则"></a>8. 学习率和停止准则</h2><p>参考<a href="http://zhoutao822.coding.me/2018/11/26/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E4%BC%98%E5%8C%96%E5%99%A8/"><code>深度学习-优化器</code></a>。</p>
+<script type="math/tex; mode=display">
+\rho = \exp(M_b\rho_s)</script><h2 id="8-学习率和停止准则"><a href="#8-学习率和停止准则" class="headerlink" title="8. 学习率和停止准则"></a>8. 学习率和停止准则</h2><p>参考<a href="http://zhoutao822.coding.me/2018/11/26/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E4%BC%98%E5%8C%96%E5%99%A8/"><code>深度学习-优化器</code></a>。</p>
 <p>在语音识别训练任务中，可以定义每一帧的学习率（$M_b$为批量大小，动态）为</p>
-<p>$$<br>\epsilon_s = \frac{\epsilon}{M_b}<br>$$</p>
-<p>根据经验的学习策略为</p>
+<script type="math/tex; mode=display">
+\epsilon_s = \frac{\epsilon}{M_b}</script><p>根据经验的学习策略为</p>
 <ul>
 <li>首先确定批量大小以及一个大的学习率，并在此基础上训练数百个小批量数据组；</li>
 <li>观察训练准则变化，然后减少批量中的数据数目、学习率或者同时减小，以使$\epsilon_sM_b$结果减半，直到训练准则获得明显改善；</li>
@@ -535,12 +534,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">897k</span>
+    <span title="站点总字数">877k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:36</span>
+    <span title="站点阅读时长">13:17</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

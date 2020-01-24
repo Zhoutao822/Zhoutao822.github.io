@@ -318,7 +318,6 @@
 <p><img src="http://114.116.9.65:7777/images/2020/01/18/tree.png" alt="tree.png"></p>
 <p>这样就完成了一个三分类决策树，每一个判断节点都是一个属性，每个节点的分支都是该属性的属性值。</p>
 <a id="more"></a>
-
 <hr>
 <p><strong>决策树学习基本算法</strong></p>
 <p>输入：训练集$D = { (\boldsymbol{x}_1, y_1), (\boldsymbol{x}_2, y_2), …, (\boldsymbol{x}_m, y_m) }$；</p>
@@ -349,23 +348,27 @@
 </ol>
 <h2 id="2-划分选择"><a href="#2-划分选择" class="headerlink" title="2. 划分选择"></a>2. 划分选择</h2><p>决策树学习的关键在第8行，即如何选择最优划分属性。一般来说，我们希望分支结点所包含的样本尽可能属于同一类别，即结点的“纯度”也来越高（如何衡量“纯度”，有不同的算法）。</p>
 <h3 id="2-1-信息增益"><a href="#2-1-信息增益" class="headerlink" title="2.1 信息增益"></a>2.1 信息增益</h3><p>假定当前样本集合$D$中第$k$类样本所占的比例为$p_k(k = 1,2,…,|\mathbb{Y}|)$，则$D$的信息熵定义为</p>
-<p>$$<br>Ent(D) = -\sum^{|\mathbb{Y}|}_{k=1}p_k\log_2p_k<br>$$</p>
-<p>$Ent(D)$的值越小，则$D$的纯度越高。</p>
+<script type="math/tex; mode=display">
+Ent(D) = -\sum^{|\mathbb{Y}|}_{k=1}p_k\log_2p_k</script><p>$Ent(D)$的值越小，则$D$的纯度越高。</p>
 <p>假定离散属性$a$有$V$个可能的取值${ a^1, a^2, …,a^V }$，若使用$a$来对样本集合$D$进行划分，则会产生$V$个分支结点，其中第$v$个分支结点包含了$D$中所有在属性$a$上取值为$a^v$的样本，记为$D^v$。则可以计算用属性$a$对$D$进行划分所获得的信息增益</p>
-<p>$$<br>Gain(D, a) = Ent(D) - \sum^V_{v=1}\frac{|D^v|}{|D|}Ent(D^v)<br>$$</p>
-<p>一般而言，信息增益越大，则使用属性$a$来进行划分所获得的纯度提升越大。因此，在第8行使用属性$a_k = \underset{a \in A}{\arg \max Gain(D, a)}$。这就是$ID3$决策树学习算法的划分准则。</p>
+<script type="math/tex; mode=display">
+Gain(D, a) = Ent(D) - \sum^V_{v=1}\frac{|D^v|}{|D|}Ent(D^v)</script><p>一般而言，信息增益越大，则使用属性$a$来进行划分所获得的纯度提升越大。因此，在第8行使用属性$a_k = \underset{a \in A}{\arg \max Gain(D, a)}$。这就是$ID3$决策树学习算法的划分准则。</p>
 <h3 id="2-2-增益率"><a href="#2-2-增益率" class="headerlink" title="2.2 增益率"></a>2.2 增益率</h3><p>利用信息增益作为划分准则可能会带来另一问题，即对可取值数目较多的属性有所偏好，比如说若一个属性有10个属性值，而另一个属性只有3个属性值，此时经过计算很大程度上10个属性值的属性带来的信息增益会大于另一个。为减少这种偏好可能带来的不利影响，$C4.5$决策树算法使用增益率作为划分准则</p>
-<p>$$<br>Gain_ratio(D, a) = \frac{Gain(D,a)}{IV(a)}<br>\<br>IV(a) = -\sum^V_{v=1}\frac{|D^v|}{|D|} \log_2\frac{|D^v|}{|D|}<br>$$</p>
-<p>$IV(a)$称为属性$a$的固有值，若属性$a$的取值数目越多，则$IV(a)$的值通常会越大。</p>
+<script type="math/tex; mode=display">
+Gain\_ratio(D, a) = \frac{Gain(D,a)}{IV(a)}
+\\
+IV(a) = -\sum^V_{v=1}\frac{|D^v|}{|D|} \log_2\frac{|D^v|}{|D|}</script><p>$IV(a)$称为属性$a$的固有值，若属性$a$的取值数目越多，则$IV(a)$的值通常会越大。</p>
 <p>与此同时$C4.5$算法具体流程并不是直接选择增益率最高的属性，而是先从候选属性中选择信息增益高于平均水平的属性，再从中选择增益率高的。</p>
 <h4 id="2-3-基尼指数"><a href="#2-3-基尼指数" class="headerlink" title="2.3 基尼指数"></a>2.3 基尼指数</h4><p>$CART$决策树（可用于分类和回归）使用基尼指数选择划分属性</p>
-<p>$$<br>Gini(D) = \sum^{|\mathbb{Y}|}<em>{k=1}\sum</em>{k’ \neq k}p_kp_{k’}<br>\<br>= 1- \sum^{|\mathbb{Y}|}_{k=1}p_k^2<br>$$</p>
-<p>$Gini(D)$反映了从数据集$D$中随机抽取两个样本，其类别标记不一致的概率。因此，$Gini(D)$越小，则数据集$D$纯度越高。</p>
+<script type="math/tex; mode=display">
+Gini(D) = \sum^{|\mathbb{Y}|}_{k=1}\sum_{k' \neq k}p_kp_{k'}
+\\
+= 1- \sum^{|\mathbb{Y}|}_{k=1}p_k^2</script><p>$Gini(D)$反映了从数据集$D$中随机抽取两个样本，其类别标记不一致的概率。因此，$Gini(D)$越小，则数据集$D$纯度越高。</p>
 <p>则对应属性$a$的基尼指数定义为</p>
-<p>$$<br>Gini_index(D, a) = \sum^V_{v=1}\frac{|D^v|}{|D|}Gini(D^v)<br>$$</p>
-<p>我们选择使得划分后基尼指数最小的属性作为最优属性，即</p>
-<p>$$<br>a_k = \underset{a \in A}{\arg \min}Gini_index(D, a)<br>$$</p>
-<h2 id="3-剪枝处理"><a href="#3-剪枝处理" class="headerlink" title="3. 剪枝处理"></a>3. 剪枝处理</h2><p>剪枝是对付过拟合的主要手段，主要方式是删除一些分支，基本策略有两种，预剪枝和后剪枝。</p>
+<script type="math/tex; mode=display">
+Gini\_index(D, a) = \sum^V_{v=1}\frac{|D^v|}{|D|}Gini(D^v)</script><p>我们选择使得划分后基尼指数最小的属性作为最优属性，即</p>
+<script type="math/tex; mode=display">
+a_k = \underset{a \in A}{\arg \min}Gini\_index(D, a)</script><h2 id="3-剪枝处理"><a href="#3-剪枝处理" class="headerlink" title="3. 剪枝处理"></a>3. 剪枝处理</h2><p>剪枝是对付过拟合的主要手段，主要方式是删除一些分支，基本策略有两种，预剪枝和后剪枝。</p>
 <ul>
 <li>预剪枝是在决策树生成过程中，对每个结点在划分前先进行估计，若当前结点的划分不能带来决策树泛化性能提升，则停止划分当前结点并标记为叶结点；</li>
 <li>后剪枝是先从数据集生成一棵完整的决策树，然后自底向上对非叶结点进行考察，若将该结点对应的子树替换为叶结点能带来泛化性能提升，则将子树替换为叶结点。</li>
@@ -399,10 +402,12 @@
 </ul>
 <h2 id="4-连续与缺失值"><a href="#4-连续与缺失值" class="headerlink" title="4. 连续与缺失值"></a>4. 连续与缺失值</h2><h3 id="4-1-连续值处理"><a href="#4-1-连续值处理" class="headerlink" title="4.1 连续值处理"></a>4.1 连续值处理</h3><p>对于连续值，最简单的策略是采用二分法，即将属性$a$的属性值基于$t$划分为两个阵营$D_t^-$和$D_t^+$，如何确定$t$的值才能使该划分为最优化分，显然，$t$的取值在$[a^i, a^{i+1})$之间都是等效的，那么我们可以参照插队的方式取$t$的所有可能值，再从中选取最优点。</p>
 <p>对于有$n$个属性值的连续属性$a$，$t$的候选划分点集和</p>
-<p>$$<br>T_a = { \frac{a^i + a^{i+1}}{2}|1 \leqslant i \leqslant n-1 }<br>$$</p>
-<p>通过对信息增益表达式的改造</p>
-<p>$$<br>Gain(D, a) = \underset{t \in T_a}{\max} Gain(D, a, t)<br>\<br>= \underset{t \in T_a}{\max} Ent(D) - \sum_{\lambda \in { -,+ }}\frac{|D^{\lambda}_t|}{|D|}Ent(D_t^{\lambda})<br>$$</p>
-<p>需注意的是，与离散属性不同，若当前结点划分属性为连续属性，该属性还可作为其后代结点的划分属性。</p>
+<script type="math/tex; mode=display">
+T_a = \{ \frac{a^i + a^{i+1}}{2}|1 \leqslant i \leqslant n-1 \}</script><p>通过对信息增益表达式的改造</p>
+<script type="math/tex; mode=display">
+Gain(D, a) = \underset{t \in T_a}{\max} Gain(D, a, t)
+\\
+= \underset{t \in T_a}{\max} Ent(D) - \sum_{\lambda \in \{ -,+ \}}\frac{|D^{\lambda}_t|}{|D|}Ent(D_t^{\lambda})</script><p>需注意的是，与离散属性不同，若当前结点划分属性为连续属性，该属性还可作为其后代结点的划分属性。</p>
 <h3 id="4-2-缺失值处理"><a href="#4-2-缺失值处理" class="headerlink" title="4.2 缺失值处理"></a>4.2 缺失值处理</h3><p>样本不完整，那么该样本应该怎样划分呢。</p>
 <p>问题等价于</p>
 <ol>
@@ -412,14 +417,20 @@
 <p>比较简单的方式是根据数据集$D$中在属性$a$上没有缺失值的样本来对属性$a$进行划分。</p>
 <hr>
 <p>对问题（1），令$\tilde{D}$表示$D$在属性$a$上没有缺失值的样本子集，<br>假定属性$a$有$V$个可取值${ a^1, a^2,…,a^V }$，<br>令$\tilde{D}^v$表示$\tilde{D}$中在属性$a$上取值为$a^v$的样本子集，<br>$\tilde{D}<em>k$表示$\tilde{D}$中属于第$k$类（$k = 1, 2,…,|\mathbb{Y}|$）的样本子集，则显然有$\tilde{D} = \bigcup</em>{k=1}^{|\mathbb{Y}|}\tilde{D}<em>k = \bigcup</em>{v=1}^{|V|}\tilde{D}^v$。<br>假定为每个样本$\boldsymbol{x}$初始化一个权重$w_{\boldsymbol{x}}$（初始值全为1），并定义</p>
-<p>$$<br>\rho = \frac{\sum_{\boldsymbol{x}\in \tilde{D}}w_{\boldsymbol{x}}}{\sum_{\boldsymbol{x}\in D}w_{\boldsymbol{x}}}<br>\<br>\tilde{p}<em>k = \frac{\sum</em>{\boldsymbol{x}\in \tilde{D}<em>k}w</em>{\boldsymbol{x}}}{\sum_{\boldsymbol{x}\in \tilde{D}}w_{\boldsymbol{x}}}<br>\<br>\tilde{r}<em>v = \frac{\sum</em>{\boldsymbol{x}\in \tilde{D}^v}w_{\boldsymbol{x}}}{\sum_{\boldsymbol{x}\in \tilde{D}}w_{\boldsymbol{x}}}<br>$$</p>
-<p>对属性$a$来说，$\rho$表示无缺失值样本所占的比例，$\tilde{p}<em>k$表示无缺失值样本中第$k$类所占的比例，$\tilde{r}_v$则表示无缺失值样本在属性$a$上取值$a^v$的样本所占的比例。显然$\sum^{|\mathbb{Y}|}</em>{k=1}\tilde{p}<em>k=1,\sum^V</em>{v=1}\tilde{r}_v=1$。</p>
+<script type="math/tex; mode=display">
+\rho = \frac{\sum_{\boldsymbol{x}\in \tilde{D}}w_{\boldsymbol{x}}}{\sum_{\boldsymbol{x}\in D}w_{\boldsymbol{x}}}
+\\
+\tilde{p}_k = \frac{\sum_{\boldsymbol{x}\in \tilde{D}_k}w_{\boldsymbol{x}}}{\sum_{\boldsymbol{x}\in \tilde{D}}w_{\boldsymbol{x}}}
+\\
+\tilde{r}_v = \frac{\sum_{\boldsymbol{x}\in \tilde{D}^v}w_{\boldsymbol{x}}}{\sum_{\boldsymbol{x}\in \tilde{D}}w_{\boldsymbol{x}}}</script><p>对属性$a$来说，$\rho$表示无缺失值样本所占的比例，$\tilde{p}<em>k$表示无缺失值样本中第$k$类所占的比例，$\tilde{r}_v$则表示无缺失值样本在属性$a$上取值$a^v$的样本所占的比例。显然$\sum^{|\mathbb{Y}|}</em>{k=1}\tilde{p}<em>k=1,\sum^V</em>{v=1}\tilde{r}_v=1$。</p>
 <p>基于上述定义，信息增益计算式可推广为</p>
-<p>$$<br>Gain(D, a) = \rho \times Gain(\tilde{D}, a)<br>\<br>= \rho \times { Ent(\tilde{D}) - \sum^V_{v=1}\tilde{r}_vEnt(\tilde{D}^v) }<br>$$</p>
-<p>其中</p>
-<p>$$<br>Ent(\tilde{D}) = - \sum^{|\mathbb{Y}|}_{k=1}\tilde{p}_k\log_2\tilde{p}_k<br>$$</p>
-<hr>
-<p>对问题（2）,若样本$\boldsymbol{x}$在划分属性$a$上的取值已知，则将$\boldsymbol{x}$划入与其取值对应的子结点，且样本权值保持为$w_{\boldsymbol{x}}$。<br>若样本$\boldsymbol{x}$在划分属性$a$上的取值未知，则将$\boldsymbol{x}$同时划入所有子结点，且样本权值在与属性$a^v$对应的子结点中调整为$\tilde{r} \cdot w_{\boldsymbol{x}}$；<br>直观地看，这就是让同一个样本以不同的概率划入到不同的子结点中去。</p>
+<script type="math/tex; mode=display">
+Gain(D, a) = \rho \times Gain(\tilde{D}, a)
+\\
+= \rho \times \{ Ent(\tilde{D}) - \sum^V_{v=1}\tilde{r}_vEnt(\tilde{D}^v) \}</script><p>其中</p>
+<script type="math/tex; mode=display">
+Ent(\tilde{D}) = - \sum^{|\mathbb{Y}|}_{k=1}\tilde{p}_k\log_2\tilde{p}_k</script><hr>
+<p>对问题（2）,若样本$\boldsymbol{x}$在划分属性$a$上的取值已知，则将$\boldsymbol{x}$划入与其取值对应的子结点，且样本权值保持为$w<em>{\boldsymbol{x}}$。<br>若样本$\boldsymbol{x}$在划分属性$a$上的取值未知，则将$\boldsymbol{x}$同时划入所有子结点，且样本权值在与属性$a^v$对应的子结点中调整为$\tilde{r} \cdot w</em>{\boldsymbol{x}}$；<br>直观地看，这就是让同一个样本以不同的概率划入到不同的子结点中去。</p>
 <h2 id="5-多变量决策树"><a href="#5-多变量决策树" class="headerlink" title="5. 多变量决策树"></a>5. 多变量决策树</h2><p>使用单属性作为划分结点，我们得到的决策树的分类边界是平行于该属性对应的轴。</p>
 <!--  -->
 <p><img src="http://114.116.9.65:7777/images/2020/01/18/tree1.png" alt="tree1.png"></p>
@@ -629,12 +640,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">897k</span>
+    <span title="站点总字数">877k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:36</span>
+    <span title="站点阅读时长">13:17</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>
