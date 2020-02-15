@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://zhoutao822.coding.me').hostname,
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"mac"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="参考：  《深度学习》第7章 深度学习中的正则化  本章部分内容与深度学习-实际问题交叉。 机器学习的一个核心问题是设计一个不仅在训练数据上表现好，并且能在新输入上泛化好的算法。在机器学习中，许多策略显式地被设计来减少测试误差（可能会以增大训练误差为代价），这些策略被统称为正则化。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深度学习-正则化">
+<meta property="og:url" content="http://zhoutao822.coding.me/archives/e0f10776.html">
+<meta property="og:site_name" content="Tao">
+<meta property="og:description" content="参考：  《深度学习》第7章 深度学习中的正则化  本章部分内容与深度学习-实际问题交叉。 机器学习的一个核心问题是设计一个不仅在训练数据上表现好，并且能在新输入上泛化好的算法。在机器学习中，许多策略显式地被设计来减少测试误差（可能会以增大训练误差为代价），这些策略被统称为正则化。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/l1l2.jpg">
+<meta property="og:image" content="http://114.116.9.65:7777/images/2020/01/19/multi-task_learning.png">
+<meta property="article:published_time" content="2018-11-29T01:07:16.000Z">
+<meta property="article:modified_time" content="2020-01-19T09:07:14.530Z">
+<meta property="article:author" content="Tao Zhou">
+<meta property="article:tag" content="Theory">
+<meta property="article:tag" content="Regularization">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://114.116.9.65:7777/images/2020/01/19/l1l2.jpg">
+
+<link rel="canonical" href="http://zhoutao822.coding.me/archives/e0f10776.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>深度学习-正则化 | Tao</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Tao" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhoutao822.coding.me/archives/e0f10776.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Tao Zhou">
+      <meta itemprop="description" content="学习笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          深度学习-正则化
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-11-29 09:07:16" itemprop="dateCreated datePublished" datetime="2018-11-29T09:07:16+08:00">2018-11-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-19 17:07:14" itemprop="dateModified" datetime="2020-01-19T17:07:14+08:00">2020-01-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Deep Learning</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/archives/e0f10776.html" class="post-meta-item leancloud_visitors" data-flag-title="深度学习-正则化" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/archives/e0f10776.html#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/archives/e0f10776.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>6.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>6 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>参考：</p>
+<blockquote>
+<p><a href="https://github.com/exacity/deeplearningbook-chinese" target="_blank" rel="noopener">《深度学习》第7章 深度学习中的正则化</a></p>
+</blockquote>
+<p>本章部分内容与<code>深度学习-实际问题</code>交叉。</p>
+<p>机器学习的一个核心问题是设计一个不仅在训练数据上表现好，并且能在新输入上泛化好的算法。在机器学习中，许多策略显式地被设计来减少测试误差（可能会以增大训练误差为代价），这些策略被统称为正则化。</p>
+<a id="more"></a>
+<h2 id="1-参数范数惩罚"><a href="#1-参数范数惩罚" class="headerlink" title="1. 参数范数惩罚"></a>1. 参数范数惩罚</h2><p>对优化目标$J$添加一个参数惩罚项$\Omega(\theta)$，正则化后的目标函数记为</p>
+<script type="math/tex; mode=display">
+\hat{J}(\theta;\boldsymbol{X, y}) = J(\theta;\boldsymbol{X, y}) + \alpha\Omega(\theta)</script><p>其中$\alpha \in [0, \infty)$是权衡范数惩罚项$\Omega$和目标函数$J$相对贡献的超参数。显然，$\alpha$为0表示没有正则化，$\alpha$越大正则化惩罚越大。</p>
+<p>通常只对<strong>权重</strong>做惩罚而不对偏置做正则惩罚，一是因为对所有权重进行等比例缩放可以实现偏置的修正，所以对偏置惩罚是多余的；二是因为正则化偏置参数可能会导致明显的欠拟合。</p>
+<h3 id="1-1-L-2-参数正则化"><a href="#1-1-L-2-参数正则化" class="headerlink" title="1.1 $L^2$参数正则化"></a>1.1 $L^2$参数正则化</h3><p>即使用$L_2$范数作为正则项$\Omega(\theta) = \frac{1}{2}||\boldsymbol{w}||^2_2$，使权重更接近原点。其目标函数为</p>
+<script type="math/tex; mode=display">
+\tilde{J}(\boldsymbol{w};\boldsymbol{X,y}) = \frac{\alpha}{2}\boldsymbol{w}^T\boldsymbol{w} + J(\boldsymbol{w};\boldsymbol{X,y})</script><p>$L_2$正则化会根据$\frac{\lambda_i}{\lambda_i + \alpha}$因子缩放与$\boldsymbol{H}$第$i$个特征向量对齐的$\boldsymbol{w}^*$的分量。</p>
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/l1l2.jpg" alt="l1l2.jpg"></p>
+<p>沿着$\boldsymbol{H}$特征值较大的方向（如$\lambda_i \gg \alpha$）正则化的影响较小，而$\lambda_i \ll \alpha$会收缩到几乎为0（但不是0）。<br>只有在显著减小目标函数方向上的参数会保留得相对完好。在无助于目标函数减小的方向上改变参数不会显著增加梯度。这种不重要的方向对应的分量会在训练过程中因正则化而衰减掉。</p>
+<p>对于线性回归而言，代价函数是</p>
+<script type="math/tex; mode=display">
+(\boldsymbol{Xw} - \boldsymbol{y})^T(\boldsymbol{Xw} - \boldsymbol{y})</script><p>添加$L^2$正则项后，目标函数变为</p>
+<script type="math/tex; mode=display">
+(\boldsymbol{Xw} - \boldsymbol{y})^T(\boldsymbol{Xw} - \boldsymbol{y}) + \frac{1}{2}\alpha\boldsymbol{w}^T\boldsymbol{w}</script><p>那么方程解从</p>
+<script type="math/tex; mode=display">
+\boldsymbol{w} = (\boldsymbol{X}^T\boldsymbol{X})^{-1}\boldsymbol{X}^T\boldsymbol{y}</script><p>变成了</p>
+<script type="math/tex; mode=display">
+\boldsymbol{w} = (\boldsymbol{X}^T\boldsymbol{X} + \alpha\boldsymbol{I})^{-1}\boldsymbol{X}^T\boldsymbol{y}</script><p>由于$\boldsymbol{X}^T\boldsymbol{X}$对角项对应每个输入特征的方差，相当于我们对每一个方差都增加了一个相同的值$\alpha$，那么对$\boldsymbol{w}$来说，对应的权重会减小，但是由于每个特征的方差都是不同的，那么增加的值相对于原始方差是有差异的，若原始方差相对于$\alpha$就很大，那么对应的权重减幅较小，原始方差相对于增加的值很小，那么受到这个新增的值的影响，对应的权重减幅很大，几乎接近0但是不会为0。</p>
+<h3 id="1-2-L-1-参数正则化"><a href="#1-2-L-1-参数正则化" class="headerlink" title="1.2 $L^1$参数正则化"></a>1.2 $L^1$参数正则化</h3><p>$L_1$范数正则化，正则项为</p>
+<script type="math/tex; mode=display">
+\Omega(\theta) = ||\boldsymbol{w}||_1 = \sum_i|w_i|</script><p>同理，其目标函数为</p>
+<script type="math/tex; mode=display">
+\tilde{J}(\boldsymbol{w};\boldsymbol{X, y}) = \alpha||\boldsymbol{w}||_1 + J(\boldsymbol{w};\boldsymbol{X, y})</script><p>对于每一维$i$：</p>
+<script type="math/tex; mode=display">
+w_i = sign(w_i^*)\max \{ |w_i^*| - \frac{\alpha}{H_{i,i}}, 0 \}</script><p>显然，当$w_i^<em> \leqslant \frac{\alpha}{H_{i,i}}$的时候，正则化会使$w_i$变成0，也就是说$L^1$正则化会产生更加<em>*稀疏</em></em>的解。因此可以使用$L^1$正则化实现降维或者特征选择。</p>
+<h2 id="2-作为约束的范数惩罚"><a href="#2-作为约束的范数惩罚" class="headerlink" title="2. 作为约束的范数惩罚"></a>2. 作为约束的范数惩罚</h2><p>上面介绍的参数范数惩罚未对正则项进行约束，如果我们想约束$\Omega$小于某个常数$k$，往往我们需要使用KKT条件（参考<code>支持向量机</code>）</p>
+<script type="math/tex; mode=display">
+L(\boldsymbol{\theta}, \alpha;\boldsymbol{X, y}) = J(\boldsymbol{\theta;X,y}) + \alpha(\Omega(\theta) - k)</script><p>这个约束问题的解由下式给出</p>
+<script type="math/tex; mode=display">
+\boldsymbol{\theta}^* = \underset{\boldsymbol{\theta}}{\arg \min} \underset{\alpha,\alpha \geqslant 0}{\max} L(\boldsymbol{\theta}, \alpha)</script><p>通过设置$k$，我们可以限制$L^2$范数在一个球内或者$L^1$范数的一个限制区域内。</p>
+<h2 id="3-正则化和欠约束问题"><a href="#3-正则化和欠约束问题" class="headerlink" title="3. 正则化和欠约束问题"></a>3. 正则化和欠约束问题</h2><p>对矩阵$\boldsymbol{X}^T\boldsymbol{X}$求逆的前提是奇异的，那么对于那些非奇异矩阵，许多正则化方法对应求逆$\boldsymbol{X}^T\boldsymbol{X} + \alpha\boldsymbol{I}$，那么可以保证矩阵是奇异的。</p>
+<p>同样的我们可以使用Moore-Penrose伪逆求解</p>
+<script type="math/tex; mode=display">
+\boldsymbol{X}^+ = \underset{\alpha \searrow 0}{\lim} (\boldsymbol{X}^T\boldsymbol{X} + \alpha\boldsymbol{I})^{-1}\boldsymbol{X}^T</script><p>实际计算没有基于这个定义，而是使用奇异值分解</p>
+<script type="math/tex; mode=display">
+\boldsymbol{A}^+ = \boldsymbol{VD}^+\boldsymbol{U}^T</script><p>其中矩阵$\boldsymbol{U,D,V}$是矩阵$\boldsymbol{A}$奇异值分解后得到的矩阵，对角矩阵$\boldsymbol{D}$的伪逆$\boldsymbol{D}^+$是其非零元素取倒数之后再转置得到的。</p>
+<h2 id="4-数据集增强"><a href="#4-数据集增强" class="headerlink" title="4. 数据集增强"></a>4. 数据集增强</h2><p>让模型泛化能力更强的最好办法就是使用更多的数据进行训练，但是实际上我们的数据集往往是有限的。解决这个问题的一种方法是创建假的数据添加到训练集中。对于一些特定的机器学习任务，创建新的假数据相当简单。</p>
+<ol>
+<li>图像识别，对于图像来说，平移，旋转或缩放都是有效的，但是需要注意比如识别手写数字“6”和“9”，这里旋转180°是不合适的；</li>
+<li>语音任务，人为手动在输入层注入噪声。</li>
+</ol>
+<h2 id="5-噪声鲁棒性"><a href="#5-噪声鲁棒性" class="headerlink" title="5. 噪声鲁棒性"></a>5. 噪声鲁棒性</h2><p>向输入添加方差极小的噪声等价于对权重施加范数惩罚。在一般情况下，注入噪声远比简单地收缩参数强大，特别是噪声被添加进隐藏单元。比如dropout算法就是这种做法地主要发展方向。</p>
+<p>假设对网络的权重添加随机扰动$\epsilon_{\boldsymbol{w}} \in N(\boldsymbol{\epsilon};0,\eta\boldsymbol{I})$，那么我们的目标函数变为：</p>
+<script type="math/tex; mode=display">
+\tilde{J}_{\boldsymbol{W}} = \mathbb{E}_{p(\boldsymbol{x}, y, \epsilon_\boldsymbol{W})}[(\hat{y}_{\epsilon_\boldsymbol{W}}(\boldsymbol{x}) - y)^2]</script><p>它推动模型进入对权重小的变化相对不敏感的区域，找到的点不只是极小点，还是由平坦区域所包围的极小点。</p>
+<h3 id="5-1-向输出目标注入噪声"><a href="#5-1-向输出目标注入噪声" class="headerlink" title="5.1 向输出目标注入噪声"></a>5.1 向输出目标注入噪声</h3><p>大多数数据集的$y$标签都有一定错误。错误的$y$不利于最大化似然对数。如何避免，使用一些小常数$\epsilon$，训练集标记$y$是正确的概率是$1-\epsilon$。</p>
+<p>例如，<strong>标签平滑</strong>通过把确切分类目标从0到和1替换成$\frac{\epsilon}{k-1},1-\epsilon$，正则化具有$k$个输出的softmax函数的模型。使用softmax和明确的最大似然学习可能永远不会收敛-softmax函数永远无法真正预测0概率或1概率，因此预测更极端。通过使用权重衰减等其他正则化策略能够防止这种情况发生。</p>
+<h2 id="6-半监督学习"><a href="#6-半监督学习" class="headerlink" title="6. 半监督学习"></a>6. 半监督学习</h2><p>参考<code>语音识别-RBM和DBN</code>，通过预训练获得输入数据的统计特征。在预训练过程中使用大量的未标记数据。</p>
+<h2 id="7-多任务学习"><a href="#7-多任务学习" class="headerlink" title="7. 多任务学习"></a>7. 多任务学习</h2><p>多任务学习是通过合并几个任务中的样例来提高泛化的一种方式。当模型的一部分被多个额外的任务共享时，这部分将被约束为良好的值（共享合理），通常会带来更好的泛化能力。</p>
+<!--  -->
+<p><img src="http://114.116.9.65:7777/images/2020/01/19/multi-task_learning.png" alt="multi-task_learning.png"></p>
+<p>该模型通常可以分为两类参数：</p>
+<ol>
+<li>具体任务的参数（从各自任务的样本中实现良好的泛化）；</li>
+<li>所有任务共享的通用参数（从所有任务的汇集数据中获益），前提是不同的任务之间存在某些统计关系的假设是合理的。</li>
+</ol>
+<p><strong>能解释数据变化（在与之相关联的不同任务中观察到）的因素中，某些因素是跨两个或更多任务共享的。</strong></p>
+<h2 id="8-提前终止"><a href="#8-提前终止" class="headerlink" title="8. 提前终止"></a>8. 提前终止</h2><p>在每次验证集误差有所改善后，我们存储模型参数的副本。当训练算法终止时，我们返回这些参数而不是最新的参数。当验证集上的误差在事先指定的循环次数内没有进一步改善时，算法就会<br>终止。</p>
+<p>提前终止需要验证集，这意味着某些训练数据不能被馈送到模型。为了更好地利用这一额外的数据，我们可以在完成提前终止的首次训练之后，进行额外的训练。在第二轮，即额外的训练步骤中，所有的训练数据都被包括在内。有两个基本的策略都可以用于第二轮训练过程。</p>
+<ol>
+<li>再次初始化模型，然后使用所有数据再次训练。在这个第二轮训练过程中，我们使用第一轮提前终止训练确定的最佳步数。此过程有一些细微之处。例如，我们没有办法知道重新训练时，对参数进行相同次数的更新和对数据集进行相同次数的遍历哪一个更好。由于训练集变大了，在第二轮训练时，每一次遍历数据集将会更多次地更新参数。</li>
+<li>保持从第一轮训练获得的参数，然后使用全部的数据继续训练。在这个阶段，已经没有验证集指导我们需要在训练多少步后终止。取而代之，我们可以监控验证集的平均损失函数，并继续训练，直到它低于提前终止过程终止时的目标值。此策略避免了重新训练模型的高成本，但表现并没有那么好。例如，验证集的目标不一定能达到之前的目标值，所以这种策略甚至不能保证终止。</li>
+</ol>
+<p><strong>提前终止为何具有正则化效果：提前终止可以将优化过程的参数空间限制在初始参数值$\theta_0$的小邻域内。</strong></p>
+<h2 id="9-参数绑定和参数共享"><a href="#9-参数绑定和参数共享" class="headerlink" title="9. 参数绑定和参数共享"></a>9. 参数绑定和参数共享</h2><p>某些任务参数应当彼此接近，比如有两个模型执行相同的分类任务（类别相同），但输入分布稍有不同。我们有参数为$\boldsymbol{w}^{(A)}$的模型$A$和参数为$\boldsymbol{w}^{(B)}$的模型$B$。这两种模型都将输入映射到两个不同但相关的输出：$\hat{y}^{(A)} = f(\boldsymbol{w}^{(A)}, \boldsymbol{x}), \hat{y}^{(B)} = f(\boldsymbol{w}^{(B)}, \boldsymbol{x})$。</p>
+<p>可以使用以下形式的参数范数惩罚：</p>
+<script type="math/tex; mode=display">
+\Omega(\boldsymbol{w}^{(A)},\boldsymbol{w}^{(B)}) = ||\boldsymbol{w}^{(A)} - \boldsymbol{w}^{(B)}||^2_2</script><p>也可以使用其他范数惩罚。</p>
+<p>参数范数惩罚是正则化参数使其彼此接近的一种方式，而更流行的方法是使用约束：<strong>强迫某些参数相等</strong>。由于我们将各种模型或模型组件解释为共享唯一的一组参数，这种正则化方法通常被称为<strong>参数共享</strong>。例如在卷积神经网络中使用相同的卷积核，能显著减少模型所占用的内存。</p>
+<h2 id="10-稀疏表示"><a href="#10-稀疏表示" class="headerlink" title="10. 稀疏表示"></a>10. 稀疏表示</h2><p>参考<code>深度学习-优化器</code>和<code>深度学习-实际问题</code>以及上面部分内容，可知，稀疏表示的模型一方面增强了泛化能力，另一方面减小了模型大小以及运算开销。</p>
+<h2 id="11-Bagging和其他集成方法"><a href="#11-Bagging和其他集成方法" class="headerlink" title="11. Bagging和其他集成方法"></a>11. Bagging和其他集成方法</h2><p>参考<code>集成学习</code></p>
+<p>Bagging是通过结合几个模型降低泛化误差的技术，主要思想是分别训练几个不同的模型，然后让所有模型表决测试样例的输出。采用这种策略的技术被称为集成方法。</p>
+<h2 id="12-Dropout"><a href="#12-Dropout" class="headerlink" title="12. Dropout"></a>12. Dropout</h2><p>参考<code>深度学习-实际问题</code></p>
+<p>一方面Dropout可以看作是廉价的Bagging方式，因为我们训练多个神经网络的开销很大，但是在每一次迭代中丢弃不同的神经元，那么自然而然地产生了不同地神经网络，从而实现了Bagging；<br>另一方面，Dropout可以看作是对隐藏层的噪声注入，前面已经说明了，提升了泛化性能。</p>
+<h2 id="13-对抗训练"><a href="#13-对抗训练" class="headerlink" title="13. 对抗训练"></a>13. 对抗训练</h2><p>对抗样本，即在许多情况下，$\boldsymbol{x}$与$\boldsymbol{x}’$非常近似，人类观察者不会察觉之间的差异但是网络会做出截然相反的预测。</p>
+<p>通过对抗训练减少原有独立同分布的测试集的错误率-在对抗扰动的训练集上训练网络。</p>
+<p>这些对抗样本的主要原因之一是过度线性。如果一个线性函数具有许多输入，那么它的值可以常迅速地改变。如果我们用$\epsilon$改变每个输入，那么权重为$\boldsymbol{w}$的线性函数可以改变$\epsilon||\boldsymbol{w}||_1$之多，如果$\boldsymbol{w}$是高维的这会是一个非常大的数。</p>
+<p>对抗样本也提供了一种实现半监督学习的方法。在与数据集中的标签不相关联的点$\boldsymbol{x}$处，模型本身为其分配一些标签$\hat{y}$。模型的标记$\hat{y}$未必是真正的标签，但如果模型是高品质的，那么$\hat{y}$提供正确标签的可能性很大。我们可以搜索一个对抗样本$\boldsymbol{x}’$，导致分类器输出一个标签$y’$且$y’ \neq \hat{y}$。不使用真正的标签，而是由训练好的模型提供标签产生的对抗样本被称为<strong>虚拟对抗样本</strong>。我们可以训练分类器为$\boldsymbol{x}$和$\boldsymbol{x}’$分配相同的标签。这鼓励分类器学习一个沿着未标签数据所在流形上任意微小变化都很鲁棒的函数。驱动这种方法的假设是，不同的类通常位于分离的流形上，并且小扰动不会使数据点从一个类的流形跳到另一个类的流形上。</p>
+<h2 id="14-切面距离、正切传播和流形正切分类器"><a href="#14-切面距离、正切传播和流形正切分类器" class="headerlink" title="14. 切面距离、正切传播和流形正切分类器"></a>14. 切面距离、正切传播和流形正切分类器</h2><p>参考<code>降维与度量学习</code></p>
+<p>许多机器学习通过假设数据位于低维流形附近来克服维数灾难。</p>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">推荐文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/7d1dcda7.html" rel="bookmark">模型评估与选择</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/8ddc7426.html" rel="bookmark">决策树</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/7ca31f7.html" rel="bookmark">神经网络</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/8f45a2c4.html" rel="bookmark">深度学习-优化器</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/3e5788ab.html" rel="bookmark">深度学习-实际问题</a></div>
+    </li>
+  </ul>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Tao Zhou
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhoutao822.coding.me/archives/e0f10776.html" title="深度学习-正则化">http://zhoutao822.coding.me/archives/e0f10776.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Theory/" rel="tag"># Theory</a>
+              <a href="/tags/Regularization/" rel="tag"># Regularization</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/archives/3e5788ab.html" rel="prev" title="深度学习-实际问题">
+      <i class="fa fa-chevron-left"></i> 深度学习-实际问题
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/archives/c6767314.html" rel="next" title="卷积神经网络">
+      卷积神经网络 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-参数范数惩罚"><span class="nav-text">1. 参数范数惩罚</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-L-2-参数正则化"><span class="nav-text">1.1 $L^2$参数正则化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-L-1-参数正则化"><span class="nav-text">1.2 $L^1$参数正则化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-作为约束的范数惩罚"><span class="nav-text">2. 作为约束的范数惩罚</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-正则化和欠约束问题"><span class="nav-text">3. 正则化和欠约束问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-数据集增强"><span class="nav-text">4. 数据集增强</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-噪声鲁棒性"><span class="nav-text">5. 噪声鲁棒性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-向输出目标注入噪声"><span class="nav-text">5.1 向输出目标注入噪声</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-半监督学习"><span class="nav-text">6. 半监督学习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-多任务学习"><span class="nav-text">7. 多任务学习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-提前终止"><span class="nav-text">8. 提前终止</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-参数绑定和参数共享"><span class="nav-text">9. 参数绑定和参数共享</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-稀疏表示"><span class="nav-text">10. 稀疏表示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-Bagging和其他集成方法"><span class="nav-text">11. Bagging和其他集成方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-Dropout"><span class="nav-text">12. Dropout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-对抗训练"><span class="nav-text">13. 对抗训练</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#14-切面距离、正切传播和流形正切分类器"><span class="nav-text">14. 切面距离、正切传播和流形正切分类器</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Tao Zhou"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Tao Zhou</p>
+  <div class="site-description" itemprop="description">学习笔记</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">61</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">126</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tao Zhou</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">877k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">13:17</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.7.0
+  </div>
+
+        
+
+
+
+
+
+
+  <script>
+  function leancloudSelector(url) {
+    url = encodeURI(url);
+    return document.getElementById(url).querySelector('.leancloud-visitors-count');
+  }
+  if (CONFIG.page.isPost) {
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.getAttribute('id'));
+      var title = visitors.getAttribute('data-flag-title');
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+              leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .then(response => response.json())
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              })
+          } else {
+              Counter('post', '/classes/Counter', { title: title, url: url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+  } else {
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.getAttribute('id'));
+      });
+
+      Counter('get', `/classes/Counter?where=${JSON.stringify({ url: { '$in': entries } })}`)
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length === 0) {
+            document.querySelectorAll('.leancloud_visitors .leancloud-visitors-count').forEach(element => {
+              element.innerText = 0;
+            });
+            return;
+          }
+          for (let item of results) {
+            let { url, time } = item;
+            leancloudSelector(url).innerText = time;
+          }
+          for (let url of entries) {
+            var element = leancloudSelector(url);
+            if (element.innerText == '') {
+              element.innerText = 0;
+            }
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+  }
+
+  fetch('https://app-router.leancloud.cn/2/route?appId=iyNzyQRx6yCU5YQVEXPl0hSe-gzGzoHsz')
+    .then(response => response.json())
+    .then(({ api_server }) => {
+      var Counter = (method, url, data) => {
+        return fetch(`https://${api_server}/1.1${url}`, {
+          method: method,
+          headers: {
+            'X-LC-Id': 'iyNzyQRx6yCU5YQVEXPl0hSe-gzGzoHsz',
+            'X-LC-Key': 'xoukWFyqvFIXJ6DfxLLYtsTP',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+    MathJax.Ajax.config.path['mhchem'] = '//cdn.jsdelivr.net/npm/mathjax-mhchem@3';
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        extensions: ['[mhchem]/mhchem.js'],
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el: '#valine-comments',
+      verify: false,
+      notify: false,
+      appId: 'iyNzyQRx6yCU5YQVEXPl0hSe-gzGzoHsz',
+      appKey: 'xoukWFyqvFIXJ6DfxLLYtsTP',
+      placeholder: "Just go go",
+      avatar: 'mm',
+      meta: guest,
+      pageSize: '10' || 10,
+      visitor: false,
+      lang: 'zh-cn' || 'zh-cn',
+      path: location.pathname,
+      recordIP: true,
+      serverURLs: ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
