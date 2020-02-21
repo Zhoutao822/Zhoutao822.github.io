@@ -204,6 +204,132 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhoutao822.coding.me/archives/e6c50c31.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Tao Zhou">
+      <meta itemprop="description" content="学习笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/archives/e6c50c31.html" class="post-title-link" itemprop="url">深度学习-损失函数</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-12-10 16:31:02" itemprop="dateCreated datePublished" datetime="2018-12-10T16:31:02+08:00">2018-12-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-19 17:05:03" itemprop="dateModified" datetime="2020-01-19T17:05:03+08:00">2020-01-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Deep Learning</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/archives/e6c50c31.html" class="post-meta-item leancloud_visitors" data-flag-title="深度学习-损失函数" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/archives/e6c50c31.html#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/archives/e6c50c31.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>参考：</p>
+<blockquote>
+<p><a href="https://www.tensorflow.org/api_docs/python/tf/losses" target="_blank" rel="noopener">Tensorflow API</a><br><a href="https://blog.csdn.net/weixin_37136725/article/details/79291818" target="_blank" rel="noopener">损失函数</a><br><a href="https://www.cnblogs.com/massquantity/p/8964029.html" target="_blank" rel="noopener">常见回归和分类损失函数比较</a></p>
+</blockquote>
+<p><strong>所有的损失都是reduce_sum处理的，log运算以e为底</strong></p>
+<h2 id="1-absolute-difference"><a href="#1-absolute-difference" class="headerlink" title="1. absolute_difference"></a>1. absolute_difference</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">tf.losses.absolute_difference(</span><br><span class="line">    labels,</span><br><span class="line">    predictions,</span><br><span class="line">    weights&#x3D;1.0,</span><br><span class="line">    scope&#x3D;None,</span><br><span class="line">    loss_collection&#x3D;tf.GraphKeys.LOSSES,</span><br><span class="line">    reduction&#x3D;Reduction.SUM_BY_NONZERO_WEIGHTS</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>绝对值损失，差距不会被平方缩放。</p>
+<script type="math/tex; mode=display">
+loss = |label - prediction|</script>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/archives/e6c50c31.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://zhoutao822.coding.me/archives/a1207629.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1389,137 +1515,6 @@ s(t) = (x * w)(t) = \sum^\infty_{a = -\infty} x(a)w(t-a)</script>
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://zhoutao822.coding.me/archives/2f863467.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Tao Zhou">
-      <meta itemprop="description" content="学习笔记">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Tao">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/archives/2f863467.html" class="post-title-link" itemprop="url">语音识别-HMM</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2018-11-16 15:33:47" itemprop="dateCreated datePublished" datetime="2018-11-16T15:33:47+08:00">2018-11-16</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-19 17:17:20" itemprop="dateModified" datetime="2020-01-19T17:17:20+08:00">2020-01-19</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Speech-Recognition/" itemprop="url" rel="index">
-                    <span itemprop="name">Speech Recognition</span>
-                  </a>
-                </span>
-            </span>
-
-          
-            <span id="/archives/2f863467.html" class="post-meta-item leancloud_visitors" data-flag-title="语音识别-HMM" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/archives/2f863467.html#comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/archives/2f863467.html" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>14k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>13 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>参考：</p>
-<blockquote>
-<p>《解析深度学习-语音识别实践》第3章 隐马尔可夫模型及其变体<br>西瓜书第7章 贝叶斯分类器<br><a href="https://www.cnblogs.com/Gabby/p/5344658.html" target="_blank" rel="noopener">机器学习系列之EM算法</a><br><a href="https://www.cnblogs.com/Denise-hzf/p/6612212.html" target="_blank" rel="noopener">HMM模型和Viterbi算法</a></p>
-</blockquote>
-<p><strong>语音识别过程：切除首尾端静音-&gt;声音划分为帧-&gt;对每一帧提取MFCC特征-&gt;若干帧对应一个状态-&gt;三个状态组成一个音素-&gt;若干音素组成单词</strong></p>
-<h2 id="1-马尔可夫链"><a href="#1-马尔可夫链" class="headerlink" title="1. 马尔可夫链"></a>1. 马尔可夫链</h2><p>马尔可夫链是一种离散状态的马尔可夫序列，也是一般性马尔可夫序列的特殊形式。<br>马尔可夫链的状态空间具有离散和有限性：$q_t \in { s^{(j)},j = 1,2,…,N}$。每一个离散值都与马尔可夫链中的一个状态相关。</p>
-<p>一个马尔可夫链$\boldsymbol{q}_1^T = q_1, q_2,…,q_T$，可被转移概率完全表示，定义为</p>
-<script type="math/tex; mode=display">
-P(q_t=s^{(j)}|q_{t-1}=s^{(i)}) = a_{ij}(t) \quad i,j=1,2,...,N</script><p>以及初始状态分布概率。如果这些转移概率与时间$t$无关，则得到齐次马尔可夫链。</p>
-<p>（齐次）马尔可夫链的转移概率通常能方便地表示为矩阵形式：</p>
-<script type="math/tex; mode=display">
-\boldsymbol{A} = [a_{ij}], \quad 其中a_{ij} \geqslant 0 \quad \forall i,j ; \sum^N_{j=1}a_{ij}=1 \quad \forall i</script><p>$\boldsymbol{A}$称为马尔可夫链的转移矩阵。给定马尔可夫链的转移概率，则状态输出概率</p>
-<script type="math/tex; mode=display">
-p_j(t) = P[q_t = s^{(j)}]</script>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/archives/2f863467.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1592,7 +1587,7 @@ p_j(t) = P[q_t = s^{(j)}]</script>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">62</span>
+          <span class="site-state-item-count">63</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1605,7 +1600,7 @@ p_j(t) = P[q_t = s^{(j)}]</script>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">130</span>
+        <span class="site-state-item-count">132</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1642,12 +1637,12 @@ p_j(t) = P[q_t = s^{(j)}]</script>
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">883k</span>
+    <span title="站点总字数">890k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:23</span>
+    <span title="站点阅读时长">13:29</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>

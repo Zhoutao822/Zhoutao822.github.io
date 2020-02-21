@@ -204,6 +204,137 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhoutao822.coding.me/archives/2f863467.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Tao Zhou">
+      <meta itemprop="description" content="学习笔记">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/archives/2f863467.html" class="post-title-link" itemprop="url">语音识别-HMM</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-11-16 15:33:47" itemprop="dateCreated datePublished" datetime="2018-11-16T15:33:47+08:00">2018-11-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-19 17:17:20" itemprop="dateModified" datetime="2020-01-19T17:17:20+08:00">2020-01-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Speech-Recognition/" itemprop="url" rel="index">
+                    <span itemprop="name">Speech Recognition</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span id="/archives/2f863467.html" class="post-meta-item leancloud_visitors" data-flag-title="语音识别-HMM" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/archives/2f863467.html#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/archives/2f863467.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>14k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>13 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>参考：</p>
+<blockquote>
+<p>《解析深度学习-语音识别实践》第3章 隐马尔可夫模型及其变体<br>西瓜书第7章 贝叶斯分类器<br><a href="https://www.cnblogs.com/Gabby/p/5344658.html" target="_blank" rel="noopener">机器学习系列之EM算法</a><br><a href="https://www.cnblogs.com/Denise-hzf/p/6612212.html" target="_blank" rel="noopener">HMM模型和Viterbi算法</a></p>
+</blockquote>
+<p><strong>语音识别过程：切除首尾端静音-&gt;声音划分为帧-&gt;对每一帧提取MFCC特征-&gt;若干帧对应一个状态-&gt;三个状态组成一个音素-&gt;若干音素组成单词</strong></p>
+<h2 id="1-马尔可夫链"><a href="#1-马尔可夫链" class="headerlink" title="1. 马尔可夫链"></a>1. 马尔可夫链</h2><p>马尔可夫链是一种离散状态的马尔可夫序列，也是一般性马尔可夫序列的特殊形式。<br>马尔可夫链的状态空间具有离散和有限性：$q_t \in { s^{(j)},j = 1,2,…,N}$。每一个离散值都与马尔可夫链中的一个状态相关。</p>
+<p>一个马尔可夫链$\boldsymbol{q}_1^T = q_1, q_2,…,q_T$，可被转移概率完全表示，定义为</p>
+<script type="math/tex; mode=display">
+P(q_t=s^{(j)}|q_{t-1}=s^{(i)}) = a_{ij}(t) \quad i,j=1,2,...,N</script><p>以及初始状态分布概率。如果这些转移概率与时间$t$无关，则得到齐次马尔可夫链。</p>
+<p>（齐次）马尔可夫链的转移概率通常能方便地表示为矩阵形式：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{A} = [a_{ij}], \quad 其中a_{ij} \geqslant 0 \quad \forall i,j ; \sum^N_{j=1}a_{ij}=1 \quad \forall i</script><p>$\boldsymbol{A}$称为马尔可夫链的转移矩阵。给定马尔可夫链的转移概率，则状态输出概率</p>
+<script type="math/tex; mode=display">
+p_j(t) = P[q_t = s^{(j)}]</script>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/archives/2f863467.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://zhoutao822.coding.me/archives/4b26bf35.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1371,139 +1502,6 @@ f(\boldsymbol{x}) = \boldsymbol{w}^T\boldsymbol{x} + b</script><p>其中$\boldsy
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://zhoutao822.coding.me/archives/fcb2659b.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="Tao Zhou">
-      <meta itemprop="description" content="学习笔记">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Tao">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/archives/fcb2659b.html" class="post-title-link" itemprop="url">数据集</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2018-11-01 23:19:22" itemprop="dateCreated datePublished" datetime="2018-11-01T23:19:22+08:00">2018-11-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-17 23:07:46" itemprop="dateModified" datetime="2020-01-17T23:07:46+08:00">2020-01-17</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index">
-                    <span itemprop="name">Machine Learning</span>
-                  </a>
-                </span>
-            </span>
-
-          
-            <span id="/archives/fcb2659b.html" class="post-meta-item leancloud_visitors" data-flag-title="数据集" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/archives/fcb2659b.html#comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/archives/fcb2659b.html" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>6.2k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>6 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><strong>没有数据集，机器学个锤子~~~</strong></p>
-<blockquote>
-<p>转载自雷锋网</p>
-</blockquote>
-<h2 id="0-Python第三方库"><a href="#0-Python第三方库" class="headerlink" title="0. Python第三方库"></a>0. Python第三方库</h2><h3 id="1-Tensorflow"><a href="#1-Tensorflow" class="headerlink" title="1. Tensorflow"></a>1. <a href="https://tensorflow.google.cn/api_docs/python/tf/keras/datasets" target="_blank" rel="noopener">Tensorflow</a></h3><p><strong>需要翻墙</strong></p>
-<blockquote>
-<p>tensorflow.keras.datasets.boston_housing 房价数据，用于回归<br>tensorflow.keras.datasets.cifar10 10物体分类图片数据，用于分类<br>tensorflow.keras.datasets.cifar100 100物体分类图片数据，用于分类<br>tensorflow.keras.datasets.fashion_mnist 服饰图像数据，用于分类<br>tensorflow.keras.datasets.imdb imdb电影评论数据，用于分类<br>tensorflow.keras.datasets.mnist 手写数字数据，用于分类<br>tensorflow.keras.datasets.reuters 路透社话题数据，用于分类</p>
-</blockquote>
-<h3 id="2-Scikit-learn"><a href="#2-Scikit-learn" class="headerlink" title="2. Scikit-learn"></a>2. <a href="http://scikit-learn.org/stable/modules/classes.html#module-sklearn.datasets" target="_blank" rel="noopener">Scikit-learn</a></h3><p><strong>小数据集</strong></p>
-<blockquote>
-<p>sklearn.datasets.load_boston 房价数据，用于回归<br>sklearn.datasets.load_breast_cancer 乳腺癌数据，用于分类<br>sklearn.datasets.load_diabetes 糖尿病数据，用于回归<br>sklearn.datasets.load_digits 手写数字数据，用于分类<br>sklearn.datasets.load_iris 鸢尾花数据，用于分类<br>sklearn.datasets.load_wine 酒类数据，用于分类<br>sklearn.datasets.load_linnerud 体能数据，用于多元分类</p>
-</blockquote>
-<p><strong>在线下载数据集</strong></p>
-<blockquote>
-<p>sklearn.datasets.fetch_20newsgroups 新闻数据，用于分类<br>sklearn.datasets.fetch_california_housing 房价数据，用于回归<br>sklearn.datasets.fetch_covtype 森林覆盖数据，用于分类<br>sklearn.datasets.fetch_kddcup99 KDD比赛网络连接数据，用于分类<br>sklearn.datasets.fetch_lfw_pairs 野外人脸数据，用于分类<br>sklearn.datasets.fetch_lfw_people 野外人脸数据，用于分类<br>sklearn.datasets.fetch_olivetti_faces Olivetti人脸数据，用于分类<br>sklearn.datasets.fetch_rcv1 RCV1多标签数据，用于分类</p>
-</blockquote>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/archives/fcb2659b.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1576,7 +1574,7 @@ f(\boldsymbol{x}) = \boldsymbol{w}^T\boldsymbol{x} + b</script><p>其中$\boldsy
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">62</span>
+          <span class="site-state-item-count">63</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1589,7 +1587,7 @@ f(\boldsymbol{x}) = \boldsymbol{w}^T\boldsymbol{x} + b</script><p>其中$\boldsy
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">130</span>
+        <span class="site-state-item-count">132</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1626,12 +1624,12 @@ f(\boldsymbol{x}) = \boldsymbol{w}^T\boldsymbol{x} + b</script><p>其中$\boldsy
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">883k</span>
+    <span title="站点总字数">890k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">13:23</span>
+    <span title="站点阅读时长">13:29</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
   </div>
